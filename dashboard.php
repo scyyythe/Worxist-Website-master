@@ -85,17 +85,19 @@ $query->execute(['u_id' => $u_id]);
 $pendingExhibit = $query->fetch(PDO::FETCH_ASSOC);
 $hasPendingExhibit = $pendingExhibit ? true : false;
    
+ob_start(); 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
     $exhibitDate = $_POST['date'];
+
     $stmt = $conn->prepare("SELECT COUNT(*) FROM exhibit_tbl WHERE exbt_date = :exbt_date");
     $stmt->execute(['exbt_date' => $exhibitDate]);
     $dateTaken = $stmt->fetchColumn() > 0;
-    if ($dateTaken) {
-        echo json_encode(['isTaken' => true]);
-    } else {
-        echo json_encode(['isTaken' => false]);
-    }
+
+    echo json_encode(['isTaken' => $dateTaken]);
+    exit();  
 }
+ob_end_clean();
+
 
 ?>
 
@@ -197,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
 <!-- end of sidebar -->
 
    <div class="wrapper">
-   <div id="logoutModal" class="logoutModal">
+   <!-- <div id="logoutModal" class="logoutModal">
     <div class="logoutModal-content">
         <p>Are you sure you want to sign out?</p>
         <div class="logoutModal-buttons">
@@ -205,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
             <button id="logoutModalCancel" class="logoutModal-cancel">Cancel</button>
         </div>
     </div>
-</div>
+</div> -->
 
  <!-- Pop-up -->
  <div class="popup" id="popup">
@@ -795,13 +797,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
 
             <div id="Solo" class="requestTab">
     <div class="exhibit-inputs">
+    <div id="artworkValidationModal" class="artwork-modal">
+    <div class="artwork-modal-content">
+        <span class="artwork-close">&times;</span>
+        <h3>Validation Errror</h3>
+        <p>Please select at least one artwork to schedule the exhibit.</p>
+    </div>
+</div>
     <form action="" name="soloExhibit" method="POST" id="soloExhibitForm">
     <label for="exhibit-title">Exhibit Title</label><br>
     <input type="text" name="exhibit-title" placeholder="Enter the title of your exhibit" required><br>
 
     <label for="exhibit-description">Exhibit Description</label><br>
     <textarea name="exhibit-description" id="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required></textarea><br>
-
+    
+    <div id="date-validation-message"></div> <br>
     <label for="exhibit-date">Exhibit Date</label><br>
     <input type="date" id="exhibit-date" name="exhibit-date" required><br>
 
@@ -811,20 +821,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
         <button class="solo-btn" id="solo-btn" name="requestSolo">Confirm Schedule</button>
     </div>
 
-    <div id="date-validation-message"></div> 
 </form>
 
         <div class="image-exhibit">
             <img src="gallery/image/solo-image.png" alt="Painting Graphics">
         </div>
     </div>
-    <div id="artworkValidationModal" class="artwork-modal">
-    <div class="artwork-modal-content">
-        <span class="artwork-close">&times;</span>
-        <h3>Validation Errror</h3>
-        <p>Please select at least one artwork to schedule the exhibit.</p>
-    </div>
-</div>
+
     <div class="select-art">
     <p>Selected Artworks (Maximum of 10)</p>
     <div class="display-creations">
@@ -881,27 +884,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
 
     <div class="exhibit-inputs">
     <form action="" name="collabExhibit" method="POST" id="collabExhibitForm">
+        <label for="exhibit-title">Exhibit Title</label><br>
+        <input type="text" name="exhibit-title" placeholder="Enter the title of your exhibit" required><br>
 
-<label for="exhibit-title">Exhibit Title</label><br>
-<input type="text" name="exhibit-title" placeholder="Enter the title of your exhibit" required><br>
+        <label for="exhibit-description">Exhibit Description</label><br>
+        <textarea name="exhibit-description" id="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required></textarea><br>
 
-<label for="exhibit-description">Exhibit Description</label><br>
-<textarea name="exhibit-description" id="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required></textarea><br>
+        <div id="date-validation-message-collab"></div><br> 
+        <label for="exhibit-date-collab">Exhibit Date</label><br>
+        <input type="date" id="exhibit-date-collab" name="exhibit-date" required>
 
-<label for="exhibit-date">Exhibit Date</label><br>
-<input type="date" id="exhibit-date" name="exhibit-date" required><br>
+        <input type="hidden" id="selectedCollaboratorsInput" name="selected_collaborators" value="" required>
+        <input type="hidden" name="selected_artworks_collab" id="selectedArtworksCollab" required>
 
-<div id="date-validation-message"></div> 
-
-<input type="hidden" id="selectedCollaboratorsInput" name="selected_collaborators" value="" required>
-
-<input type="hidden" name="selected_artworks_collab" id="selectedArtworksCollab" required>
-
-<div class="confirm-solo">
-    <button type="submit" class="collab-btn" name="requestCollab">Confirm Schedule</button>
-</div>
-</form>
-
+        <div class="confirm-solo">
+            <button type="submit" class="collab-btn" id="collab-btn" name="requestCollab">Confirm Schedule</button>
+        </div>
+    </form>
 
 
         <div class="add-collab">

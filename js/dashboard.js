@@ -639,33 +639,60 @@ document.querySelectorAll('.includeArt-collab img').forEach((img) => {
 
 //validation in requesting an exhibit
 //solo
-const artworkImages = document.querySelectorAll('.selectable-artwork');
-artworkImages.forEach(image => {
-    image.addEventListener('click', function() {
-        this.classList.toggle('selected');  // Toggle the selected class when artwork is clicked
-    });
-});
+document.getElementById('soloExhibitForm').addEventListener('submit', function (e) {
+  const selectedArtworks = document.getElementById('selectedArtworks').value;
 
-document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
-  // Get selected artworks
-  const selectedArtworks = document.querySelectorAll('.selectable-artwork.selected');
+  console.log('Selected Artworks:', selectedArtworks);
 
-  // If no artworks are selected
-  if (selectedArtworks.length === 0) {
-      event.preventDefault();  // Prevent form submission
-      document.getElementById('artworkValidationModal').style.display = 'block'; // Show validation modal
-  } else {
-      // If artworks are selected, you can add their IDs to the hidden field
-      let selectedArtworkIds = [];
-      selectedArtworks.forEach(img => {
-          selectedArtworkIds.push(img.getAttribute('data-id'));
+  if (!selectedArtworks.trim()) { 
+      e.preventDefault(); 
+
+      const modal = document.getElementById('artworkValidationModal');
+      modal.style.display = 'block';
+
+      const closeModal = document.querySelector('.artwork-modal .artwork-close');
+      closeModal.addEventListener('click', () => modal.style.display = 'none');
+      window.addEventListener('click', (event) => {
+          if (event.target === modal) modal.style.display = 'none';
       });
-      document.getElementById('selectedArtworks').value = selectedArtworkIds.join(',');
   }
 });
-document.querySelector('.artwork-close').addEventListener('click', function() {
-  document.getElementById('artworkValidationModal').style.display = 'none'; // Hide modal when close button is clicked
+document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
+  const selectedDate = document.getElementById('exhibit-date').value;
+  const data = new FormData();
+  data.append('date', selectedDate);
+
+  fetch('/dashboard.php', {
+      method: 'POST',
+      body: data
+  })
+  .then(response => response.json())
+  .then(data => {
+      const messageElement = document.getElementById('date-validation-message');
+      const submitButton = document.getElementById('solo-btn');
+
+      if (data.isTaken) {
+          event.preventDefault();  
+          messageElement.textContent = 'This date is taken, please choose another date.';
+          messageElement.style.color = 'red';
+          messageElement.style.fontSize = '12px';
+          submitButton.disabled = true;
+      } else {
+          messageElement.textContent = '';
+          submitButton.disabled = false;
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
 });
+document.getElementById('exhibit-date').addEventListener('change', function() {
+  const submitButton = document.getElementById('solo-btn');
+  const messageElement = document.getElementById('date-validation-message');
+  messageElement.textContent = '';
+  submitButton.disabled = false;
+});
+
 
 //validation in requesting an exhibit
 //collab
@@ -705,35 +732,46 @@ document.querySelector('form[name="collabExhibit"]').addEventListener('submit', 
       return; 
   }
 });
-document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
-  const selectedDate = document.getElementById('exhibit-date').value;
 
-  // Create the POST request payload to check date availability
+
+// Handle form submission for collaborative exhibit
+document.getElementById('collabExhibitForm').addEventListener('submit', function(event) {
+  const selectedDate = document.getElementById('exhibit-date-collab').value; // Get the selected date
   const data = new FormData();
-  data.append('date', selectedDate);
+  data.append('date', selectedDate); // Append the date to FormData
 
+  // Fetch request to check if the date is already taken
   fetch('/dashboard.php', {
       method: 'POST',
       body: data
   })
   .then(response => response.json())
   .then(data => {
-      const messageElement = document.getElementById('date-validation-message');
-      const submitButton = document.getElementById('solo-btn'); // Get the submit button
+      const messageElement = document.getElementById('date-validation-message-collab');
+      const submitButton = document.getElementById('collab-btn');
 
       if (data.isTaken) {
-          event.preventDefault();  // Prevent the form from submitting
+          event.preventDefault(); // Prevent form submission
           messageElement.textContent = 'This date is taken, please choose another date.';
           messageElement.style.color = 'red';
+          messageElement.style.fontSize = '12px';
           submitButton.disabled = true; // Disable the submit button
       } else {
-          messageElement.textContent = '';
+          messageElement.textContent = ''; // Clear validation message
           submitButton.disabled = false; // Enable the submit button
       }
   })
   .catch(error => {
-      console.error('Error:', error);
+      console.error('Error:', error); // Log any errors
   });
+});
+
+// Handle changes to the date input
+document.getElementById('exhibit-date-collab').addEventListener('change', function() {
+  const submitButton = document.getElementById('collab-btn');
+  const messageElement = document.getElementById('date-validation-message-collab');
+  messageElement.textContent = ''; // Clear any validation messages
+  submitButton.disabled = false; // Enable the submit button
 });
 
 

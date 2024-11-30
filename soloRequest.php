@@ -42,26 +42,22 @@ if (isset($_POST['updateRequest'])) {
         echo "Error: " . $e->getMessage();
     }
 }
-// Cancel Request Logic
+
 if (isset($_POST['cancelRequest']) && $_POST['cancelRequest'] === 'true') {
-    $exbt_id = $pending[0]['exbt_id']; // Ensure this is dynamically fetched if needed
+    $exbt_id = $pending[0]['exbt_id']; 
 
     try {
-        // Update the status to 'Cancelled' for the specific exhibit
         $query = "UPDATE exhibit_tbl SET exbt_status = 'Cancelled' WHERE exbt_id = :exbt_id AND u_id = :u_id";
         $stmt = $conn->prepare($query);
         $stmt->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
         $stmt->bindValue(':u_id', $u_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            // Send a success response as JSON
             echo json_encode(['success' => true]);
         } else {
-            // If the update fails, send an error response
             echo json_encode(['success' => false, 'error' => 'Could not cancel the request.']);
         }
     } catch (PDOException $e) {
-        // Handle database error and send it as a JSON error response
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
     exit();

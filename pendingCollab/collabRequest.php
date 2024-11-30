@@ -44,25 +44,20 @@ if (isset($_POST['updateRequest'])) {
 }
 
 if (isset($_POST['cancelRequest'])) {
-    // Get the exhibit ID and update the status to "Cancelled"
-    $exbt_id = $pending[0]['exbt_id']; // You can replace this with dynamic logic to fetch the exhibit ID
+    $exbt_id = $pending[0]['exbt_id']; 
     
     try {
-        // Update the status to 'Cancelled' for the specific exhibit
         $query = "UPDATE exhibit_tbl SET exbt_status = 'Cancelled' WHERE exbt_id = :exbt_id AND u_id = :u_id";
         $stmt = $conn->prepare($query);
         $stmt->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
         $stmt->bindValue(':u_id', $u_id, PDO::PARAM_INT);
         
         if ($stmt->execute()) {
-            // Send a success response
             echo json_encode(['success' => true]);
         } else {
-            // If the update fails, send an error response
             echo json_encode(['success' => false, 'error' => 'Could not cancel the request.']);
         }
     } catch (PDOException $e) {
-        // Catch any database errors
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
     exit();
@@ -173,7 +168,7 @@ if (isset($_POST['cancelRequest'])) {
         }
         $collaborators = array_unique($collaborators);
         foreach ($collaborators as $collaborator) {
-            // Get the first name (before the first space)
+            
             $firstName = explode(' ', $collaborator)[0];
             
             echo "<div class='collab-details'>";
