@@ -1,0 +1,448 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    color:white;
+    scroll-behavior: smooth;
+}
+
+body{
+    background-color: black;
+    overflow-x: hidden;
+
+}
+.wrapper{
+    margin: 0 auto;
+    width: 1350px;
+    height: 100%;
+    padding: 10px;
+}
+header{
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.logo img{
+    width: 50px;
+}
+
+.navbar{
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 100px;
+ 
+}
+
+.navbar a{
+    text-decoration: none;
+    color: white;
+    position: relative;
+    transition: .5s;
+    opacity: 1;
+    padding-bottom: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: .9rem;
+}
+
+.navbar a:hover{
+    color: #ec1111;
+}
+
+.navbar a span{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border-bottom:  1px solid #ec1111;
+    border-radius: 16px;
+    transform: scale(0) translateY(50px);
+    transition: .5s;
+}
+
+.navbar a:hover span{
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+
+/* HOME PAGE CSS */
+#home-page{
+    height: 650px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px;
+    position: relative;
+    bottom:50px;    
+}
+.left-description{
+    width: 550px;
+    position: relative;
+}
+
+.left-description span{
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+.left-description p{
+    line-height:2;
+    margin-bottom: 30px;
+}
+
+.explore-button button{
+    border-style: solid;
+    width: 150px;
+    background-color: #ec1111;
+    padding: 10px;
+    border-radius: 30px;
+    transition: transform .8s ease;
+}
+.explore-button button:hover{
+    transform: scale(0.9);
+    cursor: pointer;
+}
+.right-image{
+    position: relative;
+    bottom: 10px;
+    height: 700px;
+}
+.circle{
+    width: 630px;
+    height: 600px;
+    border-radius: 600px;
+    background-color: #ec1111;
+    box-shadow: 0 0 1000px #970707d3;
+ 
+}
+.small-circle{
+    position: relative;
+    left: 400px;
+    top: 150px;
+    width: 150px;
+    height: 150px;
+    border-radius: 100px;
+    background-color: #ec1111;
+}
+.zues{
+    position: relative;
+    width: 600px;
+    height: 800px;
+    bottom: 650px;
+   
+}
+.zues img{
+    width: 550px;
+    height: 800px;
+    z-index: 1;
+    
+}
+
+/* ABOUT SECTION CSS */
+#about{
+    padding: 50px;
+    height: 500px;
+    background: url(image/red.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.picture{
+    position: absolute;
+    width: fit-content;     
+}
+
+.right-description{
+    float: right;
+    width: 600px;
+    margin-top: 30px;
+    margin-right: 50px;
+}
+.right-description h1,span,h5{
+    font-weight: 550;
+}
+.right-description h1{
+    font-size: 2.5rem;
+}
+.right-description span{
+    color: #ec1111;
+}
+
+.right-description p{
+    line-height: 2;
+    text-align: justify;
+    font-size: 1rem;
+}
+.contact{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 160px;
+}
+.icon-contact{
+    border-style: solid;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 100px;
+    border-width: 1px;
+}
+
+.icon-contact i{
+    font-size: 20px;
+}
+
+
+/* GALLERY SECTION CSS */
+
+#gallery{
+    height: 700px;
+    background: url(image/bg-gallery\ red.png);
+    background-size: cover;
+    background-position: center;
+    padding: 50px;
+}
+
+.gallery-container{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 700px;
+    scroll-behavior: smooth;
+ 
+}
+
+.gallery-container h1{
+    color: #ec1111;
+    font-weight: 800;
+    letter-spacing: 3px;
+    font-size: 2rem;
+    
+}
+.arrow{
+    width: 1100px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: 300px;
+
+    
+}
+.arrow i{
+   font-size: 25px;
+
+}
+.arrow i:hover{
+   cursor: pointer;
+   color: red;
+}
+.gallery-images{
+    width: 930px;
+    padding: 20px;
+    position: relative;
+    top: 50px;
+    height: 500px;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.card{
+    transition: transform 1s ease, filter 1s ease;
+}
+
+.card:hover{
+    transform: scale(1.1);
+    gap: 20px;
+}
+
+.gallery-images:hover .card{
+    filter: blur(3px);
+    transform: none; 
+}
+.gallery-images .card:hover {
+    filter: none;
+    transform: scale(1.07);
+}
+.card img{
+  
+    width: 300px;
+    border-radius: 20px;
+}
+.card:hover .description {
+   bottom: 28%;
+   height: 120px;
+}
+.card:hover .title-card {
+    bottom: 0%;
+    height: 150px;
+
+ }
+ 
+.title-card{
+    position: absolute;
+    height: 0px;
+    transition:  1s ease;
+    bottom: 80px;
+}
+.title-card p{
+
+    position: relative;
+    bottom: 80px;
+    text-align: left;
+    margin-left: 10px;
+    font-size: 13px;
+}
+.title-card span{
+    font-size: 20px;
+}
+
+.description{
+    height:0;
+    width: 250px;
+    position: relative;
+    left: 10px;
+    bottom: 5px;
+    font-size: .5rem;
+    text-align: left;
+    overflow: hidden;
+    transition:  1s ease;
+
+}
+
+
+.description span{
+    font-size: 1rem;
+}
+
+.description button{
+    background-color: rgba(128, 128, 128, 0.288);
+    padding: 5px;
+    border-radius: 20px;
+    font-size: .5rem;
+    width: 100px;
+    border-style: none;
+    position: relative;
+    top: 10px;
+    transition: transform 1s ease, background-color 1s ease;
+}
+
+.description button:hover{
+    transform: scale(0.9);
+    background-color: #ec111183;
+    cursor: pointer;
+}
+
+
+/* FOOTER CSS */
+
+footer{
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-wrapper .button {
+    display: inline-block;
+    height: 40px; 
+    width: 40px;  
+    border-style: solid;
+    background: black;
+    cursor: pointer;
+    text-align: center;
+    margin: 0 5px;
+    border-radius: 40px; 
+    transition: all 0.3s ease-out;
+    overflow: hidden;
+}
+
+.icon-wrapper .button:hover {
+    width: 150px; 
+}
+
+.icon-wrapper .button .icon {
+    display: inline-block;
+    height: 40px; 
+    width: 40px;  
+    border-radius: 40px; 
+    box-sizing: border-box;
+    line-height: 40px; 
+    transition: all 0.5s ease-out;
+}
+.icon span{
+    position: relative;
+    bottom: 2px;
+}
+.icon-wrapper .button:hover .icon {
+    width: 150px;
+}
+
+/* meta */
+.icon-wrapper .button:nth-child(1):hover {
+    background-color: #4267B2;
+}
+
+/* insta */
+.icon-wrapper .button:nth-child(2):hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+/* twit */
+.icon-wrapper .button:nth-child(3):hover {
+    background-color: #1DA1F2;
+}
+.icon-wrapper .button .icon i {
+    font-size: 18px; 
+    line-height: 40px; 
+}
+
+.icon-wrapper .button span {
+    font-size: 13px; 
+    font-weight: 500;
+    line-height: 40px; 
+    margin-left: 5px;
+    transition: all 0.3s ease-out;
+}
+
+.icon-wrapper .button:hover span {
+    opacity: 1; 
+    margin-left: 5px; 
+}
+
+/* Responsive PC SIZE */
+/* continue after mahuman na tanan */
+@media (min-width:1500px) {
+    .wrapper{
+        margin: 0 auto;
+        width: 1500px;
+    }
+    .navbar{
+        width: 900px;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .navbar a{
+        margin-right: 150px;
+    }
+    #home-page{
+        height: 800px;
+    }
+    #gallery{
+        width: 1900px;
+        width: 100%;
+    }
+}

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://localhost:3000/dashboard.php -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./Worxist_files/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./Worxist_files/dashboard.css">
+    <link rel="shortcut icon" href="./Worxist_files/vags-logo.png" type="image/x-icon">
+
+    <title>Worxist</title>
+</head>
+<body data-new-gr-c-s-check-loaded="14.1199.0" data-gr-ext-installed="">
+   <nav class="sidebar close " id="sidebar">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="./Worxist_files/vags-logo.png" alt="Logo">
+                    <div class="text header-text">
+                    <span class="nameLogo">
+                        Worxist
+                    </span>        
+                </div>
+                </span>
+                
+                
+            </div>
+           
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="http://localhost:3000/dashboard.php" class="dashboard">
+                            <i class="bx bxs-dashboard"></i>
+                            <span class="text nav-text">
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link active">
+                        <a href="http://localhost:3000/dashboard.php" class="my-artworks">
+                            <i class="bx bxs-palette"></i>
+                            <span class="text nav-text">
+                               My Artworks
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                    <a href="http://localhost:3000/dashboard.php" class="messages">
+                        <i class="bx bxs-chat"></i>
+                        <span class="text nav-text">
+                          Messages
+                        </span>
+                    </a>
+                </li>
+
+
+            <li class="nav-link">
+                <a href="http://localhost:3000/dashboard.php" class="exhibit">
+                <i class="bx bx-image-alt"></i>
+                    <span class="text nav-text">
+                      Exhibits
+                    </span>
+                </a>
+            </li>
+
+            <li class="nav-link">
+                <a href="http://localhost:3000/dashboard.php" class="settings">
+                    <i class="bx bxs-cog"></i>
+                    <span class="text nav-text">
+                      Settings
+                    </span>
+                </a>
+            </li>
+            
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="nav-link">
+                    <a href="http://localhost:3000/index.php">
+                        <i class="bx bx-log-out"></i>
+                        <span class="text nav-text">
+                        Sign Out
+                        </span>
+                    </a>
+                </li>
+   
+           
+            </div>
+        </div>   
+   </nav>
+<!-- end of sidebar -->
+
+   <div class="wrapper">
+
+
+    <!-- artworks display -->
+     <div class="dashcontainer" id="dashboardContainer" style="display: none;">
+    <div class="overlay">
+
+    </div>
+     <div class="top-head">
+        <p><b>Worxist</b><span>
+        </span></p>
+
+            <div class="searchbar">
+                 <input type="text" class="bar">
+                <i class="bx bx-search search"></i>
+
+            </div>
+           
+            <div class="notification-icon">
+                <i class="bx bxs-bell"></i>
+            </div>
+            
+            <div class="filter-container">
+                <i class="bx bx-filter filter-icon" onclick="toggleDropdown()"></i>
+                                <div class="dropdown-content" id="dropdown">
+                                    <a href="http://localhost:3000/dashboard.php#">Sketches</a>
+                                    <a href="http://localhost:3000/dashboard.php#">Sculpture</a>
+                                    <a href="http://localhost:3000/dashboard.php#">Painting    </a>
+                                </div>
+            </div>
+
+            <div class="profile">
+                <div class="profile-pic" onclick="toggleEditProfile()"> 
+                 <img src="./Worxist_files/eyes.jpg" alt=""> 
+                </div>
+                <p class="to-edit-profile-btn" onclick="toggleEditProfile()"><b>jera </b></p>
+            </div>
+        </div>
+
+
+                    <!-- pop-up -->
+                <div class="popup" id="popup">
+                    <div class="box-pop">
+                        <img src="./Worxist_files/hands.jpg" alt="Hands">  
+                             
+                    </div>
+                    
+                       <!-- interction like save favorites -->
+                       <div class="social-interact-icons">
+                        <i class="bx bxs-heart"></i>
+                        <i class="bx bxs-bookmark-star bookmark"></i>
+                        <i class="bx bxs-star"></i>
+                     </div>
+
+                    <div class="art-details">
+                        <div class="top-details"> 
+                            <h3>The Caress</h3>
+                            <div class="close-popup" onclick="toggleImage()">
+                                <i class="bx bx-x"></i>
+                            </div>
+                        </div>
+    
+                        <div class="art-information">
+                            <p>Artist: <em><a href="http://localhost:3000/dashboard.php">Jamaica Anuba</a></em> </p>
+                            <p>Category: Painting </p>
+                            <br>
+                            <p>&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        </div>
+
+                        <div class="interaction">
+                            <h5>Comments</h5>
+            
+                            <div class="user-image">
+                                <div class="profile-pic"> 
+                                <img src="./Worxist_files/eyes.jpg" alt=""> 
+                                </div> 
+                                <h5>Angel Canete</h5>                             
+                             </div>
+                            
+                                <div class="comment">
+                                <p>Wow!</p>
+                                </div>                            
+                                
+                        </div>
+
+                        <div class="in  put-comment">
+
+                            <textarea name="comment" id="comment" class="comment-area"></textarea>
+                            <button class="comment-btn"><i class="bx bxs-send"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+
+    <!-- dashboard artwork displays -->
+<div class="image-artwork" id="blur">
+
+                                <div class="box" onclick="toggleCreation()">
+                        <img src="./Worxist_files/girl.jpg" alt="Uploaded Image">
+                        <div class="artist-name">
+                            <p><span><b>Jerald Aliano</b></span><br>
+                            The Curse</p>
+                        </div>
+                    </div>
+                                        <div class="box" onclick="toggleCreation()">
+                        <img src="./Worxist_files/body.jpg" alt="Uploaded Image">
+                        <div class="artist-name">
+                            <p><span><b>Jamaica Anuba</b></span><br>
+                            Human Body with All of Glory</p>
+                        </div>
+                    </div>
+                                        <div class="box" onclick="toggleCreation()">
+                        <img src="./Worxist_files/lips.jpg" alt="Uploaded Image">
+                        <div class="artist-name">
+                            <p><span><b>Jamaica Anuba</b></span><br>
+                            Madness</p>
+                        </div>
+                    </div>
+                                        <div class="box" onclick="toggleCreation()">
+                        <img src="./Worxist_files/red.jpg" alt="Uploaded Image">
+                        <div class="artist-name">
+                            <p><span><b>Jerald Aliano</b></span><br>
+                            The Red </p>
+                        </div>
+                    </div>
+                    </div>
+
+         
+     </div>
+
+
+     <!-- my artworks -->
+        <!-- pop-up -->
+        <div class="popup" id="popup-creation">
+                    <div class="box-pop">
+                        <img src="./Worxist_files/rose.png" alt="Hands">  
+                             
+                    </div>
+
+                    <!-- interction like save favorites -->
+                
+
+                     <div class="social-interact-icons">
+                        <i class="bx bxs-heart"></i>  
+                        <i class="bx bxs-bookmark-star"></i>       
+                        <i class="bx bxs-star"></i>
+                     </div>
+                    
+
+
+                    <div class="art-details">
+                        <div class="top-details"> 
+                            <h3>The Caress</h3>
+                            <div class="close-popup" onclick="toggleCreation()">
+                                <i class="bx bx-x"></i>
+                            </div>
+                        </div>
+    
+                        <div class="art-information">
+                            <p>Artist: <em><a href="http://localhost:3000/dashboard.php">Jamaica Anuba</a></em> </p>
+                            <p>Category: Painting </p>
+                            <br>
+                            <p>&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        </div>
+
+                        <div class="interaction">
+                            <h5>Comments</h5>
+            
+                            <div class="user-image">
+                                <div class="profile-pic"> 
+                                <img src="./Worxist_files/eyes.jpg" alt=""> 
+                                </div> 
+                                <h5>Angel Canete</h5>                             
+                             </div>
+                            
+                                <div class="comment">
+                                <p>Wow!</p>
+
+                                </div>
+
+                                <div class="input-comment">
+
+                                    <textarea name="comment" id="comment" class="comment-area"></textarea>
+                                    <button class="comment-btn"><i class="bx bxs-send"></i></button>
+                                </div>
+                                
+                        </div>
+                    </div>
+        </div>
+     <div class="artwork-section" id="artworkContainer" style="display: block;">
+    
+        <div class="profile-info">
+                <div class="image-profile">
+                    <img src="./Worxist_files/girl(1).jpg" alt="">
+                </div>
+    
+                <div class="name">
+                    <span>Jerald Aliano</span>
+                    <p>jera</p>
+                    <br>
+                    <div class="follow">
+                        <p><span>10</span>
+                        <a href="http://localhost:3000/dashboard.php" id="openFollowers">Followers</a>
+                        </p>
+    
+                        <p><span>1</span>
+                        <a href="http://localhost:3000/dashboard.php" id="openFollowing">Following</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="edit-profile-container">
+                    <button class="to-edit-profile-btn" onclick="toggleEditProfile()">Edit Profile</button>
+    
+                </div>
+        </div>
+       <hr>
+
+                        <!-- Popup Modal -->
+                    <div id="followers-modal" class="modal">
+                        <div class="modal-content">
+                            <span class="close-button">×</span>
+                            
+                            <div id="followers-content">
+                                <h5>Followers</h5>
+                                <div class="follower-display">
+                                    <div class="profile-pic">
+                                        <img src="./Worxist_files/eyes.jpg" alt="">
+                                    </div>
+                                    <div class="follower-name">
+                                        <h5>Angel Canete <br>
+                                            <span><a href="http://localhost:3000/profileDash.php"><span>@</span>scyy</a></span>
+                                        </h5>
+                                    </div>
+                                </div>
+                            
+                                
+                            </div>
+
+                            <div id="following-content" style="display: none;">
+                                <h5>Following</h5>
+                                <div class="following-display">
+                                    <div class="profile-pic">
+                                        <img src="./Worxist_files/girl(1).jpg" alt="">
+                                    </div>
+                                    <div class="follower-name">
+                                        <h5>Angel Canete <br>
+                                            <span><a href="http://localhost:3000/profileDash.php"><span>@</span>scyy</a></span>
+                                        </h5>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+
+    
+    <div class="tabpanes">
+    
+    <div class="tab">
+      <a class="tablinks active" onclick="myOption(event, &#39;Created&#39;)">Created <span></span></a>
+      <a class="tablinks" onclick="myOption(event, &#39;Saved&#39;)">Saved <span></span></a>
+      <a class="tablinks" onclick="myOption(event, &#39;Favorites&#39;)">Favorites<span></span></a>
+
+    </div>
+    <!-- Created -->
+    <div class="tabcontent" id="Created" style="display: block;">
+      <h3>My Creations</h3>
+     
+      <div class="image-artwork created">
+
+            <button class="box-button" id="upload" onclick="window.location.href=&#39;uploadArt.php&#39;"> 
+                <i class="bx bx-message-square-add"></i>
+            </button>
+
+            <div class="box" onclick="toggleCreation()"><img src="./Worxist_files/girl.jpg" alt="Uploaded Image"><div class="artist-name"><p><span><b>Jerald Aliano</b></span><br>The Red </p></div></div><div class="box" onclick="toggleCreation()"><img src="./Worxist_files/red.jpg" alt="Uploaded Image"><div class="artist-name"><p><span><b>Jerald Aliano</b></span><br>The Red </p></div></div>
+</div>
+     
+    </div>
+    
+    
+    <!-- Saved -->
+    <div id="Saved" class="tabcontent" style="display: none;">
+      <h3>Saved Artworks</h3>
+     
+        <div class="image-artwork">
+            <div class="box" onclick="toggleSaved()">
+                <img src="./Worxist_files/eternity.jpg" alt="Hands">
+                <div class="artist-name">
+                    <p><span><b>Jerald Aliviano</b></span><br>
+                    The Eternity</p>
+                </div>
+                
+            </div>
+    
+        </div>
+      
+        </div>
+    
+    
+         <!-- Favorites -->
+         <div id="Favorites" class="tabcontent" style="display: none;">
+            <h3>My Favorites</h3>
+            <div class="image-artwork">
+                <div class="box" onclick="toggleFavorite()">
+                    <img src="./Worxist_files/guitar.jpg" alt="Hands">
+                    <div class="artist-name">
+                        <p><span><b>Jerald Aliviano</b></span><br>
+                        The Eternity</p>
+                    </div>
+                    
+                </div>
+    
+        </div>
+        </div>
+
+        
+
+        <!-- end of tabpande -->
+    </div>
+    
+        <!-- end of myartwork -->
+       </div>
+
+
+
+       <!-- Messegaes -->
+        <div class="messages-container" id="messageContainer" style="display: none;">
+            
+            <div class="head-message">
+                 <h5>Messages </h5>
+                
+            </div>
+           
+            <div class="message-name">
+
+                <div class="message-name-box">
+                         <div class="profile-pic message-profile"> 
+                             <img src="./Worxist_files/girl(1).jpg" alt=""> 
+                        </div>
+    
+                        <h5>Jamaica Anuba</h5>
+                </div>
+
+                <div class="message-name-box">
+                    <div class="profile-pic message-profile"> 
+                        <img src="./Worxist_files/eyes.jpg" alt=""> 
+                   </div>
+
+                   <h5>Angel Canete</h5>
+           </div>
+                 
+            </div>
+
+            <!-- image display -->
+            <div class="message-display ">
+                <div class="message-name-box header-chat">
+                    <div class="profile-pic message-profile"> 
+                        <img src="./Worxist_files/eyes.jpg" alt=""> 
+                   </div>
+
+                   <h4>Angel Canete</h4>
+                </div>
+
+                <div class="messages-body">
+            <!-- Incoming Message -->
+            <div class="message incoming">
+                <div class="message-content">
+                    <p>Hello Jai</p>
+                    <span class="timestamp">10:30 AM</span>
+                </div>
+            </div>
+
+            <!-- Outgoing Message -->
+            <div class="message outgoing">
+                <div class="message-content">
+                    <p>Hi gel</p>
+                    <span class="timestamp">10:32 AM</span>
+                </div>
+            </div>
+
+            <!-- Incoming Message -->
+            <div class="message incoming">
+                <div class="message-content">
+                    <p>What are you up to?</p>
+                    <span class="timestamp">10:33 AM</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Input Area -->
+        <div class="messages-footer">
+            <input type="text" placeholder="Type a message" class="message-input">
+            <button class="send-btn"><i class="bx bx-send"></i></button>
+        </div>
+
+                
+            </div>
+            <!-- end of message container -->
+        </div>
+
+
+        <!-- Exhbits -->
+        <div class="exhibit-container" id="exhibitContainer" style="display: none;">
+            <h1>hello exhbit</h1>
+    
+
+            <!-- end of exhibit container -->
+        </div>
+
+
+
+
+        <!-- Settings -->
+        <div class="settings-container" id="settingsContainer" style="display: none;">
+            <h3>Account</h3>
+            <p>Real-time information and activities of your property</p>
+            <hr>
+            <div class="setting-profile-details">
+                <div class="image-profile-settings">
+                    <img src="./Worxist_files/eyes.jpg" alt="">
+                </div>
+                <p><b>Jerald Aliano</b></p><br>
+            </div>
+
+            <button class="change-image-profile">Change Photo</button>
+
+            <div class="account-details">
+                <h5>Full Name</h5>
+                <input type="text" name="name" id="name" value="Jerald Aliano">
+                
+                <label for="username" class="username-setting"><b>Username</b></label>
+                <input type="text" name="name" id="name" value="jera">
+
+                <hr>
+                <h5>Contact Email</h5>
+                <label for="email">Email</label><br>
+                <input type="email" name="email" id="email" value="jeraldalibiano@gmail.com">
+
+                <h5>Password</h5>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="&lt;br /&gt;
+&lt;b&gt;Warning&lt;/b&gt;:  Undefined variable $hashed_password in &lt;b&gt;D:\xampp\htdocs\Virtual Art Gallery\dashboard.php&lt;/b&gt; on line &lt;b&gt;575&lt;/b&gt;&lt;br /&gt;
+">
+                <button class="change-email-btn">Change Password</button>
+            </div>
+          
+
+
+
+            <!-- end of settings container -->
+        </div>
+
+
+
+        
+    <!-- end of wrapper -->
+   </div>
+  
+   <script src="./Worxist_files/dashboard.js.download"></script>
+            
+   
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;limited&quot;,&quot;isActive&quot;:false,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
