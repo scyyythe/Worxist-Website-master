@@ -273,9 +273,7 @@ class ExhibitManager {
     
             // Split the collaborator names and IDs into arrays
         $collaboratorNames = $row['collaborator_names'] ? explode(',', $row['collaborator_names']) : [];
-        $collaboratorIds = $row['collaborator_ids'] ? explode(',', $row['collaborator_ids']) : [];
-
-    
+        $collaboratorIds = $row['collaborator_ids'] ? explode(',', $row['collaborator_ids']) : []; 
             
             foreach ($collaboratorNames as $index => $collaboratorName) {
                

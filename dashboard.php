@@ -85,6 +85,18 @@ $query->execute(['u_id' => $u_id]);
 $pendingExhibit = $query->fetch(PDO::FETCH_ASSOC);
 $hasPendingExhibit = $pendingExhibit ? true : false;
    
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
+    $exhibitDate = $_POST['date'];
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM exhibit_tbl WHERE exbt_date = :exbt_date");
+    $stmt->execute(['exbt_date' => $exhibitDate]);
+    $dateTaken = $stmt->fetchColumn() > 0;
+    if ($dateTaken) {
+        echo json_encode(['isTaken' => true]);
+    } else {
+        echo json_encode(['isTaken' => false]);
+    }
+}
+
 ?>
 
 
@@ -781,38 +793,38 @@ $hasPendingExhibit = $pendingExhibit ? true : false;
                 <button class="requestLink" onclick="openPage('Collaborative')" >Collaborate</button>
             </div>
 
+            <div id="Solo" class="requestTab">
+    <div class="exhibit-inputs">
+    <form action="" name="soloExhibit" method="POST" id="soloExhibitForm">
+    <label for="exhibit-title">Exhibit Title</label><br>
+    <input type="text" name="exhibit-title" placeholder="Enter the title of your exhibit" required><br>
 
-            <div id="artworkValidationModal" class="artwork-modal">
+    <label for="exhibit-description">Exhibit Description</label><br>
+    <textarea name="exhibit-description" id="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required></textarea><br>
+
+    <label for="exhibit-date">Exhibit Date</label><br>
+    <input type="date" id="exhibit-date" name="exhibit-date" required><br>
+
+    <input type="hidden" name="selected_artworks" id="selectedArtworks" required>
+
+    <div class="confirm-solo">
+        <button class="solo-btn" id="solo-btn" name="requestSolo">Confirm Schedule</button>
+    </div>
+
+    <div id="date-validation-message"></div> 
+</form>
+
+        <div class="image-exhibit">
+            <img src="gallery/image/solo-image.png" alt="Painting Graphics">
+        </div>
+    </div>
+    <div id="artworkValidationModal" class="artwork-modal">
     <div class="artwork-modal-content">
         <span class="artwork-close">&times;</span>
         <h3>Validation Errror</h3>
         <p>Please select at least one artwork to schedule the exhibit.</p>
     </div>
 </div>
-            <div id="Solo" class="requestTab">
-    <div class="exhibit-inputs">
-        <form action="" name="soloExhibit" method="POST" id="soloExhibitForm">
-            <label for="exhibit-title">Exhibit Title</label><br>
-            <input type="text" name="exhibit-title" placeholder="Enter the title of your exhibit" required><br>
-
-            <label for="exhibit-description">Exhibit Description</label><br>
-            <textarea name="exhibit-description" id="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required></textarea><br>
-
-            <label for="exhibit-date">Exhibit Date</label><br>
-            <input type="date" id="exhibit-date" name="exhibit-date" required><br>
-
-            
-            <input type="hidden" name="selected_artworks" id="selectedArtworks" required>
-
-            <div class="confirm-solo">
-                <button class="solo-btn" id="solo-btn" name="requestSolo">Confirm Schedule</button>
-            </div>
-        </form>
-        <div class="image-exhibit">
-            <img src="gallery/image/solo-image.png" alt="Painting Graphics">
-        </div>
-    </div>
-
     <div class="select-art">
     <p>Selected Artworks (Maximum of 10)</p>
     <div class="display-creations">
@@ -879,6 +891,8 @@ $hasPendingExhibit = $pendingExhibit ? true : false;
 <label for="exhibit-date">Exhibit Date</label><br>
 <input type="date" id="exhibit-date" name="exhibit-date" required><br>
 
+<div id="date-validation-message"></div> 
+
 <input type="hidden" id="selectedCollaboratorsInput" name="selected_collaborators" value="" required>
 
 <input type="hidden" name="selected_artworks_collab" id="selectedArtworksCollab" required>
@@ -887,6 +901,7 @@ $hasPendingExhibit = $pendingExhibit ? true : false;
     <button type="submit" class="collab-btn" name="requestCollab">Confirm Schedule</button>
 </div>
 </form>
+
 
 
         <div class="add-collab">

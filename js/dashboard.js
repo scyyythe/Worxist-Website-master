@@ -488,7 +488,7 @@ function initializeIconStates(artworkId) {
 }
 
 function updateDatabase(action, artworkId, newCount) {
-  return fetch('class/interaction.php', {
+  return fetch('../class/interaction.php', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -639,25 +639,33 @@ document.querySelectorAll('.includeArt-collab img').forEach((img) => {
 
 //validation in requesting an exhibit
 //solo
-document.getElementById('soloExhibitForm').addEventListener('submit', function (e) {
-  const selectedArtworks = document.getElementById('selectedArtworks').value;
-
-  console.log('Selected Artworks:', selectedArtworks);
-
-  if (!selectedArtworks.trim()) { 
-      e.preventDefault(); 
-
-      const modal = document.getElementById('artworkValidationModal');
-      modal.style.display = 'block';
-
-      const closeModal = document.querySelector('.artwork-modal .artwork-close');
-      closeModal.addEventListener('click', () => modal.style.display = 'none');
-      window.addEventListener('click', (event) => {
-          if (event.target === modal) modal.style.display = 'none';
-      });
-  }
+const artworkImages = document.querySelectorAll('.selectable-artwork');
+artworkImages.forEach(image => {
+    image.addEventListener('click', function() {
+        this.classList.toggle('selected');  // Toggle the selected class when artwork is clicked
+    });
 });
 
+document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
+  // Get selected artworks
+  const selectedArtworks = document.querySelectorAll('.selectable-artwork.selected');
+
+  // If no artworks are selected
+  if (selectedArtworks.length === 0) {
+      event.preventDefault();  // Prevent form submission
+      document.getElementById('artworkValidationModal').style.display = 'block'; // Show validation modal
+  } else {
+      // If artworks are selected, you can add their IDs to the hidden field
+      let selectedArtworkIds = [];
+      selectedArtworks.forEach(img => {
+          selectedArtworkIds.push(img.getAttribute('data-id'));
+      });
+      document.getElementById('selectedArtworks').value = selectedArtworkIds.join(',');
+  }
+});
+document.querySelector('.artwork-close').addEventListener('click', function() {
+  document.getElementById('artworkValidationModal').style.display = 'none'; // Hide modal when close button is clicked
+});
 
 //validation in requesting an exhibit
 //collab
@@ -696,6 +704,36 @@ document.querySelector('form[name="collabExhibit"]').addEventListener('submit', 
       });
       return; 
   }
+});
+document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
+  const selectedDate = document.getElementById('exhibit-date').value;
+
+  // Create the POST request payload to check date availability
+  const data = new FormData();
+  data.append('date', selectedDate);
+
+  fetch('/dashboard.php', {
+      method: 'POST',
+      body: data
+  })
+  .then(response => response.json())
+  .then(data => {
+      const messageElement = document.getElementById('date-validation-message');
+      const submitButton = document.getElementById('solo-btn'); // Get the submit button
+
+      if (data.isTaken) {
+          event.preventDefault();  // Prevent the form from submitting
+          messageElement.textContent = 'This date is taken, please choose another date.';
+          messageElement.style.color = 'red';
+          submitButton.disabled = true; // Disable the submit button
+      } else {
+          messageElement.textContent = '';
+          submitButton.disabled = false; // Enable the submit button
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
 });
 
 
