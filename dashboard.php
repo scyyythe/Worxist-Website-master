@@ -171,19 +171,20 @@ $hasPendingExhibit = $pendingExhibit ? true : false;
             </div>
 
             <div class="bottom-content">
-    <li class="nav-link">
-        <a href="#" id="logoutButton" class="logoutButton">
-            <i class='bx bx-log-out'></i>
-            <span class="text nav-text">Sign Out</span>
-        </a>
-    </li>
-</div>
+                <li class="nav-link">
+                <a href="./logout.php" id="logoutButton" class="logoutButton">
+                <i class='bx bx-log-out'></i>
+                <span class="text nav-text">Sign Out</span>
+            </a>
+                            </li>
+   
+           
+            </div>
         </div>   
    </nav>
 <!-- end of sidebar -->
 
    <div class="wrapper">
-
    <div id="logoutModal" class="logoutModal">
     <div class="logoutModal-content">
         <p>Are you sure you want to sign out?</p>
@@ -193,6 +194,7 @@ $hasPendingExhibit = $pendingExhibit ? true : false;
         </div>
     </div>
 </div>
+
  <!-- Pop-up -->
  <div class="popup" id="popup">
     <div class="box-pop">

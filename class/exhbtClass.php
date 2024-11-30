@@ -264,7 +264,7 @@ class ExhibitManager {
                 ];
             }
     
-            // Add the artwork
+
             $collaborators[$artistId]['artworks'][] = [
                 'artwork_title' => $row['artwork_title'],
                 'artwork_description' => $row['artwork_description'],
@@ -272,12 +272,13 @@ class ExhibitManager {
             ];
     
             // Split the collaborator names and IDs into arrays
-            $collaboratorNames = explode(',', $row['collaborator_names']);
-            $collaboratorIds = explode(',', $row['collaborator_ids']);
+        $collaboratorNames = $row['collaborator_names'] ? explode(',', $row['collaborator_names']) : [];
+        $collaboratorIds = $row['collaborator_ids'] ? explode(',', $row['collaborator_ids']) : [];
+
     
-            // Add collaborators if they exist and prevent duplicates
+            
             foreach ($collaboratorNames as $index => $collaboratorName) {
-                // Only add the collaborator if not already added
+               
                 if (!in_array($collaboratorName, array_column($collaborators[$artistId]['collaborators'], 'collaborator_name'))) {
                     $collaborators[$artistId]['collaborators'][] = [
                         'collaborator_name' => $collaboratorName,
