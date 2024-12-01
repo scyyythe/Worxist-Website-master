@@ -668,7 +668,7 @@ a {
     right: 3%;
     margin-block: 1rem;
     overflow-y: auto;
-    height: 53%;
+    height: 45%;
 
 }
 .user-image{
@@ -680,40 +680,41 @@ a {
 }
 .comment{
     position: relative;
-    left: 9%;
+    left: 5%;
     border-width: 1px;
-    width: 90%;
-    height: 20%;
-    padding: 5px;
+    width: 85%;
+    height: 15%;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: left;
     font-size: .8rem;
-    border-radius: 20px;
+    border-radius: 10px;
     margin-bottom: 10px;
-
+    background-color: #9999994f;
 }
 .input-comment{
     position: relative;
-    bottom: 1rem;
+    top: 2rem;
     width: 100%;
     height: 30px;
     display: flex;
     justify-content:space-between;
     align-items: center;
+
 }
 .comment-area{
     display: flex;
     align-items: center;
     width: 85%;
     height: 40px;
-    border-radius: 50px;
+    border-radius: 10px;
     border-style: none;
     background-color: #c0bcbc70;
     resize: none;
-    padding-left: 5px;
-    padding-top: 5px;
+    padding: 10px;
     font-size: 13px;
+    z-index: 100;
 }
 .comment-btn{
     position: relative;

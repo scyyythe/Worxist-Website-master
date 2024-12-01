@@ -135,41 +135,54 @@ class artManager
     
     public function getAllArtworks($category = null) {
         $query = "
-           SELECT 
-            accounts.u_id, 
-            art_info.file, 
-            accounts.u_name, 
-            art_info.a_id, 
-            art_info.title, 
-            art_info.description, 
-            art_info.date, 
-            art_info.category,
-            COUNT(DISTINCT likes.u_id) AS likes_count,
-            COUNT(DISTINCT saved.u_id) AS saved_count,
-            COUNT(DISTINCT favorite.u_id) AS favorites_count
-        FROM art_info
-        JOIN accounts ON art_info.u_id = accounts.u_id
-        LEFT JOIN likes ON art_info.a_id = likes.a_id
-        LEFT JOIN saved ON art_info.a_id = saved.a_id
-        LEFT JOIN favorite ON art_info.a_id = favorite.a_id
-        WHERE art_info.a_status = 'approved'
-        GROUP BY art_info.a_id;
-        '";
-                
-    
+            SELECT 
+                accounts.u_id, 
+                art_info.file, 
+                accounts.u_name, 
+                accounts.profile, 
+                art_info.a_id, 
+                art_info.title, 
+                art_info.description, 
+                art_info.date, 
+                art_info.category,
+                COUNT(DISTINCT likes.u_id) AS likes_count,
+                COUNT(DISTINCT saved.u_id) AS saved_count,
+                COUNT(DISTINCT favorite.u_id) AS favorites_count,
+                (SELECT GROUP_CONCAT(
+                    CONCAT(accounts.u_name, '::', comment.content, '::', accounts.profile)
+                    ORDER BY comment.comment_id DESC) 
+                FROM comment 
+                JOIN accounts ON comment.u_id = accounts.u_id
+                WHERE comment.a_id = art_info.a_id) AS comments
+
+            FROM art_info
+            JOIN accounts ON art_info.u_id = accounts.u_id
+            LEFT JOIN likes ON art_info.a_id = likes.a_id
+            LEFT JOIN saved ON art_info.a_id = saved.a_id
+            LEFT JOIN favorite ON art_info.a_id = favorite.a_id
+            LEFT JOIN comment ON art_info.a_id = comment.a_id
+            WHERE art_info.a_status = 'approved'
+        ";
+        
         if ($category) {
-            $query .= " WHERE art_info.category = :category";
+            $query .= " AND art_info.category = :category";
         }
-    
         $query .= " GROUP BY art_info.a_id";
-    
         $statement = $this->conn->prepare($query);
         if ($category) {
             $statement->bindParam(':category', $category);
         }
+        
         $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $results;
+
     }
+    
+
+    
+    
     
     public function getPendingRequests() {
         $statement = $this->conn->prepare("

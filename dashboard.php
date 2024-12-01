@@ -212,7 +212,7 @@ ob_end_clean();
 <!-- end of sidebar -->
 
    <div class="wrapper">
-   <!-- <div id="logoutModal" class="logoutModal">
+   <div id="logoutModal" class="logoutModal">
     <div class="logoutModal-content">
         <p>Are you sure you want to sign out?</p>
         <div class="logoutModal-buttons">
@@ -220,7 +220,7 @@ ob_end_clean();
             <button id="logoutModalCancel" class="logoutModal-cancel">Cancel</button>
         </div>
     </div>
-</div> -->
+</div>
 
  <!-- Pop-up -->
  <div class="popup" id="popup">
@@ -268,23 +268,30 @@ ob_end_clean();
 
         
         <div class="interaction">
-            <h5>Comments</h5>
-            <div class="user-image">
-                <div class="profile-pic"> 
-                <img src="<?php echo $imagePath; ?>" alt="Profile Picture">
-                </div> 
-                <h5>Angel Canete</h5>                             
-            </div>
-            <div class="comment">
-                <p>Wow!</p>
-            </div>                            
-        </div>
+    <h5>Comments</h5>
+    <input type="hidden" id="userId" value="<?php echo htmlspecialchars($_SESSION['u_id'], ENT_QUOTES); ?>">
 
-       
-        <div class="input-comment">
-            <textarea name="comment" id="comment" class="comment-area"></textarea>
-            <button class="comment-btn"><i class="bx bxs-send"></i></button>
+    <div class="comment-display">
+    <div class="user-image">
+        <div class="profile-pic">
+        <img src="" class="userImage" alt="Profile Picture">
         </div>
+        <h5 class="userName">Angel Canete</h5>
+    </div>
+    <div class="comment">
+        <p class="commentContext">Wow!</p>
+    </div>    
+    </div>
+
+</div>
+
+<div class="input-comment">
+    <textarea name="comment" id="comment" class="comment-area" placeholder="Write your comment..."></textarea>
+    <button class="comment-btn">Submit</button> 
+</div>
+
+
+
     </div>
 </div>
 
@@ -328,12 +335,6 @@ ob_end_clean();
 </div>
 
 </div>
-
-
-
-
-
-
             
             <div class="filter-container">
                 <i class='bx bx-filter filter-icon' onclick="toggleDropdown()"></i>
@@ -384,37 +385,41 @@ ob_end_clean();
 
 
 <div class="image-artwork" id="blur">
-    <?php 
-    if (!empty($allImages)) {
-        foreach ($allImages as $image) { 
+<?php 
+if (!empty($allImages)) {
+    foreach ($allImages as $image) { 
+        $comments = json_encode($image['comments']);
         
-            ?>
-            <div class="box" 
-                 onclick="showPopup(this)" 
-                 data-image="<?php echo htmlspecialchars($image['file']); ?>"
-                 data-title="<?php echo($image['title']); ?>"
-                 data-artist="<?php echo ($image['u_name']); ?>"
-                 data-artist-id="<?php echo ($image['u_id']); ?>"
-                 data-category="<?php echo($image['category']); ?>" 
-                 data-description="<?php echo($image['description']); ?>"
-                data-date="<?php echo date("F d, Y", strtotime($image['date'])); ?>"
-                 data-artwork-id="<?php echo ($image['a_id']); ?>"
-                 data-liked="<?php echo ($image['likes_count']); ?>"
-                 data-favorite="<?php echo ($image['favorites_count']); ?>"
-                 data-saved="<?php echo ($image['saved_count']) ?>">
-                 
-                <img src="<?php echo($image['file']); ?>" alt="Uploaded Image">
-                <div class="artist-name">
-                    <p><span><b><?php echo($image['u_name']); ?></b></span><br>
-                    <?php echo ($image['title']); ?></p>
-                </div>
+        ?>
+        <div class="box" 
+             onclick="showPopup(this)" 
+             data-image="<?php echo htmlspecialchars($image['file']); ?>"
+             data-title="<?php echo($image['title']); ?>"
+             data-artist="<?php echo ($image['u_name']); ?>"
+             data-artist-id="<?php echo ($image['u_id']); ?>"
+             data-category="<?php echo($image['category']); ?>" 
+             data-description="<?php echo($image['description']); ?>"
+             data-date="<?php echo date("F d, Y", strtotime($image['date'])); ?>"
+             data-artwork-id="<?php echo ($image['a_id']); ?>"
+             data-liked="<?php echo ($image['likes_count']); ?>"
+             data-favorite="<?php echo ($image['favorites_count']); ?>"
+             data-saved="<?php echo ($image['saved_count']) ?>"
+             data-comments='<?php echo $comments; ?>'>
+             
+            <img src="<?php echo($image['file']); ?>" alt="Uploaded Image">
+            <div class="artist-name">
+                <p><span><b><?php echo($image['u_name']); ?></b></span><br>
+                <?php echo ($image['title']); ?></p>
             </div>
-            <?php 
-        }
-    } else {
-        echo "<p>No images found.</p>";
+        </div>
+        <?php 
     }
-    ?>
+} else {
+    echo "<p>No images found.</p>";
+}
+?>
+
+
 </div>
 
    </div>

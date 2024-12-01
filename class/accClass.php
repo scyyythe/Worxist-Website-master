@@ -231,13 +231,11 @@ class AccountManager
         $statement->execute();
         $userInfo = $statement->fetch(PDO::FETCH_ASSOC);
 
-        // Check if the profile picture exists
         $profilePic = isset($userInfo['profile']) ? $userInfo['profile'] : null;
-        $imagePath = $profilePic ? 'profile_pics/' . $profilePic : 'gallery/girl.jpg'; // Fallback to default image
-
+        $imagePath = $profilePic ? 'profile_pics/' . $profilePic : 'gallery/girl.jpg'; 
         return $imagePath;
     }
-    
+        
     public function removeProfilePicture() {
         
         $statement = $this->conn->prepare("UPDATE accounts SET profile = NULL WHERE u_id = :u_id");

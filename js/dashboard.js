@@ -377,17 +377,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const popup = document.querySelector('.exhibition-description-popup');
   const closePopup = document.querySelector('.exhibition-close-popup');
 
-  // Show the popup when the trigger is clicked
   descriptionTrigger.addEventListener('click', () => {
       popup.style.display = 'block';
   });
 
-  // Close the popup when the close button is clicked
   closePopup.addEventListener('click', () => {
       popup.style.display = 'none';
   });
 
-  // Close the popup when clicking outside the content
   window.addEventListener('click', (event) => {
       if (event.target === popup) {
           popup.style.display = 'none';
@@ -410,9 +407,9 @@ function showPopup(element) {
   const date = element.getAttribute('data-date');
   const artworkId = element.getAttribute('data-artwork-id');
   const liked = parseInt(element.getAttribute('data-liked')); 
-    const saved = parseInt(element.getAttribute('data-saved')); 
-    const favorite = parseInt(element.getAttribute('data-favorite'));
-
+  const saved = parseInt(element.getAttribute('data-saved')); 
+  const favorite = parseInt(element.getAttribute('data-favorite'));
+  const comments = element.getAttribute('data-comments'); 
 
   console.log("Artwork ID (a_id):", artworkId);
   console.log("Title:", title);
@@ -430,41 +427,83 @@ function showPopup(element) {
   document.querySelector('.category').innerText = category;
   document.querySelector('.description-of-art').innerText = description;
   document.querySelector('.dateUpload').innerText = date;
-  document.querySelector('.noHeart').innerText=liked;
-  document.querySelector('.noBookmark').innerText=saved;
-  document.querySelector('.noFavorite').innerText=favorite;
+  document.querySelector('.noHeart').innerText = liked;
+  document.querySelector('.noBookmark').innerText = saved;
+  document.querySelector('.noFavorite').innerText = favorite;
 
-  const loggedInUserId = document.getElementById('data-id').getAttribute('data-artist-id');
+  const commentDisplay = document.querySelector('.comment-display'); 
 
+  // Check if comments exist
+  if (comments && comments !== '[]') {
+    commentDisplay.innerHTML = '';  
 
-  const existingEditOption = document.querySelector('.edit-option');
-  if (existingEditOption) {
-    existingEditOption.remove();
+    const commentArray = comments.split(','); 
+    commentArray.forEach(comment => {
+      const [userName, commentText, userImage] = comment.split('::');  
+
+      // Only render comment if valid data exists
+      if (userName && commentText && userImage) {
+        const commentWrapper = document.createElement('div');
+        commentWrapper.classList.add('comment-display');
+
+        const userImageWrapper = document.createElement('div');
+        userImageWrapper.classList.add('user-image');
+
+        const profilePicWrapper = document.createElement('div');
+        profilePicWrapper.classList.add('profile-pic');
+
+        const imgElement = document.createElement('img');
+
+        // Clean the userImage path
+        const cleanedImage = (userImage && typeof userImage === 'string') ? userImage.replace(/^\/+|"+$/g, '') : ''; 
+
+        // Set the image path
+        const imagePath = `./profile_pics/${cleanedImage}`;
+        console.log("Image path: ", imagePath);
+
+        imgElement.src = imagePath;
+        imgElement.alt = 'Profile Picture';
+
+        imgElement.onerror = () => {
+          imgElement.src = './gallery/eyes.jpg'; // Default image if loading fails
+        };
+
+        profilePicWrapper.appendChild(imgElement);
+
+        const userNameElement = document.createElement('h5');
+        userNameElement.innerText = userName;
+
+        userImageWrapper.appendChild(profilePicWrapper);
+        userImageWrapper.appendChild(userNameElement);
+
+        const commentWrapperElement = document.createElement('div');
+        commentWrapperElement.classList.add('comment');
+
+        const commentTextElement = document.createElement('p');
+        commentTextElement.innerText = commentText;
+
+        commentWrapperElement.appendChild(commentTextElement);
+
+        commentWrapper.appendChild(userImageWrapper);
+        commentWrapper.appendChild(commentWrapperElement);
+
+        commentDisplay.appendChild(commentWrapper);
+      }
+    });
+  } else {
+    // If no comments, hide the comment section or show a message
+    commentDisplay.innerHTML = "<p>No comments available.</p>";
   }
 
-  if (artistId === loggedInUserId) {
-    const editOption = document.createElement('p');
-    editOption.innerHTML = "<i class='bx bxs-edit'></i>";
-    editOption.classList.add('edit-option');
-
-    editOption.onclick = () => {
-      window.location.href = `editArtwork.php?a_id=${artworkId}`;  
-  };
-  
-
-    document.querySelector('.top-details').appendChild(editOption);
-  }
-
+  // Close popup functionality
   popup.style.display = 'flex';
   setTimeout(() => {
-      popup.classList.add('active');
+    popup.classList.add('active');
   }, 0);
 
   blur.classList.add('active');
-  document.addEventListener('DOMContentLoaded', () => {
-    initializeIconStates(artworkId);  
-  });
-
+  
+  // Handle like, save, and favorite actions
   document.querySelector('.like-icon').onclick = () => {
     const likeIcon = document.querySelector('.like-icon');
     const newLikedCount = likeIcon.classList.contains('liked') ? liked - 1 : liked + 1;
@@ -473,19 +512,19 @@ function showPopup(element) {
     likeIcon.classList.toggle('liked');
 
     updateDatabase('likeArtwork', artworkId, newLikedCount);
-};
+  };
 
-document.querySelector('.bookmark-icon').onclick = () => {
+  document.querySelector('.bookmark-icon').onclick = () => {
     const bookmarkIcon = document.querySelector('.bookmark-icon');
     const newSavedCount = bookmarkIcon.classList.contains('saved') ? saved - 1 : saved + 1;
-   
+
     document.querySelector('.noBookmark').innerText = newSavedCount;
     bookmarkIcon.classList.toggle('saved');
 
     updateDatabase('saveArtwork', artworkId, newSavedCount);
-};
+  };
 
-document.querySelector('.favorite-icon').onclick = () => {
+  document.querySelector('.favorite-icon').onclick = () => {
     const favoriteIcon = document.querySelector('.favorite-icon');
     const newFavoriteCount = favoriteIcon.classList.contains('favorited') ? favorite - 1 : favorite + 1;
 
@@ -493,19 +532,21 @@ document.querySelector('.favorite-icon').onclick = () => {
     favoriteIcon.classList.toggle('favorited');
 
     updateDatabase('addToFavorites', artworkId, newFavoriteCount);
-};
+  };
 
-// Close the popup when clicking outside
-function closePopup(event) {
-  if (!popup.contains(event.target) && !element.contains(event.target)) {
-    popup.style.display = 'none';
-    blur.classList.remove('active');
-    document.removeEventListener('click', closePopup); // Remove the event listener
+  // Close the popup when clicking outside
+  function closePopup(event) {
+    if (!popup.contains(event.target) && !element.contains(event.target)) {
+      popup.style.display = 'none';
+      blur.classList.remove('active');
+      document.removeEventListener('click', closePopup); // Remove the event listener
+    }
   }
+
+  document.addEventListener('click', closePopup);
 }
 
-document.addEventListener('click', closePopup);
-}
+
 
 //interaction sa like favorited andsaved
 function initializeIconStates(artworkId) {
@@ -530,6 +571,7 @@ function initializeIconStates(artworkId) {
     });
 }
 
+
 function updateDatabase(action, artworkId, newCount) {
   return fetch('../class/interaction.php', {
       method: 'POST',
@@ -550,6 +592,66 @@ function updateDatabase(action, artworkId, newCount) {
       console.error('Error:', error);
   });
 }
+document.addEventListener("DOMContentLoaded", function () {
+  const commentBtn = document.querySelector('.comment-btn');
+
+  if (commentBtn) {
+  
+    if (!commentBtn.hasAttribute('data-listener')) {
+      commentBtn.addEventListener('click', submitComment);
+      commentBtn.setAttribute('data-listener', 'true'); 
+    }
+  } else {
+    console.log("Comment button is not found.");
+  }
+});
+
+// Comment function
+function submitComment() {
+  const comment = document.getElementById('comment').value;
+  const artworkId = document.querySelector('.social-interact-icons').getAttribute('data-artwork-id');
+  const userId = document.getElementById('userId').value;
+
+  if (comment.trim() === '') {
+    alert('Comment cannot be empty!');
+    return;
+  }
+
+  fetch('../class/submitComment.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ comment, artworkId, userId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+     
+      const commentDisplay = document.querySelector('.interaction');
+      const newComment = `
+        <div class="comment-display">
+          <div class="user-image">
+            <div class="profile-pic">
+              <img src="${data.userImage}" alt="Profile Picture">
+            </div>
+            <h5>${data.username}</h5>
+          </div>
+          <div class="comment">
+            <p>${data.content}</p>
+          </div>
+        </div>`;
+        
+      commentDisplay.insertAdjacentHTML('beforeend', newComment);
+      document.getElementById('comment').value = ''; 
+    } else {
+      console.error('Failed to post comment. Server response:', data);
+      alert(data.message || 'Failed to post comment.');
+    }
+  })
+  .catch(error => console.error('Error occurred while submitting the comment:', error));
+}
+
+
+
 
 function closePopup() {
   const popup = document.getElementById('popup');
