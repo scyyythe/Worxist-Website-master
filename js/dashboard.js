@@ -1,6 +1,5 @@
 
 // js para sa login-register.php and index.php//
-
 document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToAbout() {
@@ -516,8 +515,9 @@ function showPopup(element) {
 
   blur.classList.add('active');
   
-  // Handle like, save, and favorite actions
-  document.querySelector('.like-icon').onclick = () => {
+  resetIconStates();
+   // Handle like, save, and favorite actions
+   document.querySelector('.like-icon').onclick = () => {
     const likeIcon = document.querySelector('.like-icon');
     const newLikedCount = likeIcon.classList.contains('liked') ? liked - 1 : liked + 1;
 
@@ -547,35 +547,65 @@ function showPopup(element) {
     updateDatabase('addToFavorites', artworkId, newFavoriteCount);
   };
 
-  // Close the popup when clicking outside
+  initializeIconStates(artworkId);
+
   function closePopup(event) {
     if (!popup.contains(event.target) && !element.contains(event.target)) {
       popup.style.display = 'none';
       blur.classList.remove('active');
-      document.removeEventListener('click', closePopup); // Remove the event listener
+      document.removeEventListener('click', closePopup); 
     }
   }
 
   document.addEventListener('click', closePopup);
 }
+function resetIconStates() {
+  // Remove 'liked', 'saved', and 'favorited' states from all other artwork icons
+  const allLikeIcons = document.querySelectorAll('.like-icon');
+  allLikeIcons.forEach(icon => icon.classList.remove('liked'));
+  
+  const allBookmarkIcons = document.querySelectorAll('.bookmark-icon');
+  allBookmarkIcons.forEach(icon => icon.classList.remove('saved'));
 
+  const allFavoriteIcons = document.querySelectorAll('.favorite-icon');
+  allFavoriteIcons.forEach(icon => icon.classList.remove('favorited'));
+}
 
-
-//interaction sa like favorited andsaved
 function initializeIconStates(artworkId) {
-  fetch(`class/interaction.php?action=getStates&a_id=${artworkId}`)
+  fetch(`../class/interaction.php?action=getStates&a_id=${artworkId}`)
     .then(response => response.json())
     .then(data => {
         if (data) {
-          
-            if (data.liked) {
-                document.querySelector('.like-icon').classList.add('liked');
-            }
-            if (data.saved) {
-                document.querySelector('.bookmark-icon').classList.add('saved');
-            }
-            if (data.favorited) {
-                document.querySelector('.favorite-icon').classList.add('favorited');
+            const artworkElement = document.querySelector(`[data-artwork-id="${artworkId}"]`);
+
+            if (artworkElement) {
+                const likeIcon = artworkElement.querySelector('.like-icon');
+                const bookmarkIcon = artworkElement.querySelector('.bookmark-icon');
+                const favoriteIcon = artworkElement.querySelector('.favorite-icon');
+
+                if (likeIcon && data.liked) {
+                    likeIcon.classList.add('liked');
+                    likeIcon.style.color = 'red'; 
+                } else {
+                    likeIcon.classList.remove('liked');
+                    likeIcon.style.color = ''; 
+                }
+
+                if (bookmarkIcon && data.saved) {
+                    bookmarkIcon.classList.add('saved');
+                    bookmarkIcon.style.color = 'yellow'; 
+                } else {
+                    bookmarkIcon.classList.remove('saved');
+                    bookmarkIcon.style.color = ''; 
+                }
+
+                if (favoriteIcon && data.favorited) {
+                    favoriteIcon.classList.add('favorited');
+                    favoriteIcon.style.color = 'gold'; 
+                } else {
+                    favoriteIcon.classList.remove('favorited');
+                    favoriteIcon.style.color = ''; 
+                }
             }
         }
     })
@@ -585,26 +615,27 @@ function initializeIconStates(artworkId) {
 }
 
 
-function updateDatabase(action, artworkId, newCount) {
-  return fetch('../class/interaction.php', {
+async function updateDatabase(action, artworkId, newCount) {
+  try {
+    const response = await fetch('../class/interaction.php', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ action: action, a_id: artworkId, newCount: newCount })
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (!data.success) {
-          console.error('Error updating database');
-      } else {
-          console.log(`${action} updated successfully!`);
-      }
-  })
-  .catch(error => {
-      console.error('Error:', error);
-  });
+    });
+    const data = await response.json();
+    if (!data.success) {
+      console.error('Error updating database');
+    } else {
+      console.log(`${action} updated successfully!`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
+
+//insert comment
 document.addEventListener("DOMContentLoaded", function () {
   const commentBtn = document.querySelector('.comment-btn');
 

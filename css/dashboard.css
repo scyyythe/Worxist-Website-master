@@ -665,10 +665,8 @@ a {
 
 .interaction{   
     position: relative;
-    right: 3%;
-    margin-block: 1rem;
     overflow-y: auto;
-    height: 45%;
+    height: 82%;
 
 }
 .user-image{
@@ -695,13 +693,21 @@ a {
 }
 .input-comment{
     position: relative;
-    top: 2rem;
     width: 100%;
     height: 30px;
     display: flex;
     justify-content:space-between;
     align-items: center;
 
+}
+.comment-interaction{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 75%;
+    position: relative;
+    right: 3%;
+    padding: 20px;
 }
 .comment-area{
     display: flex;
@@ -739,6 +745,7 @@ a {
     align-content: center;
     justify-content: center;
 }
+
 .box{
     font-size: .8rem;
     height: 350px;
@@ -783,7 +790,12 @@ a {
     height: 100vh;
     float: right;
 }
-
+.category-p{
+    text-align: center;
+    border-radius: 20px;
+    padding-inline: 10px;
+    background-color:#b9b9b980;
+}
 /* tabpanes */
 .tabpanes{
    position: relative;

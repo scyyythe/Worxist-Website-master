@@ -253,6 +253,7 @@ ob_end_clean();
 
         <div class="art-information">
        
+        <div class="top-art-info" style="display: flex; width: 100%; justify-content:space-between;">
         <p>
             <b>Artist:</b> 
             <em>
@@ -260,35 +261,39 @@ ob_end_clean();
             </em>
         </p>
 
-            <p><b>Category:</b> <span class="category"></span></p><br>
+            <p class="category-p"><span class="category"></span></p>
+        </div>
+       
             <p class="description-of-art"></p>
             <p><b>Date:</b>&nbsp;<span class="dateUpload"></span></p>
           
         </div>
 
-        
-        <div class="interaction">
-    <h5>Comments</h5>
-    <input type="hidden" id="userId" value="<?php echo htmlspecialchars($_SESSION['u_id'], ENT_QUOTES); ?>">
+     <div class="comment-interaction">
+            <div class="interaction">
+            <h5>Comments</h5>
+            <input type="hidden" id="userId" value="<?php echo htmlspecialchars($_SESSION['u_id'], ENT_QUOTES); ?>">
 
-    <div class="comment-display">
-    <div class="user-image">
-        <div class="profile-pic">
-        <img src="" class="userImage" alt="Profile Picture">
+            <div class="comment-display">
+            <div class="user-image">
+                <div class="profile-pic">
+                <img src="" class="userImage" alt="Profile Picture">
+                </div>
+                <h5 class="userName">Angel Canete</h5>
+            </div>
+            <div class="comment">
+                <p class="commentContext">Wow!</p>
+            </div>    
+            </div>
+
         </div>
-        <h5 class="userName">Angel Canete</h5>
-    </div>
-    <div class="comment">
-        <p class="commentContext">Wow!</p>
-    </div>    
-    </div>
 
-</div>
-
-<div class="input-comment">
-    <textarea name="comment" id="comment" class="comment-area" placeholder="Write your comment..."></textarea>
-    <button class="comment-btn">Submit</button> 
-</div>
+        <div class="input-comment">
+            <textarea name="comment" id="comment" class="comment-area" placeholder="Write your comment..."></textarea>
+            <button class="comment-btn"><i class='bx bx-send' style="color:red;"></i></button> 
+        </div>
+     </div>   
+       
 
 
 
