@@ -514,9 +514,10 @@ background: rgba(255, 255, 255, 1);
 /* Actions Section */
 .actions {
     display: flex;
-    margin-top: 50px;
+    margin-top: 80px;
     justify-content: center;
     gap: 50px;
+    z-index: 100;
 }
 
 .btn {

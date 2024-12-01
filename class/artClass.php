@@ -30,11 +30,10 @@ class artManager
             $statement = $this->conn->prepare("DELETE FROM art_info WHERE a_id = :a_id");
             $statement->bindValue(':a_id', $a_id);
     
-            // Debug: Check the SQL query and the bound parameters
             if ($statement->execute()) {
                 return true;
             } else {
-                // Debug: Log the error message
+                
                 echo "Error: Could not delete artwork. " . implode(", ", $statement->errorInfo());
                 return false;
             }
@@ -121,7 +120,7 @@ class artManager
     
         $stmtArtworks = $this->conn->prepare($checkArtworksQuery);
         $stmtArtworks->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
-        $stmtArtworks->bindValue(':loggedInUserId', $loggedInUserId, PDO::PARAM_INT);  // Bind the logged-in user ID
+        $stmtArtworks->bindValue(':loggedInUserId', $loggedInUserId, PDO::PARAM_INT); 
         $stmtArtworks->execute();
         return $stmtArtworks->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -182,9 +181,6 @@ class artManager
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
 
 
     public function handleArtworkRequest($action, $a_id) {

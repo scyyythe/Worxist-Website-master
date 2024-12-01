@@ -186,7 +186,7 @@ ob_end_clean();
 
             <div class="bottom-content">
                 <li class="nav-link">
-                <a href="./logout.php" id="logoutButton" class="logoutButton">
+                <a href="./logout.php" class="logoutButton">
                 <i class='bx bx-log-out'></i>
                 <span class="text nav-text">Sign Out</span>
             </a>

@@ -11,7 +11,7 @@ class Exhibit {
     }
 
     public function getAcceptedExhibits() {
-        $statement = $this->conn->prepare("
+        $statement = $this->conn->prepare(  "
             SELECT 
                 exhibit_tbl.exbt_title, 
                 exhibit_tbl.exbt_descrip, 

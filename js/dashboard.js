@@ -657,6 +657,7 @@ document.getElementById('soloExhibitForm').addEventListener('submit', function (
       });
   }
 });
+//validaiton in date solo exhibit
 document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
   const selectedDate = document.getElementById('exhibit-date').value;
   const data = new FormData();
@@ -734,13 +735,12 @@ document.querySelector('form[name="collabExhibit"]').addEventListener('submit', 
 });
 
 
-// Handle form submission for collaborative exhibit
+// date validaiton for collaborative exhibit
 document.getElementById('collabExhibitForm').addEventListener('submit', function(event) {
-  const selectedDate = document.getElementById('exhibit-date-collab').value; // Get the selected date
+  const selectedDate = document.getElementById('exhibit-date-collab').value; 
   const data = new FormData();
-  data.append('date', selectedDate); // Append the date to FormData
+  data.append('date', selectedDate); 
 
-  // Fetch request to check if the date is already taken
   fetch('/dashboard.php', {
       method: 'POST',
       body: data
@@ -751,27 +751,26 @@ document.getElementById('collabExhibitForm').addEventListener('submit', function
       const submitButton = document.getElementById('collab-btn');
 
       if (data.isTaken) {
-          event.preventDefault(); // Prevent form submission
+          event.preventDefault(); 
           messageElement.textContent = 'This date is taken, please choose another date.';
           messageElement.style.color = 'red';
           messageElement.style.fontSize = '12px';
-          submitButton.disabled = true; // Disable the submit button
+          submitButton.disabled = true; 
       } else {
-          messageElement.textContent = ''; // Clear validation message
-          submitButton.disabled = false; // Enable the submit button
+          messageElement.textContent = ''; 
+          submitButton.disabled = false; 
       }
   })
   .catch(error => {
-      console.error('Error:', error); // Log any errors
+      console.error('Error:', error); 
   });
 });
 
-// Handle changes to the date input
 document.getElementById('exhibit-date-collab').addEventListener('change', function() {
   const submitButton = document.getElementById('collab-btn');
   const messageElement = document.getElementById('date-validation-message-collab');
-  messageElement.textContent = ''; // Clear any validation messages
-  submitButton.disabled = false; // Enable the submit button
+  messageElement.textContent = '';
+  submitButton.disabled = false; 
 });
 
 
