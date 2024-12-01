@@ -7,7 +7,6 @@ include 'class/artClass.php';
 include 'class/exhbtClass.php'; 
 include 'class/interactClass.php'; 
 
-// Enable error reporting (for debugging)
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -40,11 +39,12 @@ $allImages = $exhibitManager->getAllArtworks();
 $pendingArtworks = $exhibitManager->getPendingArtworks();
 
 $exhibitManager = new ExhibitManager($conn);
+$exhibitManager->validateAndUpdateExhibitStatus();
 $exhibit = $exhibitManager->getAcceptedExhibits();
 $collaborators = $exhibitManager->fetchCollaboratorsWithArtworks();
 $notifications = $exhibitManager->getNotifications($u_id);
 
-$artInteract = new artInteraction($conn);
+$artInteract = new artInteraction($conn);   
 $artSaved = $artInteract->getSavedArtworks($u_id);
 $artFave = $artInteract->getFavoriteArtworks($u_id);
 
@@ -79,11 +79,24 @@ $statement->bindParam(':u_id', $u_id, PDO::PARAM_INT);
 $statement->execute();
 $pendingRequest = $statement->fetch(PDO::FETCH_ASSOC);
 
+$query = "SELECT * FROM exhibit_tbl WHERE u_id = :u_id AND exbt_status = 'Accepted'";
+$statement = $conn->prepare($query);
+$statement->bindParam(':u_id', $u_id, PDO::PARAM_INT);
+$statement->execute();
+$acceptedRequest = $statement->fetch(PDO::FETCH_ASSOC);
+
+
 // if Already Scheduled an Exhibit
 $query = $conn->prepare("SELECT exbt_status FROM exhibit_tbl WHERE u_id = :u_id AND exbt_status = 'Pending'");
 $query->execute(['u_id' => $u_id]);
 $pendingExhibit = $query->fetch(PDO::FETCH_ASSOC);
 $hasPendingExhibit = $pendingExhibit ? true : false;
+
+// if Already Scheduled an Exhibit
+$query = $conn->prepare("SELECT exbt_status FROM exhibit_tbl WHERE u_id = :u_id AND exbt_status = 'Accepted'");
+$query->execute(['u_id' => $u_id]);
+$pendingExhibit = $query->fetch(PDO::FETCH_ASSOC);
+$hasAcceptedExhibit = $pendingExhibit ? true : false;
    
 ob_start(); 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
@@ -784,12 +797,17 @@ ob_end_clean();
                 <p>Schedule Your Exhibition Now</p>
             </div>
             <?php if ($hasPendingExhibit): ?>
-        <div class="pending-exhibit-message">
-            <p>You already have a pending exhibit.</p><br>
-            <button class="viewExhibit" id="viewExhibit" data-exbt-type="<?php echo htmlspecialchars($pendingRequest['exbt_type']); ?>">View Pending Exhibit</button>
-        </div>
-        
-    <?php else: ?>
+    <div class="pending-exhibit-message">
+        <p>You already have a pending exhibit.</p><br>
+        <button class="viewExhibit" id="viewExhibit" data-exbt-type="<?php echo htmlspecialchars($pendingRequest['exbt_type']); ?>">View Pending Exhibit</button>
+    </div>
+<?php elseif ($hasAcceptedExhibit): ?>
+    <br>
+    <div class="accepted-exhibit-message">
+        <p>Your exhibit has been accepted.</p><br>
+        <button class="viewExhibit" id="viewExhibit-accepted" data-exbt-type="<?php echo htmlspecialchars($acceptedRequest['exbt_type']); ?>">View Accepted Exhibit</button>
+    </div>
+        <?php else: ?>
             <div class="tab-btn">
                 <button class="requestLink" onclick="openPage('Solo')" id="defaultOpen">Solo</button>
                 <button class="requestLink" onclick="openPage('Collaborative')" >Collaborate</button>

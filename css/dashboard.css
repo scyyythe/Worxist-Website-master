@@ -1224,6 +1224,7 @@ a {
     width: 30%;
     
 }
+
 .viewExhibit:hover{
     cursor: pointer;
     background-color: #dd1c1cdc;
@@ -1980,6 +1981,25 @@ a {
     cursor: pointer;
 }
 
+.exhibtiDescription{
+
+    margin-inline: auto;
+    line-height: 1.5;
+    border-style: solid;
+    text-align: center;
+}
+.acceptedArtworks{
+    border-style: solid;
+    padding: 20px;
+    height: 500px;
+}
+.accepted-exhibit-message{
+        text-align: center;
+
+    button{
+        width: 300px !important;
+    }
+}
 /* settings css */
 .settings-container {
     font-size: 13px;
@@ -2902,3 +2922,4 @@ textarea{
         width: 100%;
     }
 }
+

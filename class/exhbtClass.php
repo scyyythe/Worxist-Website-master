@@ -226,10 +226,16 @@ class ExhibitManager {
     //para sa carousel
     public function fetchCollaboratorsWithArtworks()
     {
+        // Automatically update exhibit statuses before fetching
+        $this->validateAndUpdateExhibitStatus();
+    
+        // Prepare the query to fetch ongoing exhibits
         $statement = $this->conn->prepare("
             SELECT 
                 exhibit_tbl.exbt_title, 
                 exhibit_tbl.exbt_descrip, 
+                exhibit_tbl.exbt_date, 
+                exhibit_tbl.exbt_status,
                 art_info.title AS artwork_title, 
                 art_info.description AS artwork_description, 
                 art_info.file AS artwork_file, 
@@ -244,8 +250,14 @@ class ExhibitManager {
             INNER JOIN accounts ON art_info.u_id = accounts.u_id
             LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id
-            WHERE exhibit_tbl.exbt_status = 'Accepted'
-            GROUP BY exhibit_tbl.exbt_id, art_info.a_id;
+            WHERE exhibit_tbl.exbt_status IN ('Ongoing', 'Accepted')
+            GROUP BY exhibit_tbl.exbt_id, art_info.a_id
+            ORDER BY 
+                CASE 
+                    WHEN exhibit_tbl.exbt_status = 'Ongoing' THEN 1 
+                    ELSE 2 
+                END, 
+                exhibit_tbl.exbt_date ASC;
         ");
         
         $statement->execute();
@@ -254,17 +266,22 @@ class ExhibitManager {
         $collaborators = [];
         foreach ($results as $row) {
             $artistId = $row['artist_id'];
-
+    
             if (!isset($collaborators[$artistId])) {
                 $collaborators[$artistId] = [
                     'u_name' => $row['u_name'],
                     'profile_image' => $row['profile_image'],
                     'artworks' => [],
-                    'collaborators' => [] 
+                    'collaborators' => [],
+                    'exhibit' => [
+                        'title' => $row['exbt_title'],
+                        'description' => $row['exbt_descrip'],
+                        'date' => $row['exbt_date'],
+                        'status' => $row['exbt_status']
+                    ]
                 ];
             }
     
-
             $collaborators[$artistId]['artworks'][] = [
                 'artwork_title' => $row['artwork_title'],
                 'artwork_description' => $row['artwork_description'],
@@ -272,11 +289,10 @@ class ExhibitManager {
             ];
     
             // Split the collaborator names and IDs into arrays
-        $collaboratorNames = $row['collaborator_names'] ? explode(',', $row['collaborator_names']) : [];
-        $collaboratorIds = $row['collaborator_ids'] ? explode(',', $row['collaborator_ids']) : []; 
+            $collaboratorNames = $row['collaborator_names'] ? explode(',', $row['collaborator_names']) : [];
+            $collaboratorIds = $row['collaborator_ids'] ? explode(',', $row['collaborator_ids']) : [];
             
             foreach ($collaboratorNames as $index => $collaboratorName) {
-               
                 if (!in_array($collaboratorName, array_column($collaborators[$artistId]['collaborators'], 'collaborator_name'))) {
                     $collaborators[$artistId]['collaborators'][] = [
                         'collaborator_name' => $collaboratorName,
@@ -289,6 +305,28 @@ class ExhibitManager {
         return array_values($collaborators);
     }
     
+    
+    public function validateAndUpdateExhibitStatus()
+    {
+        $currentDate = date('Y-m-d');
+        $ongoingStatement = $this->conn->prepare("
+            UPDATE exhibit_tbl
+            SET exbt_status = 'Ongoing'
+            WHERE exbt_status = 'Accepted' AND exbt_date = :currentDate
+        ");
+        $ongoingStatement->bindValue(':currentDate', $currentDate, PDO::PARAM_STR);
+        $ongoingStatement->execute();
+
+        $completedStatement = $this->conn->prepare("
+            UPDATE exhibit_tbl
+            SET exbt_status = 'Completed'
+            WHERE exbt_status = 'Ongoing' AND exbt_date < :currentDate
+        ");
+        $completedStatement->bindValue(':currentDate', $currentDate, PDO::PARAM_STR);
+        $completedStatement->execute();
+    }
+    
+
     
     //para sa oragniser/admin or sag asa
     public function getExhibitDetails($exhibitId) {
@@ -320,15 +358,12 @@ class ExhibitManager {
             'artwork_files' => [],
             'collaborator_names' => [],
         ];
-    
-        // Collect unique artwork files
         foreach ($rows as $row) {
             if (!empty($row['artwork_file']) && !in_array($row['artwork_file'], $result['artwork_files'])) {
                 $result['artwork_files'][] = $row['artwork_file'];
             }
         }
     
-        // Collect unique collaborator names and format them (first name only)
         foreach ($rows as $row) {
             if (!empty($row['collaborator_name'])) {
                 $fullName = $row['collaborator_name'];
@@ -354,7 +389,15 @@ class ExhibitManager {
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    
+    public function myAcceptedExhibits($u_id) {
+        $statement = $this->conn->prepare("
+            SELECT * FROM exhibit_tbl 
+            WHERE u_id = :u_id AND exbt_status = 'Accepted'
+        ");
+        $statement->bindValue(':u_id', $u_id);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
     //get artworks from exhibit
     public function getExhibitArtwork($exhibitId){
         $statement=$this->conn->prepare("SELECT * FROM exhibit_artworks");
@@ -393,6 +436,31 @@ class ExhibitManager {
              LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id  
             WHERE exhibit_tbl.exbt_status = 'Pending'
+        ");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function acceptedExhibits() {
+        $statement = $this->conn->prepare("
+            SELECT 
+                exhibit_tbl.exbt_id, 
+                exhibit_tbl.exbt_title, 
+                exhibit_tbl.exbt_descrip, 
+                exhibit_tbl.exbt_date, 
+                exhibit_tbl.exbt_type,
+                accounts.u_name AS organizer_name, 
+                art_info.title AS artwork_title, 
+                art_info.description AS artwork_description, 
+                art_info.file AS artwork_file, 
+                art_info.u_id AS artist_id ,
+                 collaborators.u_name AS collaborator_name
+            FROM exhibit_tbl
+            INNER JOIN accounts ON exhibit_tbl.u_id = accounts.u_id
+            INNER JOIN exhibit_artworks ON exhibit_tbl.exbt_id = exhibit_artworks.exbt_id
+            INNER JOIN art_info ON exhibit_artworks.a_id = art_info.a_id
+             LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
+            LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id  
+            WHERE exhibit_tbl.exbt_status = 'Accepted'
         ");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);

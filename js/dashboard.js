@@ -164,6 +164,49 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("viewExhibit-btn");
+  const button2 = document.getElementById("viewExhibit-accepted");
+
+  // Debugging logs to check button existence
+  console.log("Button 1:", button); // Check if button is found
+  console.log("Button 2:", button2); // Check if button is found
+
+  if (button) {
+    button.addEventListener("click", function(event) {
+      event.preventDefault(); 
+
+      const exbtType = this.getAttribute("data-exbt-type"); 
+      console.log("Pending Exhibit type:", exbtType); // Debugging
+
+      if (exbtType === 'Solo') {
+        window.location.href = "soloRequest.php";
+      } else if (exbtType === 'Collaborate') {
+        window.location.href = "pendingCollab/collabRequest.php";
+      }
+    });
+  } else {
+    console.log("viewExhibit-btn button is not found.");
+  }
+
+  if (button2) {
+    button2.addEventListener("click", function(event) {
+      event.preventDefault(); 
+
+      const exbtType = this.getAttribute("data-exbt-type"); 
+      console.log("Accepted Exhibit type:", exbtType); // Debugging
+
+      if (exbtType === 'Solo') {
+        window.location.href = "acceptedSolo.php";
+      } else if (exbtType === 'Collaborate') {
+        window.location.href = "pendingCollab/acceptedCollab.php";
+      }
+    });
+  } else {
+    console.log("viewExhibit-accepted button is not found.");
+  }
+});
+
 
 // dropdown filter
 function toggleDropdown() {
@@ -928,17 +971,6 @@ function removeProfilePic() {
     previewContainer.style.display = "none";
     imagePreview.src = "";
 
-    fileInput.value = "";
-}
-
-function removeProfilePic() {
-    const imagePreview = document.getElementById("imagePreview");
-    const previewContainer = document.getElementById("imagePreviewContainer");
-    const fileInput = document.getElementById("profilePicture");
-
-    previewContainer.style.display = "none";
-    imagePreview.src = "";
-    
     fileInput.value = "";
 }
 
