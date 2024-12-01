@@ -9,44 +9,53 @@ class AccountManager
       
     }
 
-  
     public function login($username, $password)
     {
-        $statement = $this->conn->prepare("SELECT u_id, u_name, username, email, password, u_type FROM accounts WHERE username = :username");
+        $statement = $this->conn->prepare("SELECT u_id, u_name, username, email, password, u_type, u_status FROM accounts WHERE username = :username");
         $statement->bindValue(':username', $username);
         $statement->execute();
         $user = $statement->fetch(PDO::FETCH_ASSOC);
     
-        if ($user && password_verify($password, $user['password'])) {
-          
-            $_SESSION['u_id'] = $user['u_id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['name'] = $user['u_name'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['u_type'] = $user['u_type'];
-
-            $_SESSION['loggedin'] = true;
-    
-           
-            if ($user['u_type'] === 'Admin') {
-                header("Location:admin/admin.php");
-            } elseif ($user['u_type'] === 'User') {
-                header("Location: dashboard.php");
-            } elseif ($user['u_type'] === 'Organizer') {
-                header("Location: organizer/org.php");
+        
+        if ($user) {
+            if ($user['u_status'] === 'Archived') {
+                return "Your account is archived. Please contact support.";
             }
-            die;
+
+            if (password_verify($password, $user['password'])) {
+    
+                $_SESSION['u_id'] = $user['u_id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['name'] = $user['u_name'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['u_type'] = $user['u_type'];
+    
+                $_SESSION['loggedin'] = true;
+    
+                
+                if ($user['u_type'] === 'Admin') {
+                    header("Location: admin/admin.php");
+                } elseif ($user['u_type'] === 'User') {
+                    header("Location: dashboard.php");
+                } elseif ($user['u_type'] === 'Organizer') {
+                    header("Location: organizer/org.php");
+                }
+                die;
+            } else {
+                return "Incorrect password.";
+            }
         }
+    
+        return "Incorrect username or password.";
     }
     
 
-   
     public function register($name, $email, $username, $password)
     {
         $accType = 'User';
         $accStatus = 'Active';
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
+    
         $statement = $this->conn->prepare("INSERT INTO accounts (u_name, email, username, password, u_type, u_status) 
                                            VALUES (:name, :email, :username, :hashed_password, :accType, :accStatus)");
         $statement->bindValue(':name', $name);
@@ -55,7 +64,7 @@ class AccountManager
         $statement->bindValue(':hashed_password', $hashed_password);
         $statement->bindValue(':accType', $accType);
         $statement->bindValue(':accStatus', $accStatus);
-
+    
         if ($statement->execute()) {
             $_SESSION['username'] = $username;
             $_SESSION['name'] = $name;
@@ -63,13 +72,14 @@ class AccountManager
             $_SESSION['email'] = $email;
             $_SESSION['accType'] = $accType;
             $_SESSION['accStatus'] = $accStatus;
+            
           
-            header("Location: login-register.php");
-
-            die;
+            return "Registration Complete.";
         }
-        return false;
+    
+        return "Registration failed. Please try again.";
     }
+    
 
     public function getUsers() {
         try {

@@ -12,12 +12,14 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
     $result = $accountManager->login($username, $password);
     
-    if ($result) {
-        echo $result;
+    if ($result === true) {
+        header("Location: dashboard.php");
+        exit();
     } else {
-        $errorMessage = "Incorrect username or password.";
+        $errorMessage = $result;
     }
 }
+
 
 
 if (isset($_POST['register'])) {
@@ -30,12 +32,16 @@ if (isset($_POST['register'])) {
     if (empty($name) || empty($email) || empty($username) || empty($password)) {
         $errorMessage = "All fields are required for registration.";
     } else {
-        $accountManager->register($name, $email, $username, $password);
-        $successMessage='Registration Complete';
-    }   
+        $message = $accountManager->register($name, $email, $username, $password);
+        if ($message === "Registration Complete.") {
+            $successMessage = $message;  
+        } else {
+            $errorMessage = $message;  
+        }
+    }
 }
 
-// Store the messages in session for later use
+
 if ($errorMessage) {
     $_SESSION['errorMessage'] = $errorMessage;
 }
