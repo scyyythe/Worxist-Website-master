@@ -433,7 +433,6 @@ function showPopup(element) {
 
   const commentDisplay = document.querySelector('.comment-display'); 
 
-  // Check if comments exist
   if (comments && comments !== '[]') {
     commentDisplay.innerHTML = '';  
 
@@ -441,7 +440,6 @@ function showPopup(element) {
     commentArray.forEach(comment => {
       const [userName, commentText, userImage] = comment.split('::');  
 
-      // Only render comment if valid data exists
       if (userName && commentText && userImage) {
         const commentWrapper = document.createElement('div');
         commentWrapper.classList.add('comment-display');
@@ -453,11 +451,8 @@ function showPopup(element) {
         profilePicWrapper.classList.add('profile-pic');
 
         const imgElement = document.createElement('img');
-
-        // Clean the userImage path
         const cleanedImage = (userImage && typeof userImage === 'string') ? userImage.replace(/^\/+|"+$/g, '') : ''; 
 
-        // Set the image path
         const imagePath = `./profile_pics/${cleanedImage}`;
         console.log("Image path: ", imagePath);
 
@@ -465,7 +460,7 @@ function showPopup(element) {
         imgElement.alt = 'Profile Picture';
 
         imgElement.onerror = () => {
-          imgElement.src = './gallery/eyes.jpg'; // Default image if loading fails
+          imgElement.src = './gallery/eyes.jpg'; 
         };
 
         profilePicWrapper.appendChild(imgElement);
@@ -491,8 +486,26 @@ function showPopup(element) {
       }
     });
   } else {
-    // If no comments, hide the comment section or show a message
     commentDisplay.innerHTML = "<p>No comments available.</p>";
+  }
+
+  // edit option
+  const loggedInUserId = document.getElementById('data-id').getAttribute('data-artist-id');
+  const existingEditOption = document.querySelector('.edit-option');
+  if (existingEditOption) {
+    existingEditOption.remove();
+  }
+
+  if (artistId === loggedInUserId) {
+    const editOption = document.createElement('p');
+    editOption.innerHTML = "<i class='bx bxs-edit'></i>";
+    editOption.classList.add('edit-option');
+
+    editOption.onclick = () => {
+      window.location.href = `editArtwork.php?a_id=${artworkId}`;  
+  };
+  
+    document.querySelector('.top-details').appendChild(editOption);
   }
 
   // Close popup functionality

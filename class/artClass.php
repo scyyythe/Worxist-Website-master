@@ -180,10 +180,6 @@ class artManager
 
     }
     
-
-    
-    
-    
     public function getPendingRequests() {
         $statement = $this->conn->prepare("
             SELECT art_info.a_id, art_info.file, art_info.title, accounts.u_name AS artist_name, accounts.profile AS artist_profile
