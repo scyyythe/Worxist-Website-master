@@ -250,7 +250,7 @@ class ExhibitManager {
             INNER JOIN accounts ON art_info.u_id = accounts.u_id
             LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id
-            WHERE exhibit_tbl.exbt_status IN ('Ongoing', 'Accepted')
+            WHERE exhibit_tbl.exbt_status IN ('Ongoing')
             GROUP BY exhibit_tbl.exbt_id, art_info.a_id
             ORDER BY 
                 CASE 

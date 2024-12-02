@@ -129,9 +129,9 @@ if (isset($_POST['cancelRequest']) && $_POST['cancelRequest'] === 'true') {
 
                     <input type="hidden" name="selected_artworks" id="selectedArtworks" value="">
 
-                    <div class="update-actions">
+                    <!-- <div class="update-actions">
                         <button type="button" class="cancel-btn" id="cancel-btn" name="cancelRequest">Cancel Request</button>
-                    </div>
+                    </div> -->
                 </form>
 
         <div class="image-exhibit">

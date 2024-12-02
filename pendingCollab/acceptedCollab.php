@@ -130,9 +130,9 @@ if (isset($_POST['cancelRequest'])) {
             </div>
         </div>
 
-        <div class="update-actions">
+        <!-- <div class="update-actions">
             <button type="button" class="cancel-btn" id="cancel-btn" name="cancelRequest">Cancel Request</button>
-        </div>
+        </div> -->
         <img src="pics/graphic.png" class="graphic">
     </div>
 </form>
