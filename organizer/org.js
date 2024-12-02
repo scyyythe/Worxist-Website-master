@@ -76,102 +76,98 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        // Populate panel with fetched exhibit data
-        document.getElementById("exhibit-date").innerText = exhibit.exhibit.exbt_date;
-        document.getElementById("exhibit-title").innerText = exhibit.exhibit.exbt_title;
-        document.getElementById("exhibit-description").innerText = exhibit.exhibit.exbt_descrip;
+    // Populate panel with fetched exhibit data
+document.getElementById("exhibit-date").innerText = exhibit.exhibit.exbt_date;
+document.getElementById("exhibit-title").innerText = exhibit.exhibit.exbt_title;
+document.getElementById("exhibit-description").innerText = exhibit.exhibit.exbt_descrip;
 
-        //solo
-        document.getElementById('artist_name').textContent = exhibit.exhibit.organizer_name || 'Unknown Organizer';
-        const artworkFiles = exhibit.artwork_files;
+// Solo Section
+document.getElementById('artist_name').textContent = exhibit.exhibit.organizer_name || 'Unknown Organizer';
+const artworkFiles = exhibit.artwork_files;
 
-        const soloCardImages = document.getElementById('soloCardImages');
-        soloCardImages.innerHTML = '';
-        
-        artworkFiles.forEach(file => {
-            const img = document.createElement('img');
-            img.src =  `../${file}`;
-            img.alt = 'Artwork'; 
-            img.style.width = '100%';
-            img.style.margin = '10px';
-        
-            soloCardImages.appendChild(img);
-        });
-        
-        //collab
-        document.getElementById('artist_nameCollab').textContent = exhibit.exhibit.organizer_name || 'Unknown Organizer';
-  
-        const collaboratorsContainer = document.getElementById('collaborators-cards');
-        const collaboratorNames = exhibit.collaborator_names || ['Unknown Collaborator'];
-        collaboratorsContainer.innerHTML = '';
-        
-        collaboratorNames.forEach((name, index) => {
-          const collabDetails = document.createElement('div');
-          collabDetails.classList.add('collab-details');
-        
-          const collabNameElement = document.createElement('p');
-          collabNameElement.classList.add('collab-name1');
-          collabNameElement.textContent = name;
-        
-          const collaboratorContainer = document.createElement('div');
-          collaboratorContainer.classList.add('collaborator');
-        
-          const artCollage = document.createElement('div');
-          artCollage.classList.add('art-collage');
-        
-          const cArtworks = document.createElement('div');
-          cArtworks.classList.add('c-artworks');
-        
-          // for (let i = 0; i < 2; i++) {
-          //   if (exhibit.artwork_files[i]) {
-          //     const image = document.createElement('img');
-          //     image.src = exhibit.artwork_files[i];
-          //     cArtworks.appendChild(image); 
-          //   }
-          // }
-          
-        
-          const cArtwork = document.createElement('div');
-          cArtwork.classList.add('c-artwork');
-          if (exhibit.artwork_files[2]) {
-            const image = document.createElement('img');
-            image.src = exhibit.artwork_files[2];
-            // image.alt = `Art 3 by ${name}`;
-            // cArtwork.appendChild(image);
-          } else if (exhibit.artwork_files.length === 0) {
-            const noImagesText = document.createElement('p');
-            noImagesText.textContent = 'No images';
-            cArtwork.appendChild(noImagesText);
-          }
-        
-          artCollage.appendChild(cArtworks);
-          artCollage.appendChild(cArtwork);
-        
-          collaboratorContainer.appendChild(artCollage);
-        
-          collabDetails.appendChild(collabNameElement);
-          collabDetails.appendChild(collaboratorContainer);
-        
-          collaboratorsContainer.appendChild(collabDetails);
-        });
-        
+const soloCardImages = document.getElementById('soloCardImages');
+soloCardImages.innerHTML = '';
 
-        //admin collab retrieve sa images
-        const artworksContainer = document.querySelector('.artworks');
-  const artworkContainer = document.querySelector('.artwork');
-
-
-  artworkFiles.slice(0, 3).forEach((file, index) => {
+artworkFiles.forEach(file => {
     const img = document.createElement('img');
-    img.src = `../${file}`; 
-    img.alt = `Art ${index + 1}`;
-    
-    if (index < 2) {
-      artworksContainer.appendChild(img);  // Add first two to 'artworksContainer'
-    } else {
-      artworkContainer.appendChild(img);  // Add the third to 'artworkContainer'
+    img.src = `../${file}`;
+    img.alt = 'Artwork';
+    img.style.width = '100%';
+    img.style.margin = '10px';
+
+    soloCardImages.appendChild(img);
+});
+
+// Collaborator Section
+document.getElementById('artist_nameCollab').textContent = exhibit.exhibit.organizer_name || 'Unknown Organizer';
+
+const collaboratorsContainer = document.getElementById('collaborators-cards');
+const collaboratorNames = exhibit.collaborator_names || ['Unknown Collaborator'];
+collaboratorsContainer.innerHTML = '';
+
+collaboratorNames.forEach((name, index) => {
+    const collabDetails = document.createElement('div');
+    collabDetails.classList.add('collab-details');
+
+    const collabNameElement = document.createElement('p');
+    collabNameElement.classList.add('collab-name1');
+    collabNameElement.textContent = name;
+
+    const collaboratorContainer = document.createElement('div');
+    collaboratorContainer.classList.add('collaborator');
+
+    const artCollage = document.createElement('div');
+    artCollage.classList.add('art-collage');
+
+    const cArtworks = document.createElement('div');
+    cArtworks.classList.add('c-artworks');
+
+    const collaboratorFiles = exhibit.artwork_files.slice(0, 2); 
+    collaboratorFiles.forEach(file => {
+        const image = document.createElement('img');
+        image.src = `../${file}`;
+        cArtworks.appendChild(image);
+    });
+
+    const cArtwork = document.createElement('div');
+    cArtwork.classList.add('c-artwork');
+    if (exhibit.artwork_files[2]) {
+        const image = document.createElement('img');
+        image.src = `../${exhibit.artwork_files[2]}`;
+        cArtwork.appendChild(image);
+    } else if (exhibit.artwork_files.length === 0) {
+        const noImagesText = document.createElement('p');
+        noImagesText.textContent = 'No images';
+        cArtwork.appendChild(noImagesText);
     }
-  });
+
+    artCollage.appendChild(cArtworks);
+    artCollage.appendChild(cArtwork);
+
+    collaboratorContainer.appendChild(artCollage);
+
+    collabDetails.appendChild(collabNameElement);
+    collabDetails.appendChild(collaboratorContainer);
+
+    collaboratorsContainer.appendChild(collabDetails);
+});
+
+// Admin & Collaborator Image Handling (Admin Section)
+const artworksContainer = document.querySelector('.artworks');
+const artworkContainer = document.querySelector('.artwork');
+
+artworkFiles.slice(0, 3).forEach((file, index) => {
+    const img = document.createElement('img');
+    img.src = `../${file}`;
+    img.alt = `Art ${index + 1}`;
+
+    if (index < 2) {
+        artworksContainer.appendChild(img);
+    } else {
+        artworkContainer.appendChild(img);
+    }
+});
+
 
 
         // get the exhibit type
@@ -379,7 +375,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentImages = []; 
   let currentIndex = 0;   
 
-  // Function to open the modal
+  // Function to open the modal and show images
   function openModal(images) {
     modal.style.display = "flex"; 
     currentImages = images; 
@@ -391,8 +387,12 @@ document.addEventListener("DOMContentLoaded", function () {
   for (let i = 0; i < adminCards.length; i++) {
     adminCards[i].addEventListener("click", function () {
       const images = adminCards[i].querySelectorAll("img"); 
-      if (images.length > 0) {
-        openModal(images); 
+
+      // Only the first 3 images will be displayed in the modal initially
+      const firstThreeImages = Array.from(images).slice(0, 3);
+
+      if (firstThreeImages.length > 0) {
+        openModal(firstThreeImages); 
       }
     });
   }
@@ -424,6 +424,7 @@ document.addEventListener("DOMContentLoaded", function () {
     modalImage.src = currentImages[currentIndex].src; 
   });
 });
+
 
 
 
@@ -669,4 +670,33 @@ clearButton.addEventListener('click', function(event) {
     event.preventDefault(); 
     inputField.value = '';
     textareaField.value = '';
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const logoutButton = document.querySelector('.logoutButton');
+  const logoutModal = document.getElementById('logoutModal');
+  const logoutModalCancel = document.getElementById('logoutModalCancel');
+  const logoutModalConfirm = document.querySelector('.logoutModal-confirm');
+
+  // Show the logout modal when the logout button is clicked
+  if (logoutButton) {
+      logoutButton.addEventListener('click', function(e) {
+          e.preventDefault(); // Prevent the default behavior of the anchor tag
+          logoutModal.style.display = 'flex';  // Show the modal
+      });
+  }
+
+  // Hide the logout modal when cancel button is clicked
+  if (logoutModalCancel) {
+      logoutModalCancel.addEventListener('click', function() {
+          logoutModal.style.display = 'none'; // Hide the modal
+      });
+  }
+
+  // Redirect to logout.php when the "Yes" button is clicked
+  if (logoutModalConfirm) {
+      logoutModalConfirm.addEventListener('click', function() {
+          window.location.href = '../logout.php'; // Redirect to logout.php
+      });
+  }
 });

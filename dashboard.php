@@ -212,6 +212,7 @@ ob_end_clean();
 <!-- end of sidebar -->
 
    <div class="wrapper">
+    
    <div id="logoutModal" class="logoutModal">
     <div class="logoutModal-content">
         <p>Are you sure you want to sign out?</p>

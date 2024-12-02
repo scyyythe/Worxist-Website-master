@@ -1120,33 +1120,31 @@ function removeProfilePic() {
     fileInput.value = "";
 }
 
- document.addEventListener('DOMContentLoaded', function () {
-        // Select the logout button and modal
-        const logoutButton = document.getElementById('logoutButton');
-        const logoutModal = document.getElementById('logoutModal');
-        const logoutModalCancel = document.getElementById('logoutModalCancel');
+document.addEventListener('DOMContentLoaded', function () {
+  const logoutButton = document.querySelector('.logoutButton');
+  const logoutModal = document.getElementById('logoutModal');
+  const logoutModalCancel = document.getElementById('logoutModalCancel');
+  const logoutModalConfirm = document.querySelector('.logoutModal-confirm');
 
-        // Check if the logoutButton exists
-        if (logoutButton) {
-            console.log('Logout button found!');
-            // Add event listener to logout button
-            logoutButton.addEventListener('click', function(e) {
-                e.preventDefault();  // Prevent the default action (e.g., page navigation)
-                console.log('Logout button clicked');  // Check if clicked
-                logoutModal.style.display = 'flex';  // Show the logout modal
-            });
-        } else {
-            console.log('Logout button not found!');
-        }
+  // Show the logout modal
+  if (logoutButton) {
+      logoutButton.addEventListener('click', function(e) {
+          e.preventDefault(); // Prevent the default action of the anchor tag
+          logoutModal.style.display = 'flex';  // Show the modal
+      });
+  }
 
-        // Check if the cancel button exists
-        if (logoutModalCancel) {
-            // Add event listener to cancel button
-            logoutModalCancel.addEventListener('click', function() {
-                console.log('Cancel button clicked');
-                logoutModal.style.display = 'none';  // Hide the modal if cancel is clicked
-            });
-        } else {
-            console.log('Cancel button not found!');
-        }
-    });
+  // Hide the logout modal when cancel button is clicked
+  if (logoutModalCancel) {
+      logoutModalCancel.addEventListener('click', function() {
+          logoutModal.style.display = 'none'; // Hide the modal
+      });
+  }
+
+  // Redirect to logout.php when "Yes" is clicked
+  if (logoutModalConfirm) {
+      logoutModalConfirm.addEventListener('click', function() {
+          window.location.href = './logout.php'; // Redirect to logout.php
+      });
+  }
+});

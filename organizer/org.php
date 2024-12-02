@@ -117,15 +117,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <ul class="nav">
             <li><i class='bx bx-merge'></i><a href="#exhibits" class="exhibitLink">Exhibits</a></li>
-<li><i class='bx bxs-cog'></i><a href="#settings" class="settingLink">Settings</a></li>
-
+            <li><i class='bx bxs-cog'></i><a href="#settings" class="settingLink">Settings</a></li>
             </ul>
-            <a href="../logout.php" class="logout"><i class='bx bxs-log-out'></i>Logout</a>
-
+            <a href="../logout.php" class="logout logoutButton"><i class='bx bxs-log-out'></i>Logout</a>
+         
         </aside>
 
-        <!-- Main Content -->
+      
+<!-- Main Content -->
         <section class="main-wrapper">
+        <div id="logoutModal" class="logoutModal" style="display:none;">
+    <div class="logoutModal-content">
+        <p>Are you sure you want to sign out?</p>
+        <div class="logoutModal-buttons">
+            <a href="#" class="logoutModal-confirm">Yes</a>
+            <button id="logoutModalCancel" class="logoutModal-cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+        
             <section class="header-wrapper" id="header">
                 <header class="header">
                     <div class="header-title">
@@ -226,37 +236,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <!-- Collaborators Section -->
     <div class="collaborators">
-        <h2>Collaborators</h2>
-        <div class="collaborator-cards" id="collaborators-cards">
-        
-            <div class="collab-details">
-                    <p class="collab-name1" id="collab_name">Angel</p>
-                    <div class="collaborator">
-                        <div class="art-collage">
-                            <div class="c-artworks">
-                                <img src="pics/a1.jpg" alt="Art 1">
-                                <img src="pics/a3.jpg" alt="Art 2">
-                            </div>
-                            <div class="c-artwork">
-                                <img src="pics/a2.jpg" alt="Art 3">
-                            </div>
-                        </div>
+    <h2>Collaborators</h2>
+    <div class="collaborator-cards" id="collaborators-cards">
+        <div class="collab-details">
+            <p class="collab-name1" id="collab_name">Angel</p>
+            <div class="collaborator">
+                <div class="art-collage">
+                    <div class="c-artworks">
+                        <!-- Multiple images will be inserted here -->
                     </div>
-                </div>             
-        
+                    <div class="c-artwork">
+                        <!-- One image will be inserted here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
 </div>
 
-<!-- solo -->
-<div class="solo" id="soloRequest">
-    <h2>Exhibit Owner</h2>
-    <p id="artist_name"></p><br>
-    <div class="admin-card soloCard" id="soloCardImages">
+                <!-- solo -->
+                <div class="solo" id="soloRequest">
+                    <h2>Exhibit Owner</h2>
+                    <p id="artist_name"></p><br>
+                    <div class="admin-card soloCard" id="soloCardImages">
 
-    </div>
-</div>
+                    </div>
+                </div>
 
 </div>
 
@@ -419,7 +426,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <button id="s-cancelButton" class="s-cancel-button">Cancel</button>
                             </div>
                         </div>
-                    </div> <!-- Closing missing div -->
+                    </div> 
                 </form>
             </div>
         </div>

@@ -1220,3 +1220,72 @@ background: rgba(255, 255, 255, 1);
     height: 3px; 
     background-color: #a20d0d; 
 }
+/* logout */
+.logoutModal {
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.logoutModal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.logoutModal-content p {
+  font-size: 18px;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.logoutModal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.logoutModal-confirm {
+  background: #a20d0d;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  transition: background 0.3s;
+  width: 100px;
+}
+
+.logoutModal-confirm:hover {
+  background: rgb(167, 2, 2);
+}
+
+.logoutModal-cancel {
+  background: white;
+  color: red;
+  padding: 10px 20px;
+  border: 2px solid #9f1414;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.logoutButton {
+  color: red;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.logoutButton .text {
+  font-weight: bold;
+}
