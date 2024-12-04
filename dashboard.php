@@ -732,11 +732,17 @@ if (!empty($allImages)) {
     <!-- Top gallery section with title -->
     <div class="gallery-container">
         <div class="top-gallery">
-            <h3>
-                <?php 
-                    echo isset($exhibit[0]['exbt_title']) ? ($exhibit[0]['exbt_title']) : 'Exhibit Title'; 
-                ?>
-            </h3>
+        <h3>
+    <?php 
+        if (!empty($collaborators) && isset($collaborators[0]['exhibit']['title'])) {
+          
+            echo htmlspecialchars($collaborators[0]['exhibit']['title'] ?? 'Exhibit Title', ENT_QUOTES);
+        } else {
+            echo 'Exhibit Title';
+        }
+    ?>
+</h3>
+
         </div>
         <div class="descriptionExhibit">
     <p class="viewDescription">View Description</p>
@@ -747,10 +753,15 @@ if (!empty($allImages)) {
     <div class="exhibition-description-popup-content">
         <span class="exhibition-close-popup" hidden>&times;</span>
         <p>
-            <?php 
-                echo isset($exhibit[0]['exbt_descrip']) ? $exhibit[0]['exbt_descrip'] : 'No description available.';
-            ?>
-        </p>
+    <?php 
+        if (!empty($collaborators) && isset($collaborators[0]['exhibit']['description'])) {
+          
+            echo htmlspecialchars($collaborators[0]['exhibit']['description'] ?? 'No description available.', ENT_QUOTES);
+        } else {
+            echo 'No description available.';
+        }
+    ?>
+</p>
     </div>
 </div>
 

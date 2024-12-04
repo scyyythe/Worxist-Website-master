@@ -201,7 +201,7 @@ class ExhibitManager {
     }
     
     
-    
+
     public function getAcceptedExhibits() {
         $statement = $this->conn->prepare("
             SELECT 
@@ -288,7 +288,7 @@ class ExhibitManager {
                 'artwork_file' => $row['artwork_file']
             ];
     
-            // Split the collaborator names and IDs into arrays
+      
             $collaboratorNames = $row['collaborator_names'] ? explode(',', $row['collaborator_names']) : [];
             $collaboratorIds = $row['collaborator_ids'] ? explode(',', $row['collaborator_ids']) : [];
             
@@ -460,7 +460,7 @@ class ExhibitManager {
             INNER JOIN art_info ON exhibit_artworks.a_id = art_info.a_id
              LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id  
-            WHERE exhibit_tbl.exbt_status = 'Accepted'
+            WHERE exhibit_tbl.exbt_status IN ('Accepted', 'Ongoing');
         ");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);

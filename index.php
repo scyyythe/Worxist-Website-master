@@ -24,7 +24,7 @@ class Exhibit {
             INNER JOIN exhibit_artworks ON exhibit_tbl.exbt_id = exhibit_artworks.exbt_id
             INNER JOIN art_info ON exhibit_artworks.a_id = art_info.a_id
             INNER JOIN accounts ON art_info.u_id = accounts.u_id
-            WHERE exhibit_tbl.exbt_status = 'Accepted'
+            WHERE exhibit_tbl.exbt_status = 'Ongoing'
         ");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
