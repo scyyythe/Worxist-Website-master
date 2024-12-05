@@ -65,13 +65,14 @@ $userName = new AccountManager($conn);
 if (isset($_POST['changeUser'])) { 
     $new_username = trim($_POST['new_username']); 
     $u_id = $_SESSION['u_id']; 
-
     try {
         $userName->changeUsername($u_id, $new_username); 
         $_SESSION['username'] = $new_username;
-        $username = $_SESSION['username'];
+        echo json_encode(['success' => true, 'message' => 'Username updated successfully']);
     } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
+    
 }
 
 ?>
