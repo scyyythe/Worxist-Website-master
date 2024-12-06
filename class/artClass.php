@@ -145,6 +145,7 @@ class artManager
                 art_info.description, 
                 art_info.date, 
                 art_info.category,
+                art_info.a_status,
                 COUNT(DISTINCT likes.u_id) AS likes_count,
                 COUNT(DISTINCT saved.u_id) AS saved_count,
                 COUNT(DISTINCT favorite.u_id) AS favorites_count,

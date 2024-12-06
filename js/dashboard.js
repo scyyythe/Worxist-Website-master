@@ -409,6 +409,7 @@ function showPopup(element) {
   const saved = parseInt(element.getAttribute('data-saved')); 
   const favorite = parseInt(element.getAttribute('data-favorite'));
   const comments = element.getAttribute('data-comments'); 
+  const status = element.getAttribute('data-status');
 
   console.log("Artwork ID (a_id):", artworkId);
   console.log("Title:", title);
@@ -488,6 +489,7 @@ function showPopup(element) {
     commentDisplay.innerHTML = "<p>No comments available.</p>";
   }
 
+  
   // edit option
   const loggedInUserId = document.getElementById('data-id').getAttribute('data-artist-id');
   const existingEditOption = document.querySelector('.edit-option');
