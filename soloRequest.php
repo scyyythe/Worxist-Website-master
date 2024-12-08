@@ -8,7 +8,7 @@ include 'class/exhbtClass.php';
 $u_id = $_SESSION['u_id']; 
 $exhibitManager = new ExhibitManager($conn);
 $pendingExhibits = $exhibitManager->myPendingExhibits($u_id);
-$pending = $exhibitManager->getPendingExhibits();
+$pending = $exhibitManager->getPendingExhibits($u_id);
 $updateSuccess = false;
 
 if (isset($_POST['updateRequest'])) {

@@ -474,6 +474,8 @@ class ExhibitManager {
 
     //accept and decline fucntion
     public function updateExhibitStatus($exbt_id, $status) {
+   
+    
         if ($status !== 'Accepted' && $status !== 'Declined') {
             echo json_encode(["status" => "error", "message" => "Invalid status"]);
             exit;
@@ -503,15 +505,6 @@ class ExhibitManager {
     
                 if (!empty($incompleteCollaborators)) {
                     echo json_encode(["status" => "error", "message" => "Not all collaborators have included their artworks"]);
-                    exit;
-                }
-    
-                // Check if there's already an accepted exhibit
-                $query = "SELECT * FROM exhibit_tbl WHERE exbt_status = 'Accepted' LIMIT 1";
-                $statement = $this->conn->prepare($query);
-                $statement->execute();
-                if ($statement->rowCount() > 0) {
-                    echo json_encode(["status" => "error", "message" => "There is already an accepted exhibit. Please wait until it is marked as Done."]);
                     exit;
                 }
             }

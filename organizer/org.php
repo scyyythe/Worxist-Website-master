@@ -55,7 +55,7 @@ if (isset($_POST['changeUser'])) {
 
 //retrieveing pending exhibit
 $exhibit= new ExhibitManager($conn);
-$pending=$exhibit->getPendingExhibits();
+$pending=$exhibit->getPendingExhibits($u_id);
 $request=$exhibit->getRequestExhibit();
 $exhibitId = 1; 
 $collaborator=$exhibit->getCollab($exhibitId);
@@ -77,16 +77,21 @@ if (isset($_GET['id'])) {
 }
 // approved or declined exhibits
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (isset($_POST['exbt_id']) && !empty($_POST['exbt_id']) && isset($_POST['status']) && !empty($_POST['status'])) {
-        $exbt_id = $_POST['exbt_id'];
-        $status = $_POST['status'];
+        $exbt_id = $_POST['exbt_id']; 
+        $status = $_POST['status'];   
 
-        // Check if status is either 'Accepted' or 'Declined'
+        // Ensure the status is either 'Accepted' or 'Declined'
         if ($status === 'Accepted' || $status === 'Declined') {
+            // Assuming ExhibitManager class is already defined
             $exhibit = new ExhibitManager($conn);
             $update = $exhibit->updateExhibitStatus($exbt_id, $status); 
-            echo json_encode(['status' => 'success', 'message' => 'Exhibit status updated successfully']);
+            
+            if ($update) {
+                echo json_encode(['status' => 'success', 'message' => 'Exhibit status updated successfully']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to update exhibit status']);
+            }
         } else {
             echo json_encode(["status" => "error", "message" => "Invalid status"]);
         }
@@ -95,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit();
 }
+
 
 
 ?>
@@ -277,8 +283,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="actions">
                     <button class="btn approve-btn" name="approveRequest" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">Approve</button>
-                    <button class="btn decline-btn" name="declineRequest" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">Decline</button>
-                    </div>
+<button class="btn decline-btn" name="declineRequest" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">Decline</button>
+
+</div>
+
                     <!-- Popup Container -->
                     <div id="p-popup-container" class="p-popup">
                         <div class="p-popup-content">
