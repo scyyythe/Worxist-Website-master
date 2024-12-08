@@ -473,38 +473,66 @@ class ExhibitManager {
             exit;
         }
     
-        if ($status === 'Accepted') {
-            // Check if there's already an exhibit with status 'Accepted'
-            $query = "SELECT * FROM exhibit_tbl WHERE exbt_status = 'Accepted' LIMIT 1";
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                echo json_encode(["status" => "error", "message" => "There is already an accepted exhibit. Please wait until it is marked as Done."]);
-                exit;
+        try {
+            if ($status === 'Accepted') {
+                // Fetch collaborators
+                $query = "SELECT u_id FROM collab_exhibit WHERE exbt_id = ?";
+                $statement = $this->conn->prepare($query);
+                $statement->bindValue(1, $exbt_id, PDO::PARAM_INT);
+                $statement->execute();
+                $collaborators = $statement->fetchAll(PDO::FETCH_COLUMN);
+    
+                $incompleteCollaborators = [];
+                foreach ($collaborators as $collab_id) {
+                    $artworkQuery = "SELECT 1 FROM exhibit_artworks WHERE exbt_id = ? AND a_id IN (SELECT a_id FROM art_info WHERE u_id = ?)";
+                    $artworkStatement = $this->conn->prepare($artworkQuery);
+                    $artworkStatement->bindValue(1, $exbt_id, PDO::PARAM_INT);
+                    $artworkStatement->bindValue(2, $collab_id, PDO::PARAM_INT);
+                    $artworkStatement->execute();
+    
+                    if ($artworkStatement->rowCount() === 0) {
+                        $incompleteCollaborators[] = $collab_id;
+                    }
+                }
+    
+                if (!empty($incompleteCollaborators)) {
+                    echo json_encode(["status" => "error", "message" => "Not all collaborators have included their artworks"]);
+                    exit;
+                }
+    
+                // Check if there's already an accepted exhibit
+                $query = "SELECT * FROM exhibit_tbl WHERE exbt_status = 'Accepted' LIMIT 1";
+                $statement = $this->conn->prepare($query);
+                $statement->execute();
+                if ($statement->rowCount() > 0) {
+                    echo json_encode(["status" => "error", "message" => "There is already an accepted exhibit. Please wait until it is marked as Done."]);
+                    exit;
+                }
             }
-        }
     
-        // Update exhibit status
-        $statement = $this->conn->prepare("UPDATE exhibit_tbl SET exbt_status = ?, accepted_at = ? WHERE exbt_id = ?");
-        
-        $accepted_at = ($status === 'Accepted') ? date("Y-m-d H:i:s") : null;
-        
-        $statement->bindValue(1, $status, PDO::PARAM_STR);
-        $statement->bindValue(2, $accepted_at, PDO::PARAM_STR); 
-        $statement->bindValue(3, $exbt_id, PDO::PARAM_INT);
+            // Update exhibit status
+            $statement = $this->conn->prepare("UPDATE exhibit_tbl SET exbt_status = ?, accepted_at = ? WHERE exbt_id = ?");
+            $accepted_at = ($status === 'Accepted') ? date("Y-m-d H:i:s") : null;
+            $statement->bindValue(1, $status, PDO::PARAM_STR);
+            $statement->bindValue(2, $accepted_at, PDO::PARAM_STR);
+            $statement->bindValue(3, $exbt_id, PDO::PARAM_INT);
     
-        if ($statement->execute()) {
-
-            $message = "Your exhibit status is $status";
-            $this->createNotification($exbt_id, $message);
-    
-            echo json_encode(["status" => "success", "message" => "Exhibit status updated to $status"]);
-        } else {
-            $errorInfo = $statement->errorInfo();
-            echo json_encode(["status" => "error", "message" => "Failed to update status. Error: " . $errorInfo[2]]);
+            if ($statement->execute()) {
+                $message = "Your exhibit status is $status";
+                $this->createNotification($exbt_id, $message);
+                echo json_encode(["status" => "success", "message" => "Exhibit status updated to $status"]);
+            } else {
+                $errorInfo = $statement->errorInfo();
+                echo json_encode(["status" => "error", "message" => "Failed to update status. Error: " . $errorInfo[2]]);
+            }
+        } catch (Exception $e) {
+            echo json_encode(["status" => "error", "message" => "Exception caught: " . $e->getMessage()]);
         }
         exit();
     }
+    
+    
+    
     
     private function createNotification($exbt_id, $message) {
         $query = "SELECT u_id FROM exhibit_tbl WHERE exbt_id = :exbt_id";

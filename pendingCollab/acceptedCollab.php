@@ -99,7 +99,7 @@ if (isset($_POST['cancelRequest'])) {
         <a style="text-decoration: none;color:black; font-weight:bold; font-size:25px;" href="/dashboard.php"><</a>
             <span class="title">Accepted Collaborative Exhibit</span>
         </div>
-        <div class="tabs">
+        <div class="tabs" style="margin-bottom:50px;">
             <h4 class="tab collaborative active">Collaborative</h4>
         </div>
         <div class="wrapper">

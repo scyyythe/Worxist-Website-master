@@ -292,29 +292,31 @@ document.addEventListener("DOMContentLoaded", function () {
         method: 'POST',
         body: new URLSearchParams({
           exbt_id: currentExhibitId,
-          status: 'Accepted' 
+          status: 'Accepted'
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
         if (data.status === 'success') {
           showCustomAlert('Exhibit approved!');
         } else {
-          // Check if the error message indicates there's already an accepted exhibit
-          if (data.message === "There is already an accepted exhibit. Please wait until it is marked as Done.") {
-            showCustomAlert('Cannot accept a new exhibit. Please wait for the current one to be marked as Done.');
-          } else {
-            showCustomAlert('Failed to update exhibit status.');
-          }
+          const errorMsg = data.message || 'Failed to update exhibit status.';
+          showCustomAlert(errorMsg);
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        showCustomAlert('An error occurred.');
+        showCustomAlert('An error occurred while updating exhibit status.');
       });
+      
     } else if (currentAction === "decline" && currentExhibitId) {
       // Decline action
       fetch('org.php', {
