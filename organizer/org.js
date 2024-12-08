@@ -250,16 +250,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const popupMessage = document.getElementById("p-popup-message");
   const confirmButton = document.getElementById("p-confirm-btn");
   const cancelButton = document.getElementById("p-cancel-btn");
-  
+
   let currentAction = ""; 
-  let currentExhibitId = null;
+  let currentExhibitId = null; // To store the exhibit ID to be updated
 
   // Function to show the popup
   function showPopup(message, action, exhibitId) {
     popupMessage.textContent = message; 
     popupContainer.style.display = "flex"; 
     currentAction = action;
-    currentExhibitId = exhibitId; 
+    currentExhibitId = exhibitId; // Store the exhibit ID for the action
   }
 
   // Function to hide the popup
@@ -270,33 +270,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Add click listeners to all approve buttons
-  approveButtons.forEach(button => {
-    button.addEventListener("click", function () {
-      const exhibitId = button.getAttribute("data-exhibit-id"); 
-      console.log("Clicked approve button for exhibit ID:", exhibitId); // Debugging log
-      showPopup(`Are you sure you want to approve this exhibit? Exhibit ID: ${exhibitId}`, "approve", exhibitId);
+  for (let i = 0; i < approveButtons.length; i++) {
+    approveButtons[i].addEventListener("click", function () {
+      const exhibitId = approveButtons[i].getAttribute("data-exhibit-id"); 
+      showPopup(`Are you sure you want to approve this exhibit? ${exhibitId}`, "approve", exhibitId);
     });
-  });
+  }
 
   // Add click listeners to all decline buttons
-  declineButtons.forEach(button => {
-    button.addEventListener("click", function () {
-      const exhibitId = button.getAttribute("data-exhibit-id"); 
-      console.log("Clicked decline button for exhibit ID:", exhibitId); // Debugging log
+  for (let i = 0; i < declineButtons.length; i++) {
+    declineButtons[i].addEventListener("click", function () {
+      const exhibitId = declineButtons[i].getAttribute("data-exhibit-id");
       showPopup("Are you sure you want to decline this exhibit?", "decline", exhibitId);
     });
-  });
+  }
 
-  // Confirm action button
   confirmButton.addEventListener("click", function () {
-    console.log("Confirming action for exhibit ID:", currentExhibitId); // Debugging log
-
     if (currentAction === "approve" && currentExhibitId) {
+      // Approve action
       fetch('org.php', {
         method: 'POST',
         body: new URLSearchParams({
           exbt_id: currentExhibitId,
-          status: 'Accepted'
+          status: 'Accepted' 
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -304,18 +300,23 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if (data.status === 'success') {
           showCustomAlert('Exhibit approved!');
         } else {
-          showCustomAlert('Failed to update exhibit status.');
+          // Check if the error message indicates there's already an accepted exhibit
+          if (data.message === "There is already an accepted exhibit. Please wait until it is marked as Done.") {
+            showCustomAlert('Cannot accept a new exhibit. Please wait for the current one to be marked as Done.');
+          } else {
+            showCustomAlert('Failed to update exhibit status.');
+          }
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        showCustomAlert('An error occurred while updating exhibit status.');
+        showCustomAlert('An error occurred.');
       });
     } else if (currentAction === "decline" && currentExhibitId) {
+      // Decline action
       fetch('org.php', {
         method: 'POST',
         body: new URLSearchParams({
@@ -340,10 +341,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    hidePopup();
+    hidePopup(); 
   });
 
-  // Cancel button to hide popup
   cancelButton.addEventListener("click", function () {
     hidePopup(); 
   });
