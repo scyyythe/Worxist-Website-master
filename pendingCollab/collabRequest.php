@@ -8,7 +8,7 @@ include '../class/exhbtClass.php';
 $u_id = $_SESSION['u_id']; 
 $exhibit = new ExhibitManager($conn);
 $pendingExhibits = $exhibit->myPendingExhibits($u_id);
-$pending = $exhibit->getPendingExhibits();
+$pending = $exhibit->getPendingExhibits($u_id);
 $response = [];
 
 if (isset($_POST['updateRequest'])) {
@@ -140,20 +140,35 @@ if (isset($_POST['cancelRequest'])) {
 
 
             <div class="artworks">
-                <div class="admin">
-                    <h4>Your Artworks</h4>
-                    <div class="admin-card">
-                        <div class="art-collage">
-                            <div class="artworks">
-                                <img src="pics/a1.jpg" class="art1">
-                                <img src="pics/a3.jpg" class="art2">
-                            </div>
-                            <div class="artwork">
-                                <img src="pics/a2.jpg" alt="Art 3">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="admin">
+    <h4>Your Artworks</h4>
+<div class="admin-card">
+    <div class="art-collage">
+        <div class="artworks">
+            <?php if (isset($pending[0])): ?>
+                <img src="/<?php echo htmlspecialchars($pending[0]['artwork_file'], ENT_QUOTES); ?>" class="art1">
+            <?php else: ?>
+                <img src="/pics/a1.jpg" class="art1">
+            <?php endif; ?>
+
+            <?php if (isset($pending[1])): ?>
+                <img src="/<?php echo htmlspecialchars($pending[1]['artwork_file'], ENT_QUOTES); ?>" class="art2">
+            <?php else: ?>
+                <img src="/pics/a3.jpg" class="art2">
+            <?php endif; ?>
+        </div>
+        <div class="artwork">
+            <?php if (isset($pending[2])): ?>
+                <img src="/<?php echo htmlspecialchars($pending[2]['artwork_file'], ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($pending[2]['artwork_title'], ENT_QUOTES); ?>">
+            <?php else: ?>
+                <img src="/pics/a2.jpg" alt="Art 3">
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+</div>
+
 
                 <div class="collaborators">
         <h2>Collaborators</h2>
@@ -214,6 +229,6 @@ if (isset($_POST['cancelRequest'])) {
         </div>
     </section>
     <script src="script.js"></script>
-    
+
 </body>
 </html>

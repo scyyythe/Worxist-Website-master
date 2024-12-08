@@ -368,7 +368,7 @@ function showCustomAlert(message) {
 
 //ADMIN & COLLAB IMG CAROUSEL
 document.addEventListener("DOMContentLoaded", function () {
-  const adminCards = document.querySelectorAll(".admin-card, .collaborator"); // Both admin-card and collaborator
+  const adminCards = document.querySelectorAll(".admin-card, .collaborator");
   const modal = document.getElementById("image-modal");
   const modalImage = modal.querySelector(".modal-image");
   const leftBtn = modal.querySelector(".left-btn");

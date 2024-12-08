@@ -415,7 +415,7 @@ class ExhibitManager {
     }
 
     //pending exhibits
-    public function getPendingExhibits() {
+    public function getPendingExhibits($userId) {
         $statement = $this->conn->prepare("
             SELECT 
                 exhibit_tbl.exbt_id, 
@@ -427,19 +427,25 @@ class ExhibitManager {
                 art_info.title AS artwork_title, 
                 art_info.description AS artwork_description, 
                 art_info.file AS artwork_file, 
-                art_info.u_id AS artist_id ,
-                 collaborators.u_name AS collaborator_name
+                art_info.u_id AS artist_id,
+                collaborators.u_name AS collaborator_name
             FROM exhibit_tbl
             INNER JOIN accounts ON exhibit_tbl.u_id = accounts.u_id
             INNER JOIN exhibit_artworks ON exhibit_tbl.exbt_id = exhibit_artworks.exbt_id
             INNER JOIN art_info ON exhibit_artworks.a_id = art_info.a_id
-             LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
+            LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id  
             WHERE exhibit_tbl.exbt_status = 'Pending'
+            AND (exhibit_tbl.u_id = :userId OR collab_exhibit.u_id = :userId)
         ");
+        
+        $statement->bindParam(':userId', $userId, PDO::PARAM_INT);
+        
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+
     public function acceptedExhibits() {
         $statement = $this->conn->prepare("
             SELECT 
