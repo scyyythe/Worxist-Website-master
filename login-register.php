@@ -31,12 +31,22 @@ if (isset($_POST['register'])) {
 
     if (empty($name) || empty($email) || empty($username) || empty($password)) {
         $errorMessage = "All fields are required for registration.";
+    } elseif (strlen($password) < 8) {
+        $errorMessage = "Password must be at least 8 characters long.";
+    } elseif (!preg_match("/^[a-zA-Z\s]+$/", $name)) {
+        $errorMessage = "Name must be a valid name with alphabetic characters and spaces only.";
     } else {
-        $message = $accountManager->register($name, $email, $username, $password);
-        if ($message === "Registration Complete.") {
-            $successMessage = $message;  
+        $name = ucwords(strtolower($name));
+
+        if ($accountManager->isUsernameTaken($username)) {
+            $errorMessage = "Username is already taken. Please choose another.";
         } else {
-            $errorMessage = $message;  
+            $message = $accountManager->register($name, $email, $username, $password);
+            if ($message === "Registration Complete.") {
+                $successMessage = $message;
+            } else {
+                $errorMessage = $message;
+            }
         }
     }
 }

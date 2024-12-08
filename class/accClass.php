@@ -80,7 +80,16 @@ class AccountManager
         return "Registration failed. Please try again.";
     }
     
-
+    public function isUsernameTaken($username) {
+        $query = "SELECT COUNT(*) FROM accounts WHERE username = :username";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $count = $stmt->fetchColumn();
+        
+        return $count > 0; 
+    }
+    
     public function getUsers() {
         try {
             $query = "SELECT u_id, profile, u_name, username, email, u_status FROM accounts 
