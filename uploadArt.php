@@ -3,12 +3,24 @@ session_start();
 include("include/connection.php");
 include 'class/accClass.php'; 
 
-if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
-    $uploader = new ArtUploader($conn);
-    $uploader->uploadArtwork($_FILES['file'], $_POST['title'], $_POST['description'], $_POST['category']);
-}
+$message = '';  // Initialize message variable
 
+if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
+    // Check if all the required fields are present
+    if (!empty($_FILES['file']['name']) && !empty($_POST['title']) && !empty($_POST['description']) && !empty($_POST['category'])) {
+        $uploader = new ArtUploader($conn);
+        $uploadResult = $uploader->uploadArtwork($_FILES['file'], $_POST['title'], $_POST['description'], $_POST['category']);
+    
+        if (!$uploadResult['success']) {
+            $message = $uploadResult['message'];  // Set the message for the modal
+        }
+    } else {
+        $message = "Please fill in all the fields before submitting!";  // Set the message for the modal
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,12 +50,13 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 
     <div class="container">  
         <!-- Validation Modal -->
-<div id="validationModal" class="modal">
+        <div id="validationModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <p>Please fill in all the fields before submitting!</p>
+        <p id="modalMessage"><?php echo htmlspecialchars($message); ?></p>  <!-- Use PHP to inject message -->
     </div>
 </div>
+
 
     <!-- input artwork details -->
     <div class="artwork-upload">
@@ -111,31 +124,31 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 
     <script>
 
-        // Show modal
-function showModal() {
+// Show modal with custom message if there's a message from PHP
+window.onload = function() {
+    const message = "<?php echo addslashes($message); ?>";  // Get PHP message
+    if (message) {
+        showModal(message);  // Show the modal if there's a message
+    }
+}
+
+// Show modal with custom message
+function showModal(message) {
     const modal = document.getElementById('validationModal');
-    modal.style.display = 'block';
+    const modalMessage = document.getElementById('modalMessage');
+    
+    if (modal && modalMessage) {
+        modalMessage.textContent = message;  // Set the message content
+        modal.style.display = 'block';  // Display the modal
+    }
 }
 
 // Close modal
 function closeModal() {
     const modal = document.getElementById('validationModal');
-    modal.style.display = 'none';
+    modal.style.display = 'none';  // Hide the modal
 }
 
-
-document.querySelector('form[name="uploadArt"]').addEventListener('submit', function(event) {
-    const title = document.getElementById('title').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const category = document.getElementById('category').value;
-    const file = document.querySelector('input[type="file"]').files[0];
-
-    
-    if (!title || !description || !category || !file) {
-        event.preventDefault();  
-        showModal();  
-    }
-});
 
         function returnArt() {
     window.location.href = 'dashboard.php';

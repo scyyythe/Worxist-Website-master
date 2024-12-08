@@ -191,17 +191,64 @@ class artManager
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
+    
     public function handleArtworkRequest($action, $a_id) {
         $status = ($action === 'approve') ? 'Approved' : 'Declined'; 
-
-        try {   
-            $stmt = $this->conn->prepare("UPDATE art_info SET a_status = :status WHERE a_id = :a_id");
-            $stmt->bindValue(':status', $status); 
-            $stmt->bindValue(':a_id', $a_id);  
+    
+        try {
+            $this->conn->beginTransaction();
+    
+            $stmt = $this->conn->prepare("SELECT u_id, ban_end_date, u_status FROM accounts WHERE u_id = (SELECT u_id FROM art_info WHERE a_id = :a_id)");
+            $stmt->bindValue(':a_id', $a_id);
             $stmt->execute();
-
+            $user = $stmt->fetch();
+    
+            if ($user) {
+                $banEndDate = $user['ban_end_date'];
+                $currentDate = date('Y-m-d H:i:s');
+    
+                if ($user['u_status'] === 'Banned' && strtotime($banEndDate) < strtotime($currentDate)) {
+                    $stmt = $this->conn->prepare("UPDATE accounts SET u_status = 'Active' WHERE u_id = :u_id");
+                    $stmt->bindValue(':u_id', $user['u_id']);
+                    $stmt->execute();
+                }
+            }
+    
+            $stmt = $this->conn->prepare("UPDATE art_info SET a_status = :status WHERE a_id = :a_id");
+            $stmt->bindValue(':status', $status);
+            $stmt->bindValue(':a_id', $a_id);
+            $stmt->execute();
+    
+            if ($action === 'decline') {
+                $stmt = $this->conn->prepare("SELECT u_id FROM art_info WHERE a_id = :a_id");
+                $stmt->bindValue(':a_id', $a_id);
+                $stmt->execute();
+                $user = $stmt->fetch();
+    
+                if ($user) {
+                    $u_id = $user['u_id'];
+                    $stmt = $this->conn->prepare("UPDATE accounts SET u_status = 'Banned', ban_end_date = DATE_ADD(NOW(), INTERVAL 7 DAY) WHERE u_id = :u_id");
+                    $stmt->bindValue(':u_id', $u_id);
+                    $stmt->execute();
+    
+                    $notificationMessage = "Your artwork has been declined and your account is banned for posting artwork for 7 days.";
+                    $this->sendNotification($u_id, $notificationMessage);
+                }
+            } else if ($action === 'approve') {
+                $stmt = $this->conn->prepare("SELECT u_id FROM art_info WHERE a_id = :a_id");
+                $stmt->bindValue(':a_id', $a_id);
+                $stmt->execute();
+                $user = $stmt->fetch();
+    
+                if ($user) {
+                    $u_id = $user['u_id'];
+                    $notificationMessage = "Your artwork has been approved.";
+                    $this->sendNotification($u_id, $notificationMessage);
+                }
+            }
+    
+            $this->conn->commit();
+    
             if ($stmt->rowCount() > 0) {
                 return [
                     'success' => true,
@@ -213,13 +260,30 @@ class artManager
                     'message' => 'No changes made. Please try again.'
                 ];
             }
+    
         } catch (Exception $e) {
+            $this->conn->rollBack();
             return [
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ];
         }
     }
+    
+    private function sendNotification($u_id, $message) {
+        try {
+            $stmt = $this->conn->prepare("INSERT INTO notifications (u_id, message, is_read) VALUES (:u_id, :message, 0)");
+            $stmt->bindValue(':u_id', $u_id);
+            $stmt->bindValue(':message', $message);
+            $stmt->execute();
+        } catch (Exception $e) {
+            echo "Error sending notification: " . $e->getMessage();
+        }
+    }
+    
+    
+    
+    
     
     
 

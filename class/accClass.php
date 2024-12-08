@@ -287,13 +287,37 @@ class ArtUploader {
     }
 
     public function uploadArtwork($file, $title, $description, $category) {
+        $u_id = $_SESSION['u_id'];
+    
+        $stmt = $this->conn->prepare("SELECT u_status, ban_end_date FROM accounts WHERE u_id = :u_id");
+        $stmt->bindValue(':u_id', $u_id);
+        $stmt->execute();
+        $user = $stmt->fetch();
+    
+        if ($user) {
+            if ($user['u_status'] === 'Banned') {
+                $banEndDate = $user['ban_end_date'];
+                $currentDate = date('Y-m-d H:i:s');
+    
+                if (strtotime($banEndDate) > strtotime($currentDate)) {
+                    return [
+                        'success' => false,
+                        'message' => 'You are currently banned from uploading artwork. Please wait until the ban period ends.'
+                    ];
+                } else {
+                    $stmt = $this->conn->prepare("UPDATE accounts SET u_status = 'Active' WHERE u_id = :u_id");
+                    $stmt->bindValue(':u_id', $u_id);
+                    $stmt->execute();
+                }
+            }
+        }
+    
         if (!is_dir('files')) {
             mkdir('files');
         }
     
         $a_status = 'Pending';
-        $u_id = $_SESSION['u_id'];
-        $date = date('Y-m-d');  
+        $date = date('Y-m-d');
         $filePath = '';
     
         if ($file && $file['tmp_name']) {
@@ -303,8 +327,6 @@ class ArtUploader {
         }
     
         $statement = $this->conn->prepare("INSERT INTO art_info (u_id, title, description, category, file, date, a_status) VALUES (:u_id, :title, :description, :category, :file, :date, :a_status)");
-    
-       
         $statement->bindValue(':u_id', $u_id);
         $statement->bindValue(':title', $title);
         $statement->bindValue(':description', $description);
@@ -323,10 +345,19 @@ class ArtUploader {
             $_SESSION['date'] = $date;
             $_SESSION['a_status'] = $a_status;
     
-            header("Location: dashboard.php");
-            exit;
+            return [
+                'success' => true,
+                'message' => 'Artwork uploaded successfully!'
+            ];
         }
+    
+        return [
+            'success' => false,
+            'message' => 'Failed to upload artwork.'
+        ];
     }
+    
+    
     
 }
 

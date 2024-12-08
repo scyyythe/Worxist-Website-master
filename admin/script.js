@@ -595,7 +595,7 @@ declineButtons.forEach(button => {
     selectedCard = this.closest('.card'); 
     selectedAction = 'decline';
     selectedAId = this.getAttribute('data-id');
-    popupMessage.textContent = 'Declining this post will ban the user for 14 days. Are you sure?';
+    popupMessage.textContent = 'Declining this post will ban the user from posting an artwork for 7 days. Are you sure?';
     popupContainer.style.display = 'flex';
     console.log(selectedCard);  
   });
