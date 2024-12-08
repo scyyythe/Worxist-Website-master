@@ -61,7 +61,7 @@ $acceptedExhibits = $exhibit->getAcceptedExhibits();
         </div>
     </header>
  
-    
+    <p>this is na ecampe</p>
     <div class="wrapper">
 
         <!-- HOME SECTION -->
