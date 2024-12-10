@@ -150,6 +150,6 @@ document.getElementById("confirmCancel").addEventListener("click", function() {
 
 document.getElementById("alertClose").addEventListener("click", function() {
     document.getElementById("customAlert").style.display = "none";
-    window.location.href = "../dashboard.php";  
+    // window.location.href = "../dashboard.php";  
 });
 

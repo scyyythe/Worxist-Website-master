@@ -2933,6 +2933,52 @@ textarea{
     background-color: darkred;
   }
   
+
+
+
+  /* Solo Reques */
+  .updateModalContent {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+}
+
+
+.updateCloseBtn {
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+
+.updateCloseBtn:hover,
+.updateCloseBtn:focus {
+    color: darkred;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.updateModalContent h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+
+.updateModalContent p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
 @media (max-width: 768px) {
     .exhibit-container {
         width: 100%;

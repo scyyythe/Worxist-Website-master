@@ -3,7 +3,7 @@ session_start();
 include("include/connection.php");
 include 'class/accClass.php'; 
 
-$message = '';  // Initialize message variable
+$message = '';  
 
 if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
     
