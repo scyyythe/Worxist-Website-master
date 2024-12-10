@@ -217,25 +217,55 @@ function toggleDropdown() {
   }
 }
 
+// Search Bar
 document.addEventListener('DOMContentLoaded', function () {
   const categoryLinks = document.querySelectorAll('#dropdown a'); 
   const artworks = document.querySelectorAll('.box'); 
+  const searchInput = document.querySelector('#search-input');
+  const searchIcon = document.querySelector('.search');
 
   categoryLinks.forEach(function (link) {
       link.addEventListener('click', function (event) {
           event.preventDefault();
-          const selectedCategory = link.getAttribute('data-category'); // Get the selected category
-          
+          const selectedCategory = link.getAttribute('data-category');
           filterArtworks(selectedCategory, artworks);
       });
   });
 
+  searchInput.addEventListener('input', function () {
+      const searchTerm = searchInput.value.toLowerCase();
+      filterArtworksBySearch(searchTerm, artworks);
+  });
+
+  searchIcon.addEventListener('click', function () {
+      const searchTerm = searchInput.value.toLowerCase();
+      filterArtworksBySearch(searchTerm, artworks);
+  });
+
   function filterArtworks(category, artworks) {
       artworks.forEach(function (artwork) {
-          if (category === 'all' || artwork.getAttribute('data-category') === category) {
+          const matchesCategory = category === 'all' || artwork.getAttribute('data-category') === category;
+          const isVisible = artwork.style.display !== 'none';
+          if (matchesCategory && isVisible) {
+              artwork.style.display = 'block';
+          } else if (!matchesCategory) {
+              artwork.style.display = 'none';
+          }
+      });
+  }
+
+  function filterArtworksBySearch(searchTerm, artworks) {
+      artworks.forEach(function (artwork) {
+          const titleElement = artwork.querySelector('.artwork-title');
+          const artistElement = artwork.querySelector('.artist-name');
+          const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+          const artist = artistElement ? artistElement.textContent.toLowerCase() : '';
+          const matchesSearch = title.includes(searchTerm) || artist.includes(searchTerm);
+
+          if (matchesSearch) {
               artwork.style.display = 'block';
           } else {
-              artwork.style.display = 'none'; 
+              artwork.style.display = 'none';
           }
       });
   }
@@ -370,7 +400,7 @@ settingLink.addEventListener('click', function(e) {
  
 });
 
-
+// description of exhibit
 document.addEventListener('DOMContentLoaded', () => {
   const descriptionTrigger = document.querySelector('.viewDescription');
   const popup = document.querySelector('.exhibition-description-popup');
@@ -391,6 +421,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// search artist name and title of artowrk
+document.querySelector('.search').addEventListener('click', function () {
+  const query = document.querySelector('.bar').value;
+  fetch(`/dashboard.php?search=${encodeURIComponent(query)}`)
+      .then(response => response.json())
+      .then(data => {
+          console.log(data); // Debugging
+          const resultsContainer = document.querySelector('.results-container');
+          resultsContainer.innerHTML = '';
+          data.forEach(item => {
+              const result = document.createElement('div');
+              result.innerHTML = `
+                  <h3>${item.artwork_title}</h3>
+                  <p>By: ${item.artist_name}</p>
+                  <p>${item.description}</p>
+                  <p>Category: ${item.category}</p>
+                  <img src="../${item.file}" alt="${item.artwork_title}" style="max-width: 200px;">
+                  <p>Date: ${item.date}</p>
+              `;
+              resultsContainer.appendChild(result);
+          });
+      })
+      .catch(error => console.error('Error:', error));
+});
 
 // pop up modal para sa clicked na artworks
 function showPopup(element) {

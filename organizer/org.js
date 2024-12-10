@@ -238,9 +238,6 @@ function fetchExhibitData(exhibitId) {
 
 
 
-
-
-
 // POPUP MSG FOR APPROVE & DECLINE
 document.addEventListener("DOMContentLoaded", function () {
   const approveButtons = document.querySelectorAll(".approve-btn");

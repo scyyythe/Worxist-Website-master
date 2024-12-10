@@ -38,6 +38,8 @@ $images = $exhibitManager->getUserArtworks();
 $allImages = $exhibitManager->getAllArtworks();
 $pendingArtworks = $exhibitManager->getPendingArtworks();
 
+
+
 $exhibitManager = new ExhibitManager($conn);
 $exhibitManager->validateAndUpdateExhibitStatus();
 $exhibit = $exhibitManager->getAcceptedExhibits();
@@ -110,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'])) {
     exit();  
 }
 ob_end_clean();
+
 
 
 ?>
@@ -310,11 +313,11 @@ ob_end_clean();
         <p><b>Worxist</b><span>
         </span></p>
 
-            <div class="searchbar">
-                 <input type="text" class="bar">
-                <i class='bx bx-search search'></i>
+        <div class="searchbar">
+    <input type="text" class="bar" id="search-input" placeholder="Search for artworks">
+    <i class='bx bx-search search'></i>
+</div>
 
-            </div>
            
             <div class="notification-wrapper">
     <div class="notification-icon" onclick="toggleNotifications()">

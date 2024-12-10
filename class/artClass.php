@@ -10,7 +10,6 @@ class artManager
         $this->u_id = $_SESSION['u_id'];
     }
 
-
     public function updateArtwork($a_id, $title, $description, $category) {
         $statement = $this->conn->prepare("
             UPDATE art_info 
