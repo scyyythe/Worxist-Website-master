@@ -218,57 +218,45 @@ function toggleDropdown() {
 }
 
 // Search Bar
-document.addEventListener('DOMContentLoaded', function () {
-  const categoryLinks = document.querySelectorAll('#dropdown a'); 
-  const artworks = document.querySelectorAll('.box'); 
+document.addEventListener('DOMContentLoaded', () => {
+  const categoryLinks = document.querySelectorAll('#dropdown a');
+  const artworks = document.querySelectorAll('.box');
   const searchInput = document.querySelector('#search-input');
   const searchIcon = document.querySelector('.search');
 
-  categoryLinks.forEach(function (link) {
-      link.addEventListener('click', function (event) {
-          event.preventDefault();
-          const selectedCategory = link.getAttribute('data-category');
-          filterArtworks(selectedCategory, artworks);
-      });
-  });
+  categoryLinks.forEach(link =>
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      filterArtworks(link.getAttribute('data-category'), artworks);
+    })
+  );
 
-  searchInput.addEventListener('input', function () {
-      const searchTerm = searchInput.value.toLowerCase();
-      filterArtworksBySearch(searchTerm, artworks);
-  });
+  searchInput.addEventListener('input', () =>
+    filterArtworksBySearch(searchInput.value.toLowerCase(), artworks)
+  );
 
-  searchIcon.addEventListener('click', function () {
-      const searchTerm = searchInput.value.toLowerCase();
-      filterArtworksBySearch(searchTerm, artworks);
-  });
+  searchIcon.addEventListener('click', () =>
+    filterArtworksBySearch(searchInput.value.toLowerCase(), artworks)
+  );
 
-  function filterArtworks(category, artworks) {
-      artworks.forEach(function (artwork) {
-          const matchesCategory = category === 'all' || artwork.getAttribute('data-category') === category;
-          const isVisible = artwork.style.display !== 'none';
-          if (matchesCategory && isVisible) {
-              artwork.style.display = 'block';
-          } else if (!matchesCategory) {
-              artwork.style.display = 'none';
-          }
-      });
-  }
+  const filterArtworks = (category, artworks) => {
+    artworks.forEach(artwork => {
+      const matchesCategory = category === 'all' || artwork.getAttribute('data-category') === category;
+      artwork.style.display = matchesCategory ? 'block' : 'none';
+    });
+  };
 
-  function filterArtworksBySearch(searchTerm, artworks) {
-      artworks.forEach(function (artwork) {
-          const titleElement = artwork.querySelector('.artwork-title');
-          const artistElement = artwork.querySelector('.artist-name');
-          const title = titleElement ? titleElement.textContent.toLowerCase() : '';
-          const artist = artistElement ? artistElement.textContent.toLowerCase() : '';
-          const matchesSearch = title.includes(searchTerm) || artist.includes(searchTerm);
+  const filterArtworksBySearch = (searchTerm, artworks) => {
+    artworks.forEach(artwork => {
+      const titleElement = artwork.querySelector('.artwork-title');
+      const artistElement = artwork.querySelector('.artist-name');
+      const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+      const artist = artistElement ? artistElement.textContent.toLowerCase() : '';
+      const matchesSearch = title.includes(searchTerm) || artist.includes(searchTerm);
 
-          if (matchesSearch) {
-              artwork.style.display = 'block';
-          } else {
-              artwork.style.display = 'none';
-          }
-      });
-  }
+      artwork.style.display = matchesSearch ? 'block' : 'none';
+    });
+  };
 });
 
 

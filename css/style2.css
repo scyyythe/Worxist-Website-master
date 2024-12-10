@@ -13,6 +13,7 @@
     display: flex;
     flex-wrap: wrap;
     padding-left: 2rem;
+
 }
 header{
     padding: 20px;
@@ -41,7 +42,7 @@ header{
 textarea{
     font-size: 12px;
     resize: none;
-    width: 40%;
+    width: 100%;
     height: 100px;
     padding: 5px;
      border-radius: 5px;
@@ -53,12 +54,12 @@ textarea{
 }
 .artwork-upload{
 
-    width: 100%;
+    width: 600px;
     padding-inline: 20px;
     line-height: 2.5;
     display: flex;
     flex-direction: column;
-
+   
     label{
         font-size: 13px;
     }
@@ -66,7 +67,7 @@ textarea{
 .artwork-upload input{
     font-size: 12px;
     border-radius: 5px;
-    width: 35%;
+    width: 100%;
     height: 30px;
     padding-inline: 5px;
 }
@@ -76,9 +77,10 @@ textarea{
 .artwork-upload select{
     font-size: 12px;
     border: solid 1px #cac0c0;
-    width: 20%;
+    width: 50%;
     height: 30px;
     border-radius: 10px;
+
 }
 
 .artwork-upload button{
@@ -169,7 +171,7 @@ textarea{
 
 /* modal validation */
 /* modal */
-.modal {
+#validationModal{
     display: none;
     position: fixed; 
     z-index:100; 
@@ -500,4 +502,10 @@ width: 50%;
     height:100%;
     margin-bottom: 10px;
 }
+
+#validationModal {
+    display: none;
+
+}
+
 

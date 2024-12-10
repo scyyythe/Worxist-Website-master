@@ -6,16 +6,17 @@ include 'class/accClass.php';
 $message = '';  // Initialize message variable
 
 if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
-    // Check if all the required fields are present
+    
     if (!empty($_FILES['file']['name']) && !empty($_POST['title']) && !empty($_POST['description']) && !empty($_POST['category'])) {
         $uploader = new ArtUploader($conn);
         $uploadResult = $uploader->uploadArtwork($_FILES['file'], $_POST['title'], $_POST['description'], $_POST['category']);
     
-        if (!$uploadResult['success']) {
-            $message = $uploadResult['message'];  // Set the message for the modal
+        if ($uploadResult['success']) {
+            $message = "Upload Successfully"; 
         }
+        
     } else {
-        $message = "Please fill in all the fields before submitting!";  // Set the message for the modal
+        $message = "Please fill in all the fields before submitting!";  
     }
 }
 ?>
@@ -42,9 +43,7 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
             <h4>Post Artwork</h2>
             <div id="date-time-display"></div>
         </div>
-        
-       
- 
+    
     </header>
 
 
@@ -53,7 +52,7 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
         <div id="validationModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <p id="modalMessage"><?php echo htmlspecialchars($message); ?></p>  <!-- Use PHP to inject message -->
+        <p id="modalMessage"></p>  
     </div>
 </div>
 
@@ -117,20 +116,20 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
         </form>
     </div>
     
-    <!-- display image -->
+
  
         
     </div>
 
     <script>
 
-// Show modal with custom message if there's a message from PHP
 window.onload = function() {
-    const message = "<?php echo addslashes($message); ?>";  // Get PHP message
-    if (message) {
-        showModal(message);  // Show the modal if there's a message
+        const message = "<?php echo addslashes($message); ?>"; 
+        console.log(message);  
+        if (message) {
+            showModal(message); 
+        }
     }
-}
 
 // Show modal with custom message
 function showModal(message) {

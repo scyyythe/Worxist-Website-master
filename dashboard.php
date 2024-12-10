@@ -1062,6 +1062,7 @@ if (!empty($allImages)) {
                 <h2>Account Setting</h2>
                 
                 <div class="name-display">
+        
 
                 <div class="myname">
                 <h3>Name</h3>
