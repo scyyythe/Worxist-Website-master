@@ -44,15 +44,13 @@ if (isset($_GET['action'], $_GET['a_id'])) {
 }
 
 // APPROVE ALL ARTWORK
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  
-    $response = $artManager->approveAllRequests();  //
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'approve_all') {
+    $response = $artManager->approveAllRequests();
     header('Content-Type: text/plain');
     echo $response['message'];
-
-    // Terminate the script after sending the response
     exit();
 }
+
 
 //ARCHIVED USER
 if (isset($_POST['archive_user']) && $_POST['archive_user'] == true) {
@@ -80,9 +78,15 @@ if (isset($_POST['changeUser'])) {
         $userName->changeUsername($u_id, $new_username); 
         $_SESSION['username'] = $new_username;
         $username = $_SESSION['username'];
+        // Send a success response
+        echo json_encode(['success' => true, 'message' => 'Username updated successfully!', 'new_username' => $new_username]);
     } catch (Exception $e) {
+        // Send error response
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
+    exit();
 }
+
 
 ?>
 
@@ -466,8 +470,8 @@ if (isset($_POST['changeUser'])) {
                                 <!-- Profile Form Section -->
                                 <form action="" method="POST">
                                     <label>Username<i class='bx bxs-pencil'></i></label>
-                                    <input type="text" name="new_username" value="<?php echo($username) ?>" class="input-field">
-                                    <input type="hidden" name="action" value="change_username"> 
+                                    <input type="text" id="new_username" name="new_username" value="<?php echo($username) ?>" class="input-field">
+                                    <input type="hidden" name="action" value="change_username">
                                     <label>Role</label>
                                     <input type="text" value="<?php echo($u_type) ?>" class="input-field" disabled>
                                     

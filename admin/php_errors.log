@@ -8,3 +8,8 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 50
+[11-Dec-2024 15:13:05 Europe/Berlin] PHP Warning:  Undefined variable $userName in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 76
+[11-Dec-2024 15:13:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function changeUsername() on null in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:76
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 76

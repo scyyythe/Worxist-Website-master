@@ -643,17 +643,13 @@ cancelButton.addEventListener('click', function() {
 document.getElementById('accept-all-btn').addEventListener('click', function() {
   fetch('admin.php', {
       method: 'POST',
+      body: new URLSearchParams({
+          action: 'approve_all' 
+      })
   })
-  .then(response => response.text())  
+  .then(response => response.text())
   .then(message => {
-      showCustomAlert(message);  
-      const allRequests = document.querySelectorAll('.card'); 
-      allRequests.forEach(request => {
-          const status = request.getAttribute('data-status'); 
-          if (status === 'Approved') {
-              request.remove(); 
-          }
-      });
+      showCustomAlert(message);
   })
   .catch(error => {
       console.error('Error:', error);
@@ -661,6 +657,29 @@ document.getElementById('accept-all-btn').addEventListener('click', function() {
   });
 });
 
+
+document.getElementById('changeUser').addEventListener('click', function() {
+  const newUsername = document.getElementById('new_username').value;
+
+  fetch('admin.php', { 
+      method: 'POST',
+      body: new URLSearchParams({
+          changeUser: true,
+          new_username: newUsername
+      })
+  })
+  .then(response => response.text())  
+  .then(message => {
+      showCustomAlert(message);
+      if (message.includes('Username updated successfully!')) {
+          document.getElementById('username-display').textContent = newUsername;
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      showCustomAlert('An error occurred.');
+  });
+});
 
 
 //fucnton alert message

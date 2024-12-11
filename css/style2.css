@@ -170,7 +170,6 @@ textarea{
 }
 
 /* modal validation */
-/* modal */
 #validationModal{
     display: none;
     position: fixed; 

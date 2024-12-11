@@ -213,8 +213,6 @@ class artManager
         return $response;
     }
     
-    
-
 
     public function handleArtworkRequest($action, $a_id) {
         $status = ($action === 'approve') ? 'Approved' : 'Declined'; 

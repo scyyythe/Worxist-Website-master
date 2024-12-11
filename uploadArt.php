@@ -13,6 +13,8 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
     
         if ($uploadResult['success']) {
             $message = "Upload Successfully"; 
+        } else {
+            $message = $uploadResult['message']; 
         }
         
     } else {
@@ -50,7 +52,7 @@ if (isset($_POST['uploadArt']) && $_SERVER['REQUEST_METHOD'] == "POST") {
     <div class="container">  
         <!-- Validation Modal -->
         <div id="validationModal" class="modal">
-    <div class="modal-content">
+    <div  class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
         <p id="modalMessage"></p>  
     </div>
