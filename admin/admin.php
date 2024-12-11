@@ -184,39 +184,37 @@ if (isset($_POST['changeUser'])) {
                 </div>   
 
                 <div class="main-content">
-                    <div class="best-posts">
-                        <h3>Best Performing Posts</h3>
-                        <div class="post">
-                            <img src="pics/a1.jpg" alt="Post Image">
-                            <div class="post-info">
-                                <p>Likes</p>
-                                <div class="likes">
-                                    <span class="heart">❤</span>
-                                    <span class="count">7.2k</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post">
-                            <img src="pics/a2.jpg" alt="Post Image">
-                            <div class="post-info">
-                                <p>Likes</p>
-                                <div class="likes">
-                                    <span class="heart">❤</span>
-                                    <span class="count">6.4k</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post">
-                            <img src="pics/a3.jpg" alt="Post Image">
-                            <div class="post-info">
-                                <p>Likes</p>
-                                <div class="likes">
-                                    <span class="heart">❤</span>
-                                    <span class="count">3.5k</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="best-posts">
+    <?php
+       
+        $query = "
+            SELECT art_info.file, art_info.title, art_info.a_id, IFNULL(COUNT(likes.like_id), 0) AS total_likes
+            FROM art_info
+            LEFT JOIN likes ON art_info.a_id = likes.a_id
+            GROUP BY art_info.a_id
+            ORDER BY total_likes DESC
+            LIMIT 3
+        ";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        $bestPosts = $stmt->fetchAll();
+    ?>
+    
+    <h3>Best Performing Posts</h3>
+    
+    <?php foreach ($bestPosts as $post): ?>
+        <div class="post">
+            <img src="../<?php echo htmlspecialchars($post['file']); ?>" alt="Post Image">
+            <div class="post-info">
+                <p>Likes</p>
+                <div class="likes">
+                    <span class="heart">❤</span>
+                    <span class="count"><?php echo number_format($post['total_likes'], 0); ?></span>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
 
                     <div class="post-stats">
                         <h3>Post Stats</h3>
@@ -224,61 +222,79 @@ if (isset($_POST['changeUser'])) {
                     </div>
                 </div>
 
-                <div class="top-artists">
-                    <h3>Top 10 Artists</h3>
-                    <ul class="artist-list">
-                        <li>
-                            <img src="pics/1672369246156.jpg" alt="Artist Image">
-                            <div class="artist-info">
-                                <span class="artist-name">Jera Anderson</span>
-                                <span class="artist-handle">@jeraander</span>
-                            </div>
-                            <span class="artist-percentage">35%</span>
-                        </li>
-                        <li>
-                            <img src="pics/mona.jpg" alt="Artist Image">
-                            <div class="artist-info">
-                                <span class="artist-name">Jandeb Laplap</span>
-                                <span class="artist-handle">@jandebdab</span>
-                            </div>
-                            <span class="artist-percentage">18%</span>
-                        </li>
-                        <li>
-                            <img src="pics/SHREK.jpg" alt="Artist Image">
-                            <div class="artist-info">
-                                <span class="artist-name">Jimmy Boy</span>
-                                <span class="artist-handle">@jimmyboy</span>
-                            </div>
-                            <span class="artist-percentage">25%</span>
-                        </li>
-                        <li>
-                            <img src="pics/1672369246156.jpg" alt="Artist Image">
-                            <div class="artist-info">
-                                <span class="artist-name">Jera Anderson</span>
-                                <span class="artist-handle">@jeraander</span>
-                            </div>
-                            <span class="artist-percentage">35%</span>
-                        </li>
-                        <li>
-                            <img src="pics/mona.jpg" alt="Artist Image">
-                            <div class="artist-info">
-                                <span class="artist-name">Jandeb Laplap</span>
-                                <span class="artist-handle">@jandebdab</span>
-                            </div>
-                            <span class="artist-percentage">18%</span>
-                        </li>
-                        <li>
-                            <img src="pics/SHREK.jpg" alt="Artist Image">
-                            <div class="artist-info">
-                                <span class="artist-name">Jimmy Boy</span>
-                                <span class="artist-handle">@jimmyboy</span>
-                            </div>
-                            <span class="artist-percentage">25%</span>
-                        </li>
-                    </ul>
-                    <a href="#" class="view-more">View More</a>
-                </div>
+                <?php
+$query = "
+SELECT accounts.u_name, accounts.username, accounts.profile, 
+       COUNT(DISTINCT likes.like_id) AS total_likes, 
+       COUNT(DISTINCT comment.comment_id) AS total_comments, 
+       COUNT(DISTINCT favorite.fav_id) AS total_favorites
+FROM accounts
+LEFT JOIN art_info ON accounts.u_id = art_info.u_id
+LEFT JOIN likes ON art_info.a_id = likes.a_id
+LEFT JOIN comment ON art_info.a_id = comment.a_id
+LEFT JOIN favorite ON art_info.a_id = favorite.a_id
+WHERE accounts.u_type = 'User'
+GROUP BY accounts.u_id
+ORDER BY total_likes DESC
+LIMIT 10
+";
 
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$topArtists = $stmt->fetchAll();
+?>
+
+<div class="top-artists">
+<h3>Top 10 Artists</h3>
+<ul class="artist-list">
+    <?php foreach ($topArtists as $artist): ?>
+        <li>
+            <?php
+            $imagePath = '../profile_pics/' . $artist['profile'];  
+            if (file_exists($imagePath) && !empty($artist['profile'])) {
+                echo "<img src=\"$imagePath\" alt=\"Artist Image\" class=\"artist-photo\">";
+            } else {
+                echo "<img src=\"../gallery/head.png\" alt=\"Default Artist Image\" class=\"artist-photo\">";
+            }
+            ?>
+            <div class="artist-info">
+                <span class="artist-name"><?php echo htmlspecialchars($artist['u_name']); ?></span>
+                <span class="artist-handle">@<?php echo strtolower(str_replace(' ', '', $artist['username'])); ?></span>
+            </div>
+            <?php 
+            $totalInteractions = $artist['total_likes'] + $artist['total_comments'] + $artist['total_favorites'];
+            $percentage = $totalInteractions / 1;
+            ?>
+            <span class="artist-percentage"><?php echo number_format($percentage, 1) . '%'; ?></span>
+        </li>
+    <?php endforeach; ?>
+</ul>
+<a href="#" class="view-more">View More</a>
+</div>
+
+<?php
+
+$queryPosts = "SELECT COUNT(*) AS total_posts FROM art_info WHERE a_status = 'Approved'";
+$stmt = $conn->prepare($queryPosts);
+$stmt->execute();
+$totalPosts = $stmt->fetch(PDO::FETCH_ASSOC)['total_posts'];
+
+$queryRequests = "SELECT COUNT(*) AS total_requests FROM exhibit_tbl WHERE exbt_status = 'Pending'";
+$stmt = $conn->prepare($queryRequests);
+$stmt->execute();
+$totalRequests = $stmt->fetch(PDO::FETCH_ASSOC)['total_requests'];
+
+$queryAcceptedExhibitions = "SELECT COUNT(*) AS total_accepted_exhibitions FROM exhibit_tbl WHERE accepted_at IS NOT NULL";
+$stmt = $conn->prepare($queryAcceptedExhibitions);
+$stmt->execute();
+$totalAcceptedExhibitions = $stmt->fetch(PDO::FETCH_ASSOC)['total_accepted_exhibitions'];
+
+echo "<script>
+    var posts = {$totalPosts};
+    var requests = {$totalRequests};
+    var acceptedExhibitions = {$totalAcceptedExhibitions};
+</script>";
+?>
 
                 <div class="activity">
                     <h3>Activity</h3>
@@ -525,31 +541,32 @@ if (isset($_POST['changeUser'])) {
                                     </div>
                                 </div>
                         
-                                <!-- Password Section -->
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <div id="password-view" class="p-pass">
-                                        <input type="password" value="<?php echo($password)?>" class="p-input-field" disabled>
-                                        <a href="#" id="change-link" class="change-link">Change</a>
-                                    </div>
-                                    <div id="password-edit" class="p-hidden">
-                                        <div class="pass">
-                                            <div class="p-current">
-                                                <p>Current Password</p>
-                                                <input type="password" id="new-password" class="p--input-field" placeholder="Enter new password">
-                                            </div>
-                                            <div class="p-new">
-                                                <p>New Password</p>
-                                                <input type="password" id="current-password" class="p--input-field" placeholder="Enter current password">
-                                            </div>
-                                            <a href="#" id="hide-link" class="change-link">Hide</a>
-                                        </div>
-                                        <div class="reset">
-                                            <p>Can't remember your current password? <a href="#">Reset your password</a></p>
-                                            <button type="button" id="save-password-btn">Save password</button>
-                                        </div>
-                                    </div>    
+                        <!-- Password Section -->
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div id="password-view" class="p-pass">
+                            <input type="password" value="<?php echo($password) ?>" class="p-input-field" disabled>
+                            <a href="#" id="change-link" class="change-link">Change</a>
+                        </div>
+                        <div id="password-edit" class="p-hidden">
+                            <div class="pass">
+                                <div class="p-current">
+                                    <p>Current Password</p>
+                                    <input type="password" id="current-password" class="p--input-field" placeholder="Enter current password">
                                 </div>
+                                <div class="p-new">
+                                    <p>New Password</p>
+                                    <input type="password" id="new-password" class="p--input-field" placeholder="Enter new password">
+                                </div>
+                                <a href="#" id="hide-link" class="change-link">Hide</a>
+                            </div>
+                            <div class="reset">
+                                <p>Can't remember your current password? <a href="#">Reset your password</a></p>
+                                <button type="button" id="save-password-btn">Save password</button>
+                            </div>
+                        </div>    
+                    </div>
+
                         
                                 <!-- Delete Account Section -->
                                 <div class="delete-account">

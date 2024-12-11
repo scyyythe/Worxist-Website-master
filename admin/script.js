@@ -122,7 +122,7 @@ let postStatsCanvas = document.getElementById('postStatsChart').getContext('2d')
 let postStatsChart = new Chart(postStatsCanvas, {
     type: 'bar', // Chart type
     data: {
-        labels: ['Item 1', 'Item 2', 'Item 3'], 
+        labels: ['Weekly', 'Monthly', 'Yearly'], 
         datasets: [
             {
                 label: 'Saved',
@@ -188,85 +188,85 @@ let postStatsChart = new Chart(postStatsCanvas, {
 
 
 // --- Activity Chart ---
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Get the canvas for the Activity Chart
-    let activityCanvas = document.getElementById('activityChart').getContext('2d');
+  // Get the canvas for the Activity Chart
+  let activityCanvas = document.getElementById('activityChart').getContext('2d');
 
-    // Adjust canvas resolution for high-DPI displays
-    let dpr = window.devicePixelRatio || 1; // Device Pixel Ratio
-    activityCanvas.canvas.width = activityCanvas.canvas.clientWidth * dpr;
-    activityCanvas.canvas.height = activityCanvas.canvas.clientHeight * dpr;
-    activityCanvas.scale(dpr, dpr);
+  // Adjust canvas resolution for high-DPI displays
+  let dpr = window.devicePixelRatio || 1; // Device Pixel Ratio
+  activityCanvas.canvas.width = activityCanvas.canvas.clientWidth * dpr;
+  activityCanvas.canvas.height = activityCanvas.canvas.clientHeight * dpr;
+  activityCanvas.scale(dpr, dpr);
 
-    // Line chart
-    let activityChart = new Chart(activityCanvas, {
-        type: 'line', // Chart type
-        data: {
-            labels: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'], 
-            datasets: [
-                {
-                    label: 'Posts', 
-                    data: [24, 25, 40, 50, 45], 
-                    borderColor: '#a20d0d', 
-                    backgroundColor: '#a20d0d', 
-                    fill: false, 
-                    borderWidth: 2
-                },
-                {
-                    label: 'Requests', 
-                    data: [35, 17, 45, 40, 50], 
-                    borderColor: '#ff7272', 
-                    backgroundColor: '#ff7272', 
-                    fill: false, 
-                    borderWidth: 2
-                },
-                {
-                    label: 'Exhibitions', 
-                    data: [10, 5, 20, 15, 35], 
-                    borderColor: '#ed1c24', 
-                    backgroundColor: '#ed1c24', 
-                    fill: false, 
-                    borderWidth: 2
-                }
-            ]
-        },
-        options: {
-            responsive: true, 
-            maintainAspectRatio: false, 
-            scales: {
-                y: {
-                    beginAtZero: true, 
-                    ticks: {
-                        font: {
-                            size: 14, 
-                            family: 'Poppins', 
-                            weight: 'bold'
-                        }
-                    }
-                },
-                x: {
-                    ticks: {
-                        font: {
-                            size: 14, 
-                            family: 'Poppins', 
-                        }
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        font: {
-                            size: 14, 
-                            family: 'Poppins', 
-                        }
-                    }
-                }
-            }
-        }
-    });
+  // Line chart with dynamic data for all users
+  let activityChart = new Chart(activityCanvas, {
+      type: 'line', // Chart type
+      data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], 
+          datasets: [
+              {
+                  label: 'Posts', 
+                  data: [posts, posts + 1, posts + 2, posts + 3, posts + 4], // Dynamic data for posts
+                  borderColor: '#a20d0d', 
+                  backgroundColor: '#a20d0d', 
+                  fill: false, 
+                  borderWidth: 2
+              },
+              {
+                  label: 'Requests', 
+                  data: [requests, requests + 1, requests + 2, requests + 3, requests + 4], // Dynamic data for requests
+                  borderColor: '#ff7272', 
+                  backgroundColor: '#ff7272', 
+                  fill: false, 
+                  borderWidth: 2
+              },
+              {
+                  label: 'Accepted Exhibitions', 
+                  data: [acceptedExhibitions, acceptedExhibitions + 1, acceptedExhibitions + 2, acceptedExhibitions + 3, acceptedExhibitions + 4], // Dynamic data for accepted exhibitions
+                  borderColor: '#ed1c24', 
+                  backgroundColor: '#ed1c24', 
+                  fill: false, 
+                  borderWidth: 2
+              }
+          ]
+      },
+      options: {
+          responsive: true, 
+          maintainAspectRatio: false, 
+          scales: {
+              y: {
+                  beginAtZero: true, 
+                  ticks: {
+                      font: {
+                          size: 14, 
+                          family: 'Poppins', 
+                          weight: 'bold'
+                      }
+                  }
+              },
+              x: {
+                  ticks: {
+                      font: {
+                          size: 14, 
+                          family: 'Poppins', 
+                      }
+                  }
+              }
+          },
+          plugins: {
+              legend: {
+                  labels: {
+                      font: {
+                          size: 14, 
+                          family: 'Poppins', 
+                      }
+                  }
+              }
+          }
+      }
+  });
 });
+
 
 //POP UP ARCHVED USER
 document.addEventListener('DOMContentLoaded', function () {
@@ -658,30 +658,6 @@ document.getElementById('accept-all-btn').addEventListener('click', function() {
 });
 
 
-document.getElementById('changeUser').addEventListener('click', function() {
-  const newUsername = document.getElementById('new_username').value;
-
-  fetch('admin.php', { 
-      method: 'POST',
-      body: new URLSearchParams({
-          changeUser: true,
-          new_username: newUsername
-      })
-  })
-  .then(response => response.text())  
-  .then(message => {
-      showCustomAlert(message);
-      if (message.includes('Username updated successfully!')) {
-          document.getElementById('username-display').textContent = newUsername;
-      }
-  })
-  .catch(error => {
-      console.error('Error:', error);
-      showCustomAlert('An error occurred.');
-  });
-});
-
-
 //fucnton alert message
 function showCustomAlert(message) {
   // Get the alert elements
@@ -721,25 +697,24 @@ document.getElementById(sectionId).classList.remove('hidden');
 document.getElementById(sectionId).classList.add('active');
 }
 
-
-
 // CHANGE & HIDE PASSWORD
+
 // Show password edit view when 'Change' is clicked
-document.getElementById('change-link').addEventListener('click', function(e) {
+document.getElementById('change-link').addEventListener('click', function (e) {
   e.preventDefault();
   document.getElementById('password-view').style.display = 'none';  // Hide the "Change" view
   document.getElementById('password-edit').style.display = 'block'; // Show the "Edit" view
 });
 
 // Hide password edit view when 'Hide' is clicked
-document.getElementById('hide-link').addEventListener('click', function(e) {
+document.getElementById('hide-link').addEventListener('click', function (e) {
   e.preventDefault();
   document.getElementById('password-view').style.display = 'flex';  // Show the "Change" view
   document.getElementById('password-edit').style.display = 'none'; // Hide the "Edit" view
 });
 
 // Handle save password functionality
-document.getElementById('save-password-btn').addEventListener('click', function() {
+document.getElementById('save-password-btn').addEventListener('click', function () {
   var currentPassword = document.getElementById('current-password').value;
   var newPassword = document.getElementById('new-password').value;
 
@@ -774,32 +749,39 @@ document.getElementById('save-password-btn').addEventListener('click', function(
       return;
   }
 
-
-  fetch('updatePassword.php', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-          currentPassword: currentPassword,
-          newPassword: newPassword
-      })
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.success) {
-          showCustomAlert('Password successfully changed!');
-          document.getElementById('password-view').style.display = 'flex';  // Show the "Change" view
-          document.getElementById('password-edit').style.display = 'none';  // Hide the "Edit" view
-      } else {
-          showCustomAlert('Error: ' + data.error);
-      }
-  })
-  .catch(error => {
-      console.error('Error:', error);
-      showCustomAlert('An error occurred while updating the password.');
-  });
+  fetch('../class/updatePassword.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        currentPassword: currentPassword,
+        newPassword: newPassword
+    })
+})
+.then(response => response.text())  // Get the raw response text for debugging
+.then(text => {
+    try {
+        const data = JSON.parse(text);  // Try parsing the response as JSON
+        if (data.success) {
+            showCustomAlert('Password successfully changed!');
+            document.getElementById('password-view').style.display = 'flex';
+            document.getElementById('password-edit').style.display = 'none';
+        } else {
+            showCustomAlert('Error: ' + (data.error || 'An unknown error occurred.'));
+        }
+    } catch (error) {
+        console.error('Failed to parse JSON:', error);
+        showCustomAlert('An error occurred while updating the password. The response was not valid JSON.');
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    showCustomAlert('An error occurred while updating the password.');
 });
+
+});
+
 
 //DELETE ACC POP-UP
 document.addEventListener("DOMContentLoaded", function () {

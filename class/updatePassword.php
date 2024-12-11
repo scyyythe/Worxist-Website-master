@@ -1,33 +1,38 @@
 <?php
-// Assuming you're connected to the database
-include("include/connection.php");
+session_start();
+header('Content-Type: application/json');  // Ensure correct content-type
 
-$data = json_decode(file_get_contents('php://input'), true);
-$currentPassword = $data['currentPassword'];
-$newPassword = $data['newPassword'];
-$userId = $_SESSION['u_id']; 
-
-$query = "SELECT password FROM accounts WHERE u_id = :userId";
-$stmt = $conn->prepare($query);
-$stmt->bindValue(':userId', $userId, PDO::PARAM_INT); // Use bindValue here
-$stmt->execute();
-$currentPasswordFromDb = $stmt->fetchColumn();
-
-if (!password_verify($currentPassword, $currentPasswordFromDb)) {
-    echo json_encode(['success' => false, 'error' => 'Current password is incorrect.']);
-    exit();
+// Make sure the user is logged in (check session)
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'User not logged in']);
+    exit;
 }
 
-$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $currentPassword = $_POST['currentPassword'];
+    $newPassword = $_POST['newPassword'];
 
-$updateQuery = "UPDATE accounts SET password = :newPassword WHERE u_id = :userId";
-$stmt = $conn->prepare($updateQuery);
-$stmt->bindValue(':newPassword', $hashedPassword, PDO::PARAM_STR); // Use bindValue here
-$stmt->bindValue(':userId', $userId, PDO::PARAM_INT); // Use bindValue here
+    include("include/connection.php");
 
-if ($stmt->execute()) {
-    echo json_encode(['success' => true]);
+    $userId = $_SESSION['u_id'];
+
+    $stmt = $conn->prepare("SELECT password FROM accounts WHERE u_id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && password_verify($currentPassword, $user['password'])) {
+       
+        $newPasswordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
+        $updateStmt = $conn->prepare("UPDATE accounts SET password = ? WHERE u_id = ?");
+        $updateStmt->execute([$newPasswordHashed, $userId]);
+
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Current password is incorrect']);
+    }
+    exit;
 } else {
-    echo json_encode(['success' => false, 'error' => 'Failed to update password.']);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    exit;
 }
 ?>
