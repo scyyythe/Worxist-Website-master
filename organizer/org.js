@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     // Populate panel with fetched exhibit data
-document.getElementById("exhibit-date").innerText = exhibit.exhibit.exbt_date;
+ document.getElementById("exhibit-date").innerText = "Exhibit Date: " + exhibit.exhibit.exbt_date;
 document.getElementById("exhibit-title").innerText = exhibit.exhibit.exbt_title;
 document.getElementById("exhibit-description").innerText = exhibit.exhibit.exbt_descrip;
 
@@ -168,7 +168,109 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
     }
 });
 
+        // Pass exhibitId to approve and decline buttons
+        const approveButtons = document.querySelectorAll(".approve-btn");
+        const declineButtons = document.querySelectorAll(".decline-btn");
+        const popupContainer = document.getElementById("p-popup-container");
+        const popupMessage = document.getElementById("p-popup-message");
+        const confirmButton = document.getElementById("p-confirm-btn");
+        const cancelButton = document.getElementById("p-cancel-btn");
 
+
+        for (let i = 0; i < approveButtons.length; i++) {
+          approveButtons[i].setAttribute("data-exhibit-id", exhibitId); // Attach exhibitId to the approve button
+          approveButtons[i].addEventListener("click", function () {
+            const exhibitId = this.getAttribute("data-exhibit-id"); // Retrieve the exhibitId
+            showPopup(`Are you sure you want to approve this exhibit? ${exhibitId}`, "approve", exhibitId);
+          });
+        }
+
+        for (let i = 0; i < declineButtons.length; i++) {
+          declineButtons[i].setAttribute("data-exhibit-id", exhibitId); // Attach exhibitId to the decline button
+          declineButtons[i].addEventListener("click", function () {
+            const exhibitId = this.getAttribute("data-exhibit-id"); // Retrieve the exhibitId
+            showPopup(`Are you sure you want to decline this exhibit? ${exhibitId}`, "decline", exhibitId);
+          });
+        }
+        
+         // Function to show the popup
+  function showPopup(message, action, exhibitId) {
+    popupMessage.textContent = message; 
+    popupContainer.style.display = "flex"; 
+    currentAction = action;
+    currentExhibitId = exhibitId; 
+  }
+
+  // Function to hide the popup
+  function hidePopup() {
+    popupContainer.style.display = "none";
+    currentAction = ""; 
+    currentExhibitId = null;
+  }
+
+  
+  confirmButton.addEventListener("click", function () {
+    if (currentAction === "approve" && currentExhibitId) {
+      // Approve action
+      console.log("Approving exhibit ID:", currentExhibitId);
+      fetch('org.php', {
+        method: 'POST',
+        body: new URLSearchParams({
+          exbt_id: currentExhibitId,
+          status: 'Accepted' 
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      .then(response => response.json())  // Parse the JSON response
+      .then(data => {
+        if (data.status === 'error') {
+          console.log(data.message); 
+          showCustomAlert(data.message);  
+        } else {
+         showCustomAlert("Exhibit updated successfully");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+      
+    } else if (currentAction === "decline" && currentExhibitId) {
+      // Decline action
+      console.log("Declining exhibit ID:", currentExhibitId);
+      fetch('org.php', {
+        method: 'POST',
+        body: new URLSearchParams({
+          exbt_id: currentExhibitId, // Pass the correct exhibit ID
+          status: 'Declined' // Mark as declined
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          showCustomAlert('Exhibit declined!');
+        } else {
+          showCustomAlert('Failed to update exhibit status.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showCustomAlert('An error occurred.');
+      });
+    }
+
+    hidePopup(); // Hide the popup after action is taken
+  });
+
+ cancelButton.addEventListener("click", function () {
+    hidePopup(); 
+  });
+
+  
 
         // get the exhibit type
         const fetchedExhibitType = exhibit.exhibit.exbt_type; 
@@ -194,11 +296,14 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
           panel.style.display = "block";
         }
 
+
+  
       }).catch(error => {
         console.error('Error fetching exhibit data:', error);
         alert('An error occurred while fetching exhibit details.');
       });
     });
+
   }
 
   // Back button functionality
@@ -217,134 +322,26 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
   }
 });
 
-// Fetch exhibit data function
-function fetchExhibitData(exhibitId) {
-  return new Promise((resolve, reject) => {
-    fetch(`org.php?id=${exhibitId}`)
-    .then(response => response.text())
-    .then(data => {
-      console.log("Raw data:", data);
-      try {
-        const exhibit = JSON.parse(data); 
-        resolve(exhibit);
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-        reject(error);
-      }
-    })
-    .catch(error => reject(error));
-  });
-}
-
-
-
-// POPUP MSG FOR APPROVE & DECLINE
-document.addEventListener("DOMContentLoaded", function () {
-  const approveButtons = document.querySelectorAll(".approve-btn");
-  const declineButtons = document.querySelectorAll(".decline-btn");
-
-  const popupContainer = document.getElementById("p-popup-container");
-  const popupMessage = document.getElementById("p-popup-message");
-  const confirmButton = document.getElementById("p-confirm-btn");
-  const cancelButton = document.getElementById("p-cancel-btn");
-
-  let currentAction = ""; 
-  let currentExhibitId = null; // To store the exhibit ID to be updated
-
-  // Function to show the popup
-  function showPopup(message, action, exhibitId) {
-    popupMessage.textContent = message; 
-    popupContainer.style.display = "flex"; 
-    currentAction = action;
-    currentExhibitId = exhibitId; // Store the exhibit ID for the action
-  }
-
-  // Function to hide the popup
-  function hidePopup() {
-    popupContainer.style.display = "none";
-    currentAction = ""; 
-    currentExhibitId = null;
-  }
-
-  // Add click listeners to all approve buttons
-  for (let i = 0; i < approveButtons.length; i++) {
-    approveButtons[i].addEventListener("click", function () {
-      const exhibitId = approveButtons[i].getAttribute("data-exhibit-id"); 
-      showPopup(`Are you sure you want to approve this exhibit? ${exhibitId}`, "approve", exhibitId);
+  // Fetch exhibit data function
+  function fetchExhibitData(exhibitId) {
+    return new Promise((resolve, reject) => {
+      fetch(`org.php?id=${exhibitId}`)
+      .then(response => response.text())
+      .then(data => {
+        console.log("Raw data:", data);
+        try {
+          const exhibit = JSON.parse(data); 
+          resolve(exhibit);
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+          reject(error);
+        }
+      })
+      .catch(error => reject(error));
     });
   }
 
-  // Add click listeners to all decline buttons
-  for (let i = 0; i < declineButtons.length; i++) {
-    declineButtons[i].addEventListener("click", function () {
-      const exhibitId = declineButtons[i].getAttribute("data-exhibit-id");
-      showPopup("Are you sure you want to decline this exhibit?", "decline", exhibitId);
-    });
-  }
 
-  confirmButton.addEventListener("click", function () {
-    if (currentAction === "approve" && currentExhibitId) {
-      // Approve action
-      fetch('org.php', {
-        method: 'POST',
-        body: new URLSearchParams({
-          exbt_id: currentExhibitId,
-          status: 'Accepted' 
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          showCustomAlert('Exhibit approved!');
-        } else {
-          // Check if the error message indicates there's already an accepted exhibit
-          if (data.message === "There is already an accepted exhibit. Please wait until it is marked as Done.") {
-            showCustomAlert('Cannot accept a new exhibit. Please wait for the current one to be marked as Done.');
-          } else {
-            showCustomAlert('Failed to update exhibit status.');
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showCustomAlert('An error occurred.');
-      });
-    } else if (currentAction === "decline" && currentExhibitId) {
-      // Decline action
-      fetch('org.php', {
-        method: 'POST',
-        body: new URLSearchParams({
-          exbt_id: currentExhibitId,
-          status: 'Declined' 
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          showCustomAlert('Exhibit declined!');
-        } else {
-          showCustomAlert('Failed to update exhibit status.');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showCustomAlert('An error occurred.');
-      });
-    }
-
-    hidePopup(); 
-  });
-
-  cancelButton.addEventListener("click", function () {
-    hidePopup(); 
-  });
-});
 
 function showCustomAlert(message) {
   const alertBox = document.getElementById('customAlert');

@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $exbt_id = $_POST['exbt_id']; 
         $status = $_POST['status'];   
 
-        // Ensure the status is either 'Accepted' or 'Declined'
         if ($status === 'Accepted' || $status === 'Declined') {
             // Assuming ExhibitManager class is already defined
             $exhibit = new ExhibitManager($conn);
@@ -283,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="actions">
                     <button class="btn approve-btn" name="approveRequest" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">Approve</button>
-<button class="btn decline-btn" name="declineRequest" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">Decline</button>
+                    <button class="btn decline-btn" name="declineRequest" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">Decline</button>
 
 </div>
 

@@ -522,8 +522,9 @@ class ExhibitManager {
                 echo json_encode(["status" => "success", "message" => "Exhibit status updated to $status"]);
             } else {
                 $errorInfo = $statement->errorInfo();
+                error_log("Failed to update exhibit status: " . $errorInfo[2]); 
                 echo json_encode(["status" => "error", "message" => "Failed to update status. Error: " . $errorInfo[2]]);
-            }
+            }            
         } catch (Exception $e) {
             echo json_encode(["status" => "error", "message" => "Exception caught: " . $e->getMessage()]);
         }
