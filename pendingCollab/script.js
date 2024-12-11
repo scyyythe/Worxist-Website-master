@@ -153,3 +153,45 @@ document.getElementById("alertClose").addEventListener("click", function() {
     // window.location.href = "../dashboard.php";  
 });
 
+document.getElementById("updateCloseBtn").onclick = function() {
+    document.getElementById("updateModal").style.display = "none";
+};
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById("updateModal")) {
+        document.getElementById("updateModal").style.display = "none";
+    }
+};
+
+document.getElementById("updateExhibitForm").addEventListener("submit", function(event) {
+    event.preventDefault(); 
+
+    const formData = new FormData(this);
+    formData.append("updateRequest", "true");
+
+    fetch("", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        document.getElementById("updateModal").style.display = "block";
+        
+    
+        const message = data.message;
+        document.querySelector("#updateModal .modal-content p").innerText = message;
+
+        
+        const exhibitTitle = document.querySelector("input[name='exhibit-title']").value;
+        const exhibitDescription = document.querySelector("textarea[name='exhibit-description']").value;
+        const exhibitDate = document.querySelector("input[name='exhibit-date']").value;
+
+        document.querySelector(".exhibit-title-display").innerText = exhibitTitle;
+        document.querySelector(".exhibit-description-display").innerText = exhibitDescription;
+        document.querySelector(".exhibit-date-display").innerText = exhibitDate;
+    })
+    .catch(error => {
+        console.error("Error updating exhibit:", error);
+        alert("An error occurred while updating the exhibit.");
+    });
+});

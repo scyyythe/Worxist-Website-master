@@ -5,6 +5,9 @@ include("../include/connection.php");
 include '../class/accclass.php';
 include '../class/artClass.php';
 
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', 'php_errors.log');
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: /login-register.php");
@@ -29,10 +32,6 @@ $user = new AccountManager($conn);
 $infos = $user->getAccountInfo($u_id);
 $users = $user->getUsers();
 
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 //ARTWORK REQUEST
 $artManager = new ArtManager($conn);
 if (isset($_GET['action'], $_GET['a_id'])) {
@@ -42,6 +41,17 @@ if (isset($_GET['action'], $_GET['a_id'])) {
     header('Content-Type: application/json');  
     echo json_encode($result); 
     exit(); 
+}
+
+// APPROVE ALL ARTWORK
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  
+    $response = $artManager->approveAllRequests();  //
+    header('Content-Type: text/plain');
+    echo $response['message'];
+
+    // Terminate the script after sending the response
+    exit();
 }
 
 //ARCHIVED USER
@@ -347,50 +357,54 @@ if (isset($_POST['changeUser'])) {
 
             </section>
 
+
             <!-- POSTS REQUESTS -->
             <section class="content-wrapper3" id="posts">
-    <div class="posts-wrapper">
-        <?php
-        $artManage = new artManager($conn);
-        $pendingRequests = $artManage->getPendingRequests();
+            <div class="actions-wrapper">
+        <button id="accept-all-btn" class="btn accept-all">Accept All</button>
+    </div>
 
-        foreach ($pendingRequests as $request) {
-            $profilePath = '../profile_pics/' . $request['artist_profile'];
-            if (file_exists($profilePath) && !empty($request['artist_profile'])) {
-                $profileImage = $profilePath;
-            } else {
-                $profileImage = '../gallery/head.png';
-            }
+            <div class="posts-wrapper">
+    <?php
+    $artManage = new artManager($conn);
+    $pendingRequests = $artManage->getPendingRequests();
 
-            $imagePath = '../' . $request['file'];
-            if (file_exists($imagePath) && !empty($request['file'])) {
-                $imageToShow = $imagePath;
-            } else {
-                $imageToShow = '../gallery/head.png';
-            }
+    foreach ($pendingRequests as $request) {
+        $profilePath = '../profile_pics/' . $request['artist_profile'];
+        if (file_exists($profilePath) && !empty($request['artist_profile'])) {
+            $profileImage = $profilePath;
+        } else {
+            $profileImage = '../gallery/head.png';
+        }
 
-            echo '
-                <div class="card" data-id="' . $request['a_id'] . '">
-                    <img src="' . $imageToShow . '" class="banner-image" alt="Artwork">
-                    <div class="card-content">
-                        <p class="art-title">' . $request['title'] . '</p>
-                        <div class="profile">
-                            <img src="' . $profileImage . '" alt="Profile Picture" class="profile-picture">
-                            <div class="profile-info">
-                                <h3 class="name">' . $request['artist_name'] . '</h3>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <button class="btn approve-btn" data-id="' . $request['a_id'] . '">Approve</button>
-                            <button class="btn decline-btn" data-id="' . $request['a_id'] . '">Decline</button>
+        $imagePath = '../' . $request['file'];
+        if (file_exists($imagePath) && !empty($request['file'])) {
+            $imageToShow = $imagePath;
+        } else {
+            $imageToShow = '../gallery/head.png';
+        }
+
+        echo '
+            <div class="card" data-id="' . $request['a_id'] . '">
+                <img src="' . $imageToShow . '" class="banner-image" alt="Artwork">
+                <div class="card-content">
+                    <p class="art-title">' . $request['title'] . '</p>
+                    <div class="profile">
+                        <img src="' . $profileImage . '" alt="Profile Picture" class="profile-picture">
+                        <div class="profile-info">
+                            <h3 class="name">' . $request['artist_name'] . '</h3>
                         </div>
                     </div>
-                </div>';
+                    <div class="actions">
+                        <button class="btn approve-btn" data-id="' . $request['a_id'] . '">Approve</button>
+                        <button class="btn decline-btn" data-id="' . $request['a_id'] . '">Decline</button>
+                    </div>
+                </div>
+            </div>';
+    }
+    ?>
+</div>
 
-            
-        }
-        ?>
-    </div>
 
     <!-- Modal -->
     <div class="modal" id="image-modal">

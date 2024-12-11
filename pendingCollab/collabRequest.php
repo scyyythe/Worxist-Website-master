@@ -9,39 +9,58 @@ $u_id = $_SESSION['u_id'];
 $exhibit = new ExhibitManager($conn);
 $pendingExhibits = $exhibit->myPendingExhibits($u_id);
 $pending = $exhibit->getPendingExhibits($u_id);
-$response = [];
+$updateSuccess = false;
+$message = '';
 
 if (isset($_POST['updateRequest'])) {
-    $exhibit_title = htmlspecialchars($_POST['exhibit-title']);
-    $exhibit_description = htmlspecialchars($_POST['exhibit-description']);
-    $exhibit_date = $_POST['exhibit-date'];
+    // Sanitize input data
+    $exhibit_title = htmlentities($_POST['exhibit-title'], ENT_QUOTES);
+    $exhibit_description = htmlentities($_POST['exhibit-description'], ENT_QUOTES);
+    $exhibit_date = $_POST['exhibit-date']; // Validate date if necessary
+
+    // Retrieve current exhibit details
     $exbt_id = $pending[0]['exbt_id'];
+    $current_title = $pending[0]['exbt_title'];
+    $current_description = $pending[0]['exbt_descrip'];
+    $current_date = $pending[0]['exbt_date'];
 
-    try {
-        $query = "UPDATE exhibit_tbl SET 
-                    exbt_title = :exbt_title, 
-                    exbt_descrip = :exbt_description, 
-                    exbt_date = :exbt_date
-                  WHERE exbt_id = :exbt_id AND u_id = :u_id";
+    // Check if any changes were made
+    if ($exhibit_title === $current_title && $exhibit_description === $current_description && $exhibit_date === $current_date) {
+        $message = 'No changes were made.';
+    } else {
+        try {
+            // Update query
+            $query = "UPDATE exhibit_tbl SET 
+                        exbt_title = :exbt_title, 
+                        exbt_descrip = :exbt_description, 
+                        exbt_date = :exbt_date
+                      WHERE exbt_id = :exbt_id AND u_id = :u_id";
 
-        $stmt = $conn->prepare($query);
-        $stmt->bindValue(':exbt_title', $exhibit_title, PDO::PARAM_STR);
-        $stmt->bindValue(':exbt_description', $exhibit_description, PDO::PARAM_STR);
-        $stmt->bindValue(':exbt_date', $exhibit_date, PDO::PARAM_STR);
-        $stmt->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
-        $stmt->bindValue(':u_id', $u_id, PDO::PARAM_INT);
+            // Prepare and bind values
+            $statement = $conn->prepare($query);
+            $statement->bindValue(':exbt_title', $exhibit_title, PDO::PARAM_STR);
+            $statement->bindValue(':exbt_description', $exhibit_description, PDO::PARAM_STR);
+            $statement->bindValue(':exbt_date', $exhibit_date, PDO::PARAM_STR);
+            $statement->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
+            $statement->bindValue(':u_id', $u_id, PDO::PARAM_INT);
 
-        // If the update is successful, reload the page
-        if ($stmt->execute()) {
-            header('Location: ' . $_SERVER['PHP_SELF']);
-            exit();
-        } else {
-            echo "Error: Could not update exhibit.";
+            // Execute query
+            if ($statement->execute()) {
+                $message = 'Update successful!';
+                $updateSuccess = true;
+            } else {
+                $message = 'Error: Could not update exhibit.';
+            }
+        } catch (PDOException $e) {
+            $message = 'Error: ' . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
     }
+
+ 
+    echo json_encode(['message' => $message, 'updateSuccess' => $updateSuccess]);
+    exit();
 }
+
 
 if (isset($_POST['cancelRequest'])) {
     $exbt_id = $pending[0]['exbt_id']; 
@@ -94,7 +113,14 @@ if (isset($_POST['cancelRequest'])) {
     </div>
 </div>
 
-
+   <!-- Updated Modal for Exhibit -->
+   <div id="updateModal" class="modal <?php echo $updateSuccess ? 'show' : ''; ?>" style="display:<?php echo $updateSuccess ? 'block' : 'none'; ?>;">
+    <div class="modal-content updateModalContent" style="background-color: white; color: black; width:500px;">
+        <span id="updateCloseBtn" class="close updateCloseBtn" style="position:relative; left:20px; color: red;"></span>
+        <h2>Exhibit Update</h2>
+        <p style="font-size: 1rem; margin-top:10px;"><?php echo $message; ?></p> 
+    </div>
+</div>
         <div class="header">
         <a style="text-decoration: none;color:black; font-weight:bold; font-size:25px;" href="/dashboard.php"><</a>
             <span class="title">Pending Exhibit</span>
@@ -110,14 +136,14 @@ if (isset($_POST['cancelRequest'])) {
             <label for="exhibit-title">Exhibit Title</label>
             <div class="input-field">
                 <i class='bx bxs-pencil'></i>
-                <input type="text" id="exhibit-title" name="exhibit-title" placeholder="Enter the title of your exhibit" value="<?php echo htmlspecialchars($pending[0]['exbt_title']); ?>" required>
+                <input type="text" id="exhibit-title" class="exhibit-title-display" name="exhibit-title" placeholder="Enter the title of your exhibit" value="<?php echo htmlspecialchars($pending[0]['exbt_title']); ?>" required>
             </div>
         </div>
         <div class="form-group">
             <label for="exhibit-description">Exhibit Description</label>
             <div class="input-field1">
                 <i class='bx bxs-pencil'></i>
-                <textarea id="exhibit-description" name="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required><?php echo htmlspecialchars($pending[0]['exbt_descrip']); ?></textarea>
+                <textarea id="exhibit-description" class="exhibit-description-display" name="exhibit-description" placeholder="Describe the theme or story behind your exhibit" required><?php echo htmlspecialchars($pending[0]['exbt_descrip']); ?></textarea>
             </div>
         </div>
         <div class="form-group">
@@ -125,7 +151,7 @@ if (isset($_POST['cancelRequest'])) {
             <div class="input-field">
                 <i class='bx bxs-pencil'></i>
                 <div class="date-picker">
-                    <input type="date" id="exhibit-date" name="exhibit-date" value="<?php echo htmlspecialchars($pending[0]['exbt_date']); ?>" required>
+                    <input type="date" id="exhibit-date" class="exhibit-date-display" name="exhibit-date" value="<?php echo htmlspecialchars($pending[0]['exbt_date']); ?>" required>
                 </div>
             </div>
         </div>

@@ -1,0 +1,10 @@
+[11-Dec-2024 14:45:05 Europe/Berlin] PHP Warning:  Undefined variable $artManage in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 49
+[11-Dec-2024 14:45:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function approveAllRequests() on null in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:49
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 49
+[11-Dec-2024 14:48:05 Europe/Berlin] PHP Warning:  Undefined variable $artManage in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 50
+[11-Dec-2024 14:48:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function approveAllRequests() on null in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:50
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 50

@@ -730,7 +730,7 @@ if (!empty($allImages)) {
 
         <!-- Exhbits -->
         <div class="exhibit-container" id="exhibitContainer">
-    <button onclick="toggleExhibit()" class="schedule-now">Schedule Now</button>
+    <button onclick="toggleExhibit()" class="schedule-now" style="color: red;">Schedule Now</button>
     
     <!-- Top gallery section with title -->
     <div class="gallery-container">
@@ -995,7 +995,7 @@ if (!empty($allImages)) {
     </div>
                
             <div id="myProfile" class="tabInformation"> 
-                <h3>My Profile</h3>
+                <h3 style="margin-bottom: 20px;">My Profile</h3>
                 <div class="top-myprofile">
                     <div class="profile-picture">
                     <div class="image-profile">
@@ -1050,11 +1050,15 @@ if (!empty($allImages)) {
                 
                 <!-- edit username -->
                 <form action="change.php" method="POST">
-                    <label for="edit-username">Edit Username</label><br>
+                    <label for="edit-username">Username</label><br>
                     <input type="text" id="edit-username" name="new_username" value="<?php echo($username); ?>" required><br><br>
                     <input type="hidden" name="action" value="change_username">
+
+                    <label>Bio</label><br>
+                 <textarea placeholder="Write a short introduction..." class="textarea-field"></textarea><br>
                     <button type="submit">Save Changes</button>
                 </form>
+                
                 </div>
             </div>
 <!-- account setting -->
@@ -1101,7 +1105,7 @@ if (!empty($allImages)) {
             <div class="delete-container">
                     <div class="confirm-delete">
                         <h3>Delete Account</h3>
-                        <p>Would you like to delete your account? Deleting your account will remove all the content associated with it.</p>
+                        <p style="font-size: 13px;">Would you like to delete your account? Deleting your account will remove all the content associated with it.</p>
                     </div>
 
                     <form action="change.php" method="POST">

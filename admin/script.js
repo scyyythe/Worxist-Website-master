@@ -639,6 +639,29 @@ cancelButton.addEventListener('click', function() {
   popupContainer.style.display = 'none';
 });
 
+// approve all the request
+document.getElementById('accept-all-btn').addEventListener('click', function() {
+  fetch('admin.php', {
+      method: 'POST',
+  })
+  .then(response => response.text())  
+  .then(message => {
+      showCustomAlert(message);  
+      const allRequests = document.querySelectorAll('.card'); 
+      allRequests.forEach(request => {
+          const status = request.getAttribute('data-status'); 
+          if (status === 'Approved') {
+              request.remove(); 
+          }
+      });
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      showCustomAlert('An error occurred.');
+  });
+});
+
+
 
 //fucnton alert message
 function showCustomAlert(message) {

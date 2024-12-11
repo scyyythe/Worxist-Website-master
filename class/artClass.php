@@ -190,7 +190,32 @@ class artManager
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function approveAllRequests() {
+        $response = ['success' => false, 'message' => ''];
     
+        try {
+            
+            $query = "UPDATE art_info SET a_status = 'Approved' WHERE a_status = 'Pending'";
+            $statement = $this->conn->prepare($query);
+    
+            if ($statement->execute()) {
+                $response['success'] = true;
+                $response['message'] = 'All requests have been approved successfully.';
+            } else {
+                $response['message'] = 'Could not approve all requests.';
+            }
+        } catch (PDOException $e) {
+            $response['message'] = 'Error: ' . $e->getMessage();
+            error_log('Error in approveAllRequests: ' . $e->getMessage()); 
+        }
+    
+        return $response;
+    }
+    
+    
+
+
     public function handleArtworkRequest($action, $a_id) {
         $status = ($action === 'approve') ? 'Approved' : 'Declined'; 
     

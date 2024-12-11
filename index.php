@@ -31,7 +31,6 @@ class Exhibit {
     }
 }
 
-// Instantiate the Exhibit class and fetch accepted exhibits
 $exhibit = new Exhibit($conn);
 $acceptedExhibits = $exhibit->getAcceptedExhibits();
 ?>
