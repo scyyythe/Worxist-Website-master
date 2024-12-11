@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $_POST['status'];   
 
         if ($status === 'Accepted' || $status === 'Declined') {
-            // Assuming ExhibitManager class is already defined
+          
             $exhibit = new ExhibitManager($conn);
             $update = $exhibit->updateExhibitStatus($exbt_id, $status); 
             

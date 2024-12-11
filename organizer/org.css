@@ -938,6 +938,14 @@ background: rgba(255, 255, 255, 1);
   border-radius: 10px;
   cursor: pointer;
 }
+#exhibits,
+#settings {
+  display: none; /* Initially hide both sections */
+}
+
+#exhibits {
+  display: flex; /* Show exhibits section by default */
+}
 
 #save-password-btn:hover {
   background-color: #d62d2d;
@@ -1011,7 +1019,7 @@ background: rgba(255, 255, 255, 1);
 
 .bx-trash {
   font-size: 1.7rem;
-  color: #e74c3c;
+  color: #a20d0d;
   background-color: #fceeef; 
   width: 50px;
   height: 50px;
@@ -1051,7 +1059,7 @@ background: rgba(255, 255, 255, 1);
 }
 
 .s-continue-button {
-  background-color: #e74c3c;
+  background-color: #a20d0d;
   color:  #fff;
   border: none;
   padding: 8px 16px;
@@ -1060,7 +1068,7 @@ background: rgba(255, 255, 255, 1);
 }
 
 .s-continue-button:hover {
-  background-color: #c0392b;
+  background-color: #a20d0d;
 }
 
 .s-cancel-button:hover {
@@ -1149,7 +1157,6 @@ background: rgba(255, 255, 255, 1);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(194, 190, 190, 0.719);
   width: 500px;
   padding: 20px;
   border-radius: 10px;
@@ -1158,6 +1165,7 @@ background: rgba(255, 255, 255, 1);
   z-index: 9999;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+
 }
 
 .alert-content {
@@ -1167,7 +1175,7 @@ background: rgba(255, 255, 255, 1);
 }
 
 #closeAlertBtn {
-  background-color: #f44336;
+  background-color:  #a20d0d;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -1178,7 +1186,7 @@ background: rgba(255, 255, 255, 1);
 }
 
 #closeAlertBtn:hover {
-  background-color: #e53935;
+  background-color: #a20d0d;
 }
 
 /* Fade-in effect */
@@ -1278,7 +1286,7 @@ background: rgba(255, 255, 255, 1);
 }
 
 .logoutButton {
-  color: red;
+  color: #a20d0d;
   text-decoration: none;
   display: flex;
   align-items: center;

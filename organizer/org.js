@@ -223,7 +223,7 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
-      .then(response => response.json())  // Parse the JSON response
+      .then(response => response.json())  
       .then(data => {
         if (data.status === 'error') {
           console.log(data.message); 
@@ -242,8 +242,8 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
       fetch('org.php', {
         method: 'POST',
         body: new URLSearchParams({
-          exbt_id: currentExhibitId, // Pass the correct exhibit ID
-          status: 'Declined' // Mark as declined
+          exbt_id: currentExhibitId,
+          status: 'Declined' 
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -263,7 +263,7 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
       });
     }
 
-    hidePopup(); // Hide the popup after action is taken
+    hidePopup(); 
   });
 
  cancelButton.addEventListener("click", function () {
