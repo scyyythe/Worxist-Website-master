@@ -480,6 +480,30 @@ document.querySelector('.search').addEventListener('click', function () {
       .catch(error => console.error('Error:', error));
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const popupImage = document.getElementById('popupImage');
+  const popupModal = document.getElementById('popupModal');
+  const expandedImage = document.getElementById('expandedImage');
+  const closeModal = document.getElementById('closeModal');
+
+
+  popupImage.addEventListener('click', function() {
+    expandedImage.src = popupImage.src;
+    popupModal.style.display = 'flex';  
+  });
+
+  closeModal.addEventListener('click', function() {
+    popupModal.style.display = 'none';  // Hide the modal
+  });
+
+  window.addEventListener('click', function(event) {
+    if (event.target === popupModal) {
+      popupModal.style.display = 'none';
+    }
+  });
+});
+
+
 // pop up modal para sa clicked na artworks
 function showPopup(element) {
   const blur = document.getElementById('blur');
@@ -639,15 +663,14 @@ function showPopup(element) {
 
   initializeIconStates(artworkId);
 
-  function closePopup(event) {
-    if (!popup.contains(event.target) && !element.contains(event.target)) {
-      popup.style.display = 'none';
-      blur.classList.remove('active');
-      document.removeEventListener('click', closePopup); 
-    }
+  function closePopup() {
+    popup.style.display = 'none'; 
+    blur.classList.remove('active'); 
   }
+  
+  const closeButton = document.getElementById('closeButton'); 
+  closeButton.addEventListener('click', closePopup);
 
-  document.addEventListener('click', closePopup);
 }
 function resetIconStates() {
   // Remove 'liked', 'saved', and 'favorited' states from all other artwork icons

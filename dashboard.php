@@ -226,27 +226,29 @@ ob_end_clean();
         </div>
     </div>
 </div>
-
+<div id="popupModal" class="popup-modal">
+    <span id="closeModal" class="close-modal">&times;</span>
+    <img id="expandedImage" src="" alt="Expanded Artwork" class="expanded-image">
+</div>
  <!-- Pop-up -->
  <div class="popup" id="popup">
-    <div class="box-pop">
-   
-        <img src="" alt="" class="popup-image">
-    </div>
-
+ <div class="box-pop">
+    <img src="" alt="" class="popup-image" id="popupImage">
+    <i class='bx bx-expand-alt' id="expandIcon"></i>    
+</div>
     <div class="social-interact-icons">
-    <i class='bx bxs-heart like-icon' id="like-icon" onclick="toggleLike(this)"></i>
-    <p class="noHeart"></p> 
+        <i class='bx bxs-heart like-icon' id="like-icon" onclick="toggleLike(this)"></i>
+        <p class="noHeart"></p> 
 
-    <i class='bx bxs-bookmark bookmark-icon' onclick="toggleSave(this)"></i>
-    <p class="noBookmark"></p> 
+        <i class='bx bxs-bookmark bookmark-icon' onclick="toggleSave(this)"></i>
+        <p class="noBookmark"></p> 
 
-    <i class='bx bxs-star favorite-icon' onclick="toggleFavorite(this)"></i>
-    <p class="noFavorite"></p> 
+        <i class='bx bxs-star favorite-icon' onclick="toggleFavorite(this)"></i>
+        <p class="noFavorite"></p> 
 </div>
     
     
-   
+
     <div class="art-details">
         <div class="top-details"> 
             <h3 class="data-artId"></h3>
@@ -258,19 +260,20 @@ ob_end_clean();
 
         <div class="art-information">
        
-        <div class="top-art-info" style="display: flex; width: 100%; justify-content:space-between;">
+        <div class="top-art-info" style="display: flex; width: 100%; justify-content:space-between; line-height:2;">
         <p>
             <b>Artist:</b> 
-            <em>
+           
                 <a href="javascript:void(0);" class="data-id" id="data-id" data-artist-id="<?php echo $_SESSION['u_id']; ?>" onclick="window.location.href='profileDash.php?id=' + this.getAttribute('data-artist-id');"></a> 
-            </em>
+           
         </p>
-
-            <p class="category-p"><span class="category"></span></p>
+        <p><b></b>&nbsp;<span class="dateUpload"></span></p>
+          
         </div>
-       
+        <br>
             <p class="description-of-art"></p>
-            <p><b>Date:</b>&nbsp;<span class="dateUpload"></span></p>
+            <p class="category-p"><span class="category"></span></p>
+            
           
         </div>
 
@@ -473,7 +476,7 @@ if (!empty($allImages)) {
              data-artist-id="<?php echo ($image['u_id']); ?>"
              data-category="<?php echo($image['category']); ?>" 
              data-description="<?php echo($image['description']); ?>"
-             data-date="<?php echo date("F d, Y", strtotime($image['date'])); ?>"
+             data-date="<?php echo date("Y-m-d", strtotime($image['date'])); ?>"
              data-artwork-id="<?php echo ($image['a_id']); ?>"
              data-liked="<?php echo ($image['likes_count']); ?>"
              data-favorite="<?php echo ($image['favorites_count']); ?>"
@@ -538,7 +541,7 @@ if (!empty($allImages)) {
                             data-artist-id="<?php echo($image['u_id']); ?>"
                             data-category="<?php echo($image['category']); ?>" 
                             data-description="<?php echo($image['description']); ?>"
-                            data-date="<?php echo($image['date']); ?>"
+                             data-date="<?php echo date("Y-m-d", strtotime($image['date'])); ?>"
                             data-artwork-id="<?php echo($image['a_id']); ?>" 
                             data-liked="<?php echo ($image['likes_count']); ?>"
                             data-favorite="<?php echo ($image['favorites_count']); ?>"
