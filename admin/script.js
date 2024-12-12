@@ -831,14 +831,17 @@ document.addEventListener("DOMContentLoaded", function () {
 const uploadButton = document.querySelector('.upload-btn');
 const removeButton = document.querySelector('.remove-btn');
 const profilePics = document.querySelectorAll('.profile-pic1, .profile-pic2');
+const fileInput = document.getElementById('file-input');
+const uploadForm = document.getElementById('uploadForm'); // Assuming your form has an ID
 
-const fileInput = document.createElement('input');
 fileInput.type = 'file';
 fileInput.accept = 'image/*';
+
 
 uploadButton.addEventListener('click', function () {
   fileInput.click();
 });
+
 
 fileInput.addEventListener('change', function () {
   if (fileInput.files && fileInput.files[0]) {
@@ -852,6 +855,7 @@ fileInput.addEventListener('change', function () {
         profilePics[i].style.backgroundPosition = 'center';
       }
       checkImageDisplay(); 
+      uploadForm.submit();
     };
 
     reader.readAsDataURL(file);

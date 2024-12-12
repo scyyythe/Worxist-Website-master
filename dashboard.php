@@ -881,6 +881,12 @@ if (!empty($allImages)) {
     </div>
 </div>
 
+<div id="custom-alert" class="alert-container">
+  <div class="alert-box">
+    <span id="alert-message"></span>
+    <button id="close-alert" class="close-btn">OK</button>
+  </div>
+</div>
         <!--  Exhibit Request -->
         <div id="reqExhibit-con" class="reqExhibit-con">
             <div class="top-req">

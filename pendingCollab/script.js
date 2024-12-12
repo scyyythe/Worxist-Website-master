@@ -90,22 +90,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //EDIT (PENCIL)
 document.addEventListener("DOMContentLoaded", function () {
-    // Get all the pencil icons
+
     const pencils = document.querySelectorAll(".bxs-pencil");
 
-    // Loop through each pencil icon
     for (let i = 0; i < pencils.length; i++) {
         pencils[i].addEventListener("click", function () {
-            // Find the sibling input or textarea element within the same div
-            const parentDiv = pencils[i].parentNode; // Get the parent of the pencil icon
+            
+            const parentDiv = pencils[i].parentNode;
             let inputElement = parentDiv.querySelector("input, textarea");
 
             if (inputElement) {
-                // Toggle the disabled property
                 if (inputElement.disabled) {
-                    inputElement.disabled = false; // Enable editing
-                    inputElement.focus(); // Focus the element
-                    pencils[i].style.color = "green"; // Optional: Change pencil color to green
+                    inputElement.disabled = false; 
+                    inputElement.focus();
+                    pencils[i].style.color = "green"; 
                 } else {
                     inputElement.disabled = true; // Disable editing
                     pencils[i].style.color = ""; // Reset pencil color

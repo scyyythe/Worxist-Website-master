@@ -478,11 +478,11 @@ echo "<script>
                                         <p class="file-size">Max file size - 10mb</p>
                                     </div>
                                     <div class="image-buttons">
-                                        <button class="upload-btn" name="uploadProfilePic">Upload</button>
+                                        <button class="upload-btn">Upload </button>
                                         <button class="remove-btn" style="display: none;">Remove image</button>
                                     </div>
                                 </div>
-
+   
                                 <!-- Profile Form Section -->
                                 <form action="" method="POST">
                                     <label>Username<i class='bx bxs-pencil'></i></label>
@@ -499,6 +499,9 @@ echo "<script>
                                         <button type="reset" class="clear-btn">Clear all</button>
                                     </div>
                                 </form>
+
+
+
 
                             </div>
                         </div>

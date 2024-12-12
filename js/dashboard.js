@@ -915,28 +915,57 @@ document.querySelectorAll('.display-creations img').forEach((img) => {
 document.querySelectorAll('.includeArt-collab img').forEach((img) => {
   console.log('Attaching click event to:', img);
 });
+//fucnton alert message
+function showCustomAlert(message) {
+  // Get the alert elements
+  const alertContainer = document.getElementById('custom-alert');
+  const alertMessage = document.getElementById('alert-message');
+  const closeButton = document.getElementById('close-alert');
 
+
+  alertMessage.textContent = message;
+  alertContainer.style.display = 'flex';
+
+  closeButton.addEventListener('click', function() {
+    alertContainer.style.display = 'none'; 
+  });
+}
 //validation in requesting an exhibit
-//solo
-document.getElementById('soloExhibitForm').addEventListener('submit', function (e) {
-  const selectedArtworks = document.getElementById('selectedArtworks').value;
+// Validation for solo exhibit
+document.addEventListener('DOMContentLoaded', function () {
+  const soloExhibitForm = document.getElementById('soloExhibitForm');
+  const selectedArtworks = document.getElementById('selectedArtworks');
+  const artworkValidationModal = document.getElementById('artworkValidationModal');
+  const closeModal = document.querySelector('.artwork-modal .artwork-close');
 
-  console.log('Selected Artworks:', selectedArtworks);
+  if (soloExhibitForm) {
+    soloExhibitForm.addEventListener('submit', function (e) {
+      console.log('Selected Artworks:', selectedArtworks ? selectedArtworks.value : '');
 
-  if (!selectedArtworks.trim()) { 
-      e.preventDefault(); 
+      if (!selectedArtworks || !selectedArtworks.value.trim()) {
+          e.preventDefault();
+          if (artworkValidationModal) {
+              artworkValidationModal.style.display = 'block';
+          }
 
-      const modal = document.getElementById('artworkValidationModal');
-      modal.style.display = 'block';
+          if (closeModal) {
+              closeModal.addEventListener('click', () => {
+                  if (artworkValidationModal) artworkValidationModal.style.display = 'none';
+              });
+          }
 
-      const closeModal = document.querySelector('.artwork-modal .artwork-close');
-      closeModal.addEventListener('click', () => modal.style.display = 'none');
-      window.addEventListener('click', (event) => {
-          if (event.target === modal) modal.style.display = 'none';
-      });
+          window.addEventListener('click', (event) => {
+              if (artworkValidationModal && event.target === artworkValidationModal) {
+                  artworkValidationModal.style.display = 'none';
+              }
+          });
+      }
+    });
   }
 });
-//validaiton in date solo exhibit
+
+
+// Validation for date in solo exhibit
 document.getElementById('soloExhibitForm').addEventListener('submit', function(event) {
   const selectedDate = document.getElementById('exhibit-date').value;
   const data = new FormData();
@@ -952,7 +981,7 @@ document.getElementById('soloExhibitForm').addEventListener('submit', function(e
       const submitButton = document.getElementById('solo-btn');
 
       if (data.isTaken) {
-          event.preventDefault();  
+          event.preventDefault();
           messageElement.textContent = 'This date is taken, please choose another date.';
           messageElement.style.color = 'red';
           messageElement.style.fontSize = '12px';
@@ -960,12 +989,15 @@ document.getElementById('soloExhibitForm').addEventListener('submit', function(e
       } else {
           messageElement.textContent = '';
           submitButton.disabled = false;
+          alert('Exhibit Requested Successfully')
       }
   })
   .catch(error => {
       console.error('Error:', error);
   });
 });
+
+// Reset validation for solo exhibit date
 document.getElementById('exhibit-date').addEventListener('change', function() {
   const submitButton = document.getElementById('solo-btn');
   const messageElement = document.getElementById('date-validation-message');
@@ -1040,6 +1072,7 @@ document.getElementById('collabExhibitForm').addEventListener('submit', function
       } else {
           messageElement.textContent = ''; 
           submitButton.disabled = false; 
+          alert('Exhibit Requested Successfully')
       }
   })
   .catch(error => {
