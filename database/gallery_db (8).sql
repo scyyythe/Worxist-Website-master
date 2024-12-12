@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2024 at 06:38 PM
+-- Generation Time: Dec 12, 2024 at 07:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,7 @@ CREATE TABLE `accounts` (
 INSERT INTO `accounts` (`u_id`, `u_name`, `email`, `username`, `password`, `u_type`, `profile`, `u_status`, `ban_end_date`) VALUES
 (83, 'Jamaica Anuba', 'jamaicaanuba@gmail.com', 'jai', '$2y$10$HIjyKTX/TVqQVg7G.ymNo.5qn3OE4zUIh3M.SZvi8FeCbis2.wa.a', 'Admin', '', 'Active', NULL),
 (85, 'Angel Canete', 'angelcanete86@yahoo.com', 'angel', '$2y$10$yNMFQlS4nUGtc6rBQQDuru3rpM0zTwy14M5EQTAt5LxsmX8LJKJSO', 'Organizer', '85/1732187862_lips.jpg', 'Active', NULL),
-(107, 'Jeralyn Peritoss', 'jeralynpreitos@gmail.com', 'jera', '$2y$10$1bu10Z2ST0pmIIQeUL5DkOEaAU3.3PX1zQ.H0rV/RokOD6xNb1Gl.', 'User', '107/1733032557_g1.jpg', 'Banned', '2024-12-18 22:37:15'),
+(107, 'Jeralyn Peritoss', 'jeralynpreitos@gmail.com', 'jera', '$2y$10$1bu10Z2ST0pmIIQeUL5DkOEaAU3.3PX1zQ.H0rV/RokOD6xNb1Gl.', 'User', '107/1734020489_wallpsper.jpg', 'Banned', '2024-12-18 22:37:15'),
 (108, 'Kyle Canete', 'angelcanete86@yahoo.com', 'kyle', '$2y$10$DVkKjZXt2h.5sBRIzCPPw.wirCj5fCUwhSD6pC3keBgGaa7OqE056', 'User', '108/1733061629_demon.jpg', 'Banned', '2024-12-18 22:47:24'),
 (109, 'James Arpilang', 'jamesaripliang@gmail.com', 'james', '$2y$10$Y5ozT1Q30qAFY4ToLikUcuOTB1czb41joCopQTY425g1gsWsS4KI6', 'User', '109/1733034198_stroke.jpg', 'Active', NULL),
 (110, 'Loren Canete', 'lorencanete@yahoo.com', 'loren', '$2y$10$GrkL3ayhPBZVjAWoA2JxdesxZneJhlCUzxZMQ2v0f6W.fzP8fm7N.', 'User', '110/1733034171_digital.jpg', 'Active', NULL),
@@ -102,16 +102,6 @@ CREATE TABLE `collab_exhibit` (
   `u_id` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `collab_exhibit`
---
-
-INSERT INTO `collab_exhibit` (`collab_id`, `exbt_id`, `u_id`) VALUES
-(90, 233, 107),
-(91, 234, 108),
-(92, 235, 107),
-(93, 237, 110);
-
 -- --------------------------------------------------------
 
 --
@@ -141,7 +131,8 @@ INSERT INTO `comment` (`comment_id`, `u_id`, `a_id`, `content`) VALUES
 (37, 110, 126, 'Mystie'),
 (38, 110, 133, 'Delete ko ni\n'),
 (39, 110, NULL, 'My first sketch'),
-(40, 107, 138, 'kapoya');
+(40, 107, 138, 'kapoya'),
+(41, 107, 125, 'nice body');
 
 -- --------------------------------------------------------
 
@@ -160,33 +151,7 @@ CREATE TABLE `exhibit_artworks` (
 --
 
 INSERT INTO `exhibit_artworks` (`exbtArwork_id`, `exbt_id`, `a_id`) VALUES
-(258, 231, 122),
-(259, 231, 123),
-(260, 231, 124),
-(261, 231, 138),
-(262, 233, 125),
-(263, 233, 126),
-(264, 233, 127),
-(265, 233, 128),
-(266, 234, 122),
-(267, 234, 123),
-(268, 234, 124),
-(269, 235, 125),
-(270, 235, 126),
-(271, 235, 127),
-(272, 235, 128),
-(273, 236, 122),
-(274, 234, 125),
-(275, 234, 126),
-(276, 234, 127),
-(277, 234, 128),
-(278, 237, 125),
-(279, 237, 126),
-(280, 237, 127),
-(281, 237, 128),
-(282, 237, 131),
-(283, 237, 132),
-(284, 237, 133);
+(318, 263, 125);
 
 -- --------------------------------------------------------
 
@@ -210,12 +175,7 @@ CREATE TABLE `exhibit_tbl` (
 --
 
 INSERT INTO `exhibit_tbl` (`exbt_id`, `u_id`, `exbt_title`, `exbt_descrip`, `exbt_date`, `exbt_type`, `exbt_status`, `accepted_at`) VALUES
-(231, 107, 'Update ni  sya', 'Testing update', '2024-12-10', 'Solo', 'Cancelled', NULL),
-(233, 108, 'Collab Exhibitt', 'Sample', '2024-12-11', 'Collaborate', 'Cancelled', NULL),
-(234, 107, 'Sample Title Ni', 'Sample Description', '2024-12-31', 'Collaborate', 'Cancelled', NULL),
-(235, 108, 'Solo Exhibit Ni', 'Lorem ipsum this is solo exhibit', '2024-12-12', 'Collaborate', 'Cancelled', NULL),
-(236, 107, 'Solo Exhibit Ni', 'This is solor', '2024-12-10', 'Solo', 'Accepted', '2024-12-11 18:17:28'),
-(237, 108, 'Collab Exhibit Sample', 'This is a sample collab exhibit', '2024-12-12', 'Collaborate', 'Ongoing', '2024-12-11 18:36:49');
+(263, 108, 'sad', 'sad', '2024-12-12', 'Solo', 'Cancelled', NULL);
 
 -- --------------------------------------------------------
 
@@ -229,15 +189,6 @@ CREATE TABLE `favorite` (
   `a_id` int(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `favorite`
---
-
-INSERT INTO `favorite` (`fav_id`, `u_id`, `a_id`) VALUES
-(52, 107, 122),
-(53, 107, NULL),
-(54, 108, 126);
-
 -- --------------------------------------------------------
 
 --
@@ -249,24 +200,6 @@ CREATE TABLE `likes` (
   `u_id` int(100) NOT NULL,
   `a_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `likes`
---
-
-INSERT INTO `likes` (`like_id`, `u_id`, `a_id`) VALUES
-(108, 107, 122),
-(109, 107, NULL),
-(110, 107, 124),
-(111, 108, 122),
-(112, 108, 123),
-(113, 108, 126),
-(116, 110, 122),
-(118, 110, 133),
-(120, 110, 127),
-(122, 110, 132),
-(124, 110, 131),
-(125, 110, 129);
 
 -- --------------------------------------------------------
 
@@ -283,42 +216,6 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `notifications`
---
-
-INSERT INTO `notifications` (`notification_id`, `u_id`, `exbt_id`, `message`, `is_read`, `created_at`) VALUES
-(55, 107, NULL, 'Your exhibit status is Declined', 0, '2024-12-02 14:45:58'),
-(56, 107, NULL, 'Your exhibit status is Declined', 0, '2024-12-02 14:52:45'),
-(57, 108, NULL, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-02 15:11:57'),
-(58, 107, NULL, 'Your exhibit status is Accepted', 0, '2024-12-02 15:23:14'),
-(59, 107, NULL, 'Your exhibit status is Accepted', 0, '2024-12-06 06:03:16'),
-(60, 107, NULL, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-10 12:43:49'),
-(61, 109, NULL, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-10 12:43:49'),
-(62, 113, NULL, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-10 12:43:49'),
-(63, 110, NULL, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-10 12:43:49'),
-(64, 107, 233, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-10 12:45:22'),
-(65, 108, 234, 'You have been added as a collaborator to the exhibit: Collab Exhibit.', 0, '2024-12-10 15:58:17'),
-(66, 107, NULL, 'Your artwork has been approved.', 0, '2024-12-11 13:31:17'),
-(67, 107, NULL, 'Your artwork has been approved.', 0, '2024-12-11 13:52:40'),
-(68, 107, NULL, 'Your artwork has been declined and your account is banned for posting artwork for 7 days.', 0, '2024-12-11 14:37:15'),
-(69, 108, NULL, 'Your artwork has been declined and your account is banned for posting artwork for 7 days.', 0, '2024-12-11 14:47:24'),
-(70, 107, 235, 'You have been added as a collaborator to the exhibit: Solo Exhibit Ni.', 0, '2024-12-11 16:10:47'),
-(71, 107, NULL, 'Your artwork has been approved.', 0, '2024-12-11 16:16:18'),
-(72, 107, 236, 'Your exhibit status is Accepted', 0, '2024-12-11 16:32:34'),
-(73, 107, 236, 'Your exhibit status is Accepted', 0, '2024-12-11 16:32:59'),
-(74, 107, 236, 'Your exhibit status is Accepted', 0, '2024-12-11 16:44:23'),
-(75, 107, 236, 'Your exhibit status is Accepted', 0, '2024-12-11 16:45:57'),
-(76, 107, 236, 'Your exhibit status is Declined', 0, '2024-12-11 16:49:04'),
-(77, 107, 236, 'Your exhibit status is Accepted', 0, '2024-12-11 17:01:30'),
-(78, 110, 237, 'You have been added as a collaborator to the exhibit: Collab Exhibit Sample.', 0, '2024-12-11 17:14:53'),
-(79, 108, 237, 'Your exhibit status is Accepted', 0, '2024-12-11 17:16:14'),
-(80, 107, 236, 'Your exhibit status is Accepted', 0, '2024-12-11 17:17:28'),
-(81, 108, 237, 'Your exhibit status is Accepted', 0, '2024-12-11 17:17:32'),
-(82, 108, 237, 'Your exhibit status is Accepted', 0, '2024-12-11 17:20:39'),
-(83, 108, 237, 'Your exhibit status is Declined', 0, '2024-12-11 17:28:07'),
-(84, 108, 237, 'Your exhibit status is Accepted', 0, '2024-12-11 17:36:50');
-
 -- --------------------------------------------------------
 
 --
@@ -331,15 +228,26 @@ CREATE TABLE `saved` (
   `a_id` int(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `saved`
+-- Table structure for table `user_follows`
 --
 
-INSERT INTO `saved` (`save_id`, `u_id`, `a_id`) VALUES
-(40, 107, 122),
-(41, 107, NULL),
-(42, 108, 126),
-(43, 110, 123);
+CREATE TABLE `user_follows` (
+  `follower_id` int(100) NOT NULL,
+  `following_id` int(100) NOT NULL,
+  `follow_date` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_follows`
+--
+
+INSERT INTO `user_follows` (`follower_id`, `following_id`, `follow_date`) VALUES
+(107, 107, '2024-12-12 22:04:55'),
+(107, 108, '2024-12-12 22:00:13'),
+(108, 107, '2024-12-12 22:00:48');
 
 --
 -- Indexes for dumped tables
@@ -422,6 +330,13 @@ ALTER TABLE `saved`
   ADD KEY `a_id` (`a_id`);
 
 --
+-- Indexes for table `user_follows`
+--
+ALTER TABLE `user_follows`
+  ADD PRIMARY KEY (`follower_id`,`following_id`),
+  ADD KEY `following_id` (`following_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -441,49 +356,49 @@ ALTER TABLE `art_info`
 -- AUTO_INCREMENT for table `collab_exhibit`
 --
 ALTER TABLE `collab_exhibit`
-  MODIFY `collab_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `collab_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `comment_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `comment_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `exhibit_artworks`
 --
 ALTER TABLE `exhibit_artworks`
-  MODIFY `exbtArwork_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=285;
+  MODIFY `exbtArwork_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=319;
 
 --
 -- AUTO_INCREMENT for table `exhibit_tbl`
 --
 ALTER TABLE `exhibit_tbl`
-  MODIFY `exbt_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
+  MODIFY `exbt_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=264;
 
 --
 -- AUTO_INCREMENT for table `favorite`
 --
 ALTER TABLE `favorite`
-  MODIFY `fav_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `fav_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `like_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `like_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT for table `saved`
 --
 ALTER TABLE `saved`
-  MODIFY `save_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `save_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- Constraints for dumped tables
@@ -549,6 +464,13 @@ ALTER TABLE `notifications`
 ALTER TABLE `saved`
   ADD CONSTRAINT `saved_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `accounts` (`u_id`),
   ADD CONSTRAINT `saved_ibfk_2` FOREIGN KEY (`a_id`) REFERENCES `art_info` (`a_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `user_follows`
+--
+ALTER TABLE `user_follows`
+  ADD CONSTRAINT `user_follows_ibfk_1` FOREIGN KEY (`follower_id`) REFERENCES `accounts` (`u_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_follows_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `accounts` (`u_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
