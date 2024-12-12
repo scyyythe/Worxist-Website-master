@@ -167,16 +167,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const button = document.getElementById("viewExhibit-btn");
   const button2 = document.getElementById("viewExhibit-accepted");
 
-  // Debugging logs to check button existence
-  console.log("Button 1:", button); // Check if button is found
-  console.log("Button 2:", button2); // Check if button is found
-
   if (button) {
     button.addEventListener("click", function(event) {
       event.preventDefault(); 
 
       const exbtType = this.getAttribute("data-exbt-type"); 
-      console.log("Pending Exhibit type:", exbtType); // Debugging
+      console.log("Pending Exhibit type:", exbtType); 
 
       if (exbtType === 'Solo') {
         window.location.href = "soloRequest.php";
@@ -193,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault(); 
 
       const exbtType = this.getAttribute("data-exbt-type"); 
-      console.log("Accepted Exhibit type:", exbtType); // Debugging
+      console.log("Accepted Exhibit type:", exbtType); 
 
       if (exbtType === 'Solo') {
         window.location.href = "acceptedSolo.php";
@@ -979,7 +975,6 @@ document.getElementById('exhibit-date').addEventListener('change', function() {
 
 
 //validation in requesting an exhibit
-//collab
 document.querySelector('form[name="collabExhibit"]').addEventListener('submit', function (e) {
   const selectedArtworksCollab = document.getElementById('selectedArtworksCollab').value;
   const selectedCollaborators = document.getElementById('selectedCollaboratorsInput').value;
@@ -987,8 +982,8 @@ document.querySelector('form[name="collabExhibit"]').addEventListener('submit', 
   console.log('Selected Artworks for Collaborative Exhibit:', selectedArtworksCollab);
   console.log('Selected Collaborators:', selectedCollaborators);
 
-  if (!selectedArtworksCollab.trim()) { 
-      e.preventDefault(); 
+  if (!selectedArtworksCollab.trim()) {
+      e.preventDefault();
 
       const artworkModal = document.getElementById('artworkValidationModalCollaborative');
       artworkModal.style.display = 'block';
@@ -999,30 +994,35 @@ document.querySelector('form[name="collabExhibit"]').addEventListener('submit', 
           if (event.target === artworkModal) artworkModal.style.display = 'none';
       });
 
-      return; 
+      return;
   }
 
   if (!selectedCollaborators.trim()) {
-      e.preventDefault(); 
+      e.preventDefault();
 
       const collaboratorModal = document.getElementById('collaboratorValidationModal');
       collaboratorModal.style.display = 'block';
-    
+
       const closeCollaboratorModal = document.querySelector('.collaborator-modal .collaborator-close');
       closeCollaboratorModal.addEventListener('click', () => collaboratorModal.style.display = 'none');
       window.addEventListener('click', (event) => {
           if (event.target === collaboratorModal) collaboratorModal.style.display = 'none';
       });
-      return; 
+      return;
   }
 });
 
-
-// date validaiton for collaborative exhibit
+// Date validation for collaborative exhibit
 document.getElementById('collabExhibitForm').addEventListener('submit', function(event) {
-  const selectedDate = document.getElementById('exhibit-date-collab').value; 
+  const submitButton = document.getElementById('collab-btn');
+  if (submitButton.disabled) {
+      event.preventDefault();
+      return;
+  }
+
+  const selectedDate = document.getElementById('exhibit-date-collab').value;
   const data = new FormData();
-  data.append('date', selectedDate); 
+  data.append('date', selectedDate);
 
   fetch('/dashboard.php', {
       method: 'POST',
@@ -1031,14 +1031,12 @@ document.getElementById('collabExhibitForm').addEventListener('submit', function
   .then(response => response.json())
   .then(data => {
       const messageElement = document.getElementById('date-validation-message-collab');
-      const submitButton = document.getElementById('collab-btn');
-
       if (data.isTaken) {
           event.preventDefault(); 
           messageElement.textContent = 'This date is taken, please choose another date.';
           messageElement.style.color = 'red';
           messageElement.style.fontSize = '12px';
-          submitButton.disabled = true; 
+          submitButton.disabled = true;
       } else {
           messageElement.textContent = ''; 
           submitButton.disabled = false; 
@@ -1049,13 +1047,13 @@ document.getElementById('collabExhibitForm').addEventListener('submit', function
   });
 });
 
+// Reset validation for collaborative exhibit date
 document.getElementById('exhibit-date-collab').addEventListener('change', function() {
   const submitButton = document.getElementById('collab-btn');
   const messageElement = document.getElementById('date-validation-message-collab');
   messageElement.textContent = '';
-  submitButton.disabled = false; 
+  submitButton.disabled = false;
 });
-
 
 //search collaboratots
 let debounceTimeout;
