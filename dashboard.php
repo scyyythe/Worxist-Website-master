@@ -44,7 +44,8 @@ $exhibitManager = new ExhibitManager($conn);
 $exhibitManager->validateAndUpdateExhibitStatus();
 $exhibit = $exhibitManager->getAcceptedExhibits();
 $collaborators = $exhibitManager->fetchCollaboratorsWithArtworks();
-$notifications = $exhibitManager->getNotifications($u_id);
+$notifications = $exhibitManager->getNotifications($u_id,5);
+$allNotifications = $exhibitManager->getNotifications($u_id,5);
 
 $artInteract = new artInteraction($conn);   
 $artSaved = $artInteract->getSavedArtworks($u_id);
@@ -340,8 +341,72 @@ ob_end_clean();
             <li>No new notifications.</li>
         <?php endif; ?>
     </ul>
-    <a href="#" class="view-all">View all notifications</a>
+    <a href="#" class="view-all" id="viewAllNotifications">View all notifications</a>
 </div>
+
+<!-- Notification Modal (Pop-up) -->
+<div id="notifModal" class="notifModal" style="display: none;">
+    <div class="notifModalContent">
+        <span class="notifClosebtn" id="notifClosebtn">&times;</span>
+        <h5>All Notifications</h5>
+        <ul>
+            <?php if (!empty($notifications)): ?>
+                <?php foreach ($notifications as $notification): ?>
+                    <li>
+                        <a href="uploadCollab.php?exbt_id=<?php echo $notification['exbt_id']; ?>">
+                            <?php echo htmlspecialchars($notification['message']); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li>No new notifications.</li>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+<div class="notification-center" id="notificationCenter">
+    <h5>Notifications</h5>
+    <ul>
+        <?php if (!empty($notifications)): ?>
+            <?php foreach ($notifications as $notification): ?>
+                <li>
+                    <a href="uploadCollab.php?exbt_id=<?php echo $notification['exbt_id']; ?>">
+                        <?php echo htmlspecialchars($notification['message']); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>No new notifications.</li>
+        <?php endif; ?>
+    </ul>
+    <a href="#" class="view-all" id="viewAllNotifications">View all notifications</a>
+</div>
+
+<div id="notifModal" class="notifModal" style="display: none;">
+    <div class="notifModalContent">
+        <span class="notifClosebtn" id="notifClosebtn">&times;</span>
+        <h5>All Notifications</h5>
+        <ul>
+            <?php
+        
+            if (!empty($allNotifications)):
+                foreach ($allNotifications as $notification):
+            ?>
+                <li>
+                    <a href="uploadCollab.php?exbt_id=<?php echo $notification['exbt_id']; ?>">
+                        <?php echo htmlspecialchars($notification['message']); ?>
+                    </a>
+                </li>
+            <?php endforeach; else: ?>
+                <li>No new notifications.</li>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+
+
+
+
 
 </div>
             

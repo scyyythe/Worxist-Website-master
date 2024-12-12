@@ -179,16 +179,22 @@ class ExhibitManager {
         }
     }
     
-    public function getNotifications($u_id) {
-        $query = "SELECT * FROM notifications WHERE u_id = :u_id ORDER BY created_at DESC LIMIT 5"; 
+    public function getNotifications($u_id, $limit = 5) {
+ 
+        $query = $limit == 0
+            ? "SELECT * FROM notifications WHERE u_id = :u_id ORDER BY created_at DESC" 
+            : "SELECT * FROM notifications WHERE u_id = :u_id ORDER BY created_at DESC LIMIT :limit"; 
+        
         $statement = $this->conn->prepare($query);
         $statement->bindParam(':u_id', $u_id, PDO::PARAM_INT);
         
-        // Execute the query and check if any records are found
-        if ($statement->execute()) {
-            $notifications = $statement->fetchAll(PDO::FETCH_ASSOC); 
+        if ($limit != 0) {
+            $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        }
     
-            // Debug: Output the result to verify it's returning the expected data
+        if ($statement->execute()) {
+            $notifications = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
             if (empty($notifications)) {
                 error_log("No notifications found for user ID: $u_id");
             }
@@ -199,6 +205,7 @@ class ExhibitManager {
             return [];
         }
     }
+    
     
     
 
@@ -466,7 +473,7 @@ class ExhibitManager {
             INNER JOIN art_info ON exhibit_artworks.a_id = art_info.a_id
              LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id  
-            WHERE exhibit_tbl.exbt_status IN ('Accepted', 'Ongoing');
+            WHERE exhibit_tbl.exbt_status IN ('Accepted');
         ");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);

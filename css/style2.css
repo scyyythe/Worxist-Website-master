@@ -339,7 +339,7 @@ textarea{
     align-items: center;
     font-size: 13px;
     margin-bottom: 5%;
-    
+    width: 300px;
     a{
         text-decoration: none;
         color: #b10505;

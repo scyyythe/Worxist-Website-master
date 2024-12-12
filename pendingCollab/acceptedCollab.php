@@ -31,7 +31,7 @@ if (isset($_POST['updateRequest'])) {
         $stmt->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
         $stmt->bindValue(':u_id', $u_id, PDO::PARAM_INT);
 
-        // If the update is successful, reload the page
+    
         if ($stmt->execute()) {
             header('Location: ' . $_SERVER['PHP_SELF']);
             exit();

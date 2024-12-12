@@ -46,60 +46,142 @@ $artwork=$exhibitManager->visitArtworks($u_id);
             <div class="user-information">
             <h5><?php echo ($accountInfo['u_name']); ?></h5>
             <p><span>@</span><?php echo ($accountInfo['username']); ?></p>
+            <?php
+$profile_id = $accountInfo['u_id'];
 
-                <div class="follow">
-                    <p><span >10</span>
-                    <a href="" id="openFollowers">Followers</a>
+$followersQuery = $conn->prepare("SELECT COUNT(*) AS followers_count 
+                                  FROM user_follows 
+                                  WHERE user_follows.following_id = :profile_id");
+$followersQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followersQuery->execute();
+$followersCount = $followersQuery->fetch(PDO::FETCH_ASSOC)['followers_count'];
+
+$followingQuery = $conn->prepare("SELECT COUNT(*) AS following_count 
+                                  FROM user_follows 
+                                  WHERE user_follows.follower_id = :profile_id");
+$followingQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followingQuery->execute();
+$followingCount = $followingQuery->fetch(PDO::FETCH_ASSOC)['following_count'];
+?>
+               <div class="follow">
+                    <p>
+                        <span><?php echo $followersCount; ?></span>
+                        <a href="" id="openFollowers">Followers</a>
                     </p>
 
-                    <p><span >1</span>
-                    <a href=""  id="openFollowing">Following</a>
+                    <p>
+                        <span><?php echo $followingCount; ?></span>
+                        <a href="" id="openFollowing">Following</a>
                     </p>
                 </div>
 
-                <button class="follow-btn">
-                    Follow
-                </button>
+                <button class="follow-btn" data-followed-id="<?php echo $accountInfo['u_id']; ?>">
+    <?php
+    
+    $follower_id = $_SESSION['u_id']; 
+    $followed_id = $accountInfo['u_id']; 
+
+    $statement = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = :follower_id AND following_id = :following_id");
+    $statement->execute([
+        ':follower_id' => $follower_id,
+        ':following_id' => $followed_id
+    ]);
+
+    $isFollowing = $statement->fetchColumn();
+    echo ($isFollowing > 0) ? "Unfollow" : "Follow";
+    ?>
+</button>
+
+
             </div>
         </div>
+        <?php
+$profile_id = $accountInfo['u_id'];
 
-          <!-- Popup Modal -->
-          <div id="followers-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                
-                <div id="followers-content">
-                    <h5>Followers</h5>
+$followersQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
+                                  FROM user_follows 
+                                  JOIN accounts ON user_follows.follower_id = accounts.u_id
+                                  WHERE user_follows.following_id = :profile_id");
+$followersQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followersQuery->execute();
+$followers = $followersQuery->fetchAll(PDO::FETCH_ASSOC);
+
+$followingQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
+                                  FROM user_follows 
+                                  JOIN accounts ON user_follows.following_id = accounts.u_id
+                                  WHERE user_follows.follower_id = :profile_id");
+$followingQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followingQuery->execute();
+$following = $followingQuery->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!-- Popup Modal -->
+<div id="followers-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        
+        <div id="followers-content">
+            <h5>Followers</h5>
+            <?php if (!empty($followers)): ?>
+                <?php foreach ($followers as $follower): ?>
                     <div class="follower-display">
-                        <div class="profile-pic">
-                            <img src="gallery/eyes.jpg" alt="">
-                        </div>
-                        <div class="follower-name">
-                            <h5>Angel Canete <br>
-                                <span><a href=""><span>@</span>scyy</a></span>
-                            </h5>
-                        </div>
-                    </div>
-                
-                    
-                </div>
+                    <div class="profile-pic">
+    <?php
+    $imagePath = '../profile_pics/' . $follower['profile'];
+    if (file_exists($imagePath) && !empty($follower['profile'])) {
+        echo "<img src=\"$imagePath\" alt=\"Profile Image\">";
+    } else {
+        echo "<img src=\"../gallery/head.png\" alt=\"Default Profile Image\">";
+    }
+    ?>
+</div>
 
-                <div id="following-content" style="display: none;">
-                    <h5>Following</h5>
-                    <div class="following-display">
-                        <div class="profile-pic">
-                            <img src="gallery/eyes.jpg" alt="">
-                        </div>
                         <div class="follower-name">
-                            <h5>Angel Canete <br>
-                                <span><a href="profileDash.html"><span>@</span>scyy</a></span>
+                            <h5><?php echo htmlspecialchars($follower['u_name'], ENT_QUOTES); ?> <br>
+                                <span><a href="profile.php?user=<?php echo $follower['u_id']; ?>">
+                                    <span>@</span><?php echo htmlspecialchars($follower['username'], ENT_QUOTES); ?>
+                                </a></span>
                             </h5>
                         </div>
                     </div>
-                
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No followers yet.</p>
+            <?php endif; ?>
         </div>
+
+        <div id="following-content" style="display: none;">
+            <h5>Following</h5>
+            <?php if (!empty($following)): ?>
+                <?php foreach ($following as $followed): ?>
+                    <div class="following-display">
+                    <div class="profile-pic">
+    <?php
+    $imagePath = '../profile_pics/' . $follower['profile'];
+    if (file_exists($imagePath) && !empty($follower['profile'])) {
+        echo "<img src=\"$imagePath\" alt=\"Profile Image\">";
+    } else {
+        echo "<img src=\"../gallery/head.png\" alt=\"Default Profile Image\">";
+    }
+    ?>
+</div>
+
+                        <div class="follower-name">
+                            <h5><?php echo htmlspecialchars($followed['u_name'], ENT_QUOTES); ?> <br>
+                                <span><a href="profile.php?user=<?php echo $followed['u_id']; ?>">
+                                    <span>@</span><?php echo htmlspecialchars($followed['username'], ENT_QUOTES); ?>
+                                </a></span>
+                            </h5>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Not following anyone yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
 
 
         <!-- below folder section -->

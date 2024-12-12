@@ -261,40 +261,94 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // FOLLOWERS AND FOLLOWING
-const modal = document.getElementById("followers-modal");
-const followersContent = document.getElementById("followers-content");
-const followingContent = document.getElementById("following-content");
+// JavaScript for modal functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const followersLink = document.getElementById("openFollowers");
+  const followingLink = document.getElementById("openFollowing");
+  const modal = document.getElementById("followers-modal");
+  const closeButton = document.querySelector(".close-button");
+  const followersContent = document.getElementById("followers-content");
+  const followingContent = document.getElementById("following-content");
 
-const viewFollowersButton = document.getElementById("openFollowers");
-const viewFollowingButton = document.getElementById("openFollowing");
-
-const closeButton = document.getElementsByClassName("close-button")[0];
-
-viewFollowersButton.addEventListener("click", function(event) {
-    event.preventDefault(); 
+  // Open Followers Modal
+  followersLink.addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent page reload
     followersContent.style.display = "block";
     followingContent.style.display = "none";
     modal.style.display = "block";
-});
+  });
 
-// following modal
-viewFollowingButton.addEventListener("click", function(event) {
-    event.preventDefault(); 
+  // Open Following Modal
+  followingLink.addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent page reload
     followersContent.style.display = "none";
     followingContent.style.display = "block";
     modal.style.display = "block";
-});
+  });
 
-closeButton.addEventListener("click", function() {
-    modal.style.display = "none"; 
-});
+  // Close Modal
+  closeButton.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
 
-window.addEventListener("click", function(event) {
+  // Close Modal When Clicking Outside of It
+  window.addEventListener("click", (event) => {
     if (event.target === modal) {
-        modal.style.display = "none"; 
+      modal.style.display = "none";
     }
+  });
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const followButton = document.querySelector(".follow-btn");
+  const followedId = followButton.getAttribute("data-followed-id"); // Assume you pass the followed user's ID as a `data` attribute.
+
+  followButton.addEventListener("click", () => {
+    const isFollowing = followButton.textContent.trim() === "Unfollow";
+    const action = isFollowing ? "unfollow" : "follow";
+
+    fetch("../class/follow.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `action=${action}&followed_id=${followedId}`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          followButton.textContent = isFollowing ? "Follow" : "Unfollow";
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
 });
 
+// Get the modal notifaction
+var notifModal = document.getElementById('notifModal');
+var viewAllNotifications = document.getElementById('viewAllNotifications');
+var notifClosebtn = document.getElementById('notifClosebtn');
+
+
+viewAllNotifications.onclick = function(event) {
+    event.preventDefault(); 
+    notifModal.style.display = 'block';
+}
+
+
+notifClosebtn.onclick = function() {
+    notifModal.style.display = 'none';
+}
+
+
+window.onclick = function(event) {
+    if (event.target == notifModal) {
+        notifModal.style.display = 'none';
+    }
+}
 
 // e link mga side bar
 document.addEventListener('DOMContentLoaded', function() {
