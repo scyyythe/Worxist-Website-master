@@ -298,10 +298,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 document.addEventListener("DOMContentLoaded", () => {
   const followButton = document.querySelector(".follow-btn");
-  const followedId = followButton.getAttribute("data-followed-id"); // Assume you pass the followed user's ID as a `data` attribute.
-
+  const followedId = followButton.getAttribute("data-followed-id"); 
   followButton.addEventListener("click", () => {
     const isFollowing = followButton.textContent.trim() === "Unfollow";
     const action = isFollowing ? "unfollow" : "follow";
@@ -332,17 +332,13 @@ var notifModal = document.getElementById('notifModal');
 var viewAllNotifications = document.getElementById('viewAllNotifications');
 var notifClosebtn = document.getElementById('notifClosebtn');
 
-
 viewAllNotifications.onclick = function(event) {
     event.preventDefault(); 
     notifModal.style.display = 'block';
 }
-
-
 notifClosebtn.onclick = function() {
     notifModal.style.display = 'none';
 }
-
 
 window.onclick = function(event) {
     if (event.target == notifModal) {

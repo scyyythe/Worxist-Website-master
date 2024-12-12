@@ -138,7 +138,7 @@ $following = $followingQuery->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="follower-name">
                             <h5><?php echo htmlspecialchars($follower['u_name'], ENT_QUOTES); ?> <br>
-                                <span><a href="profile.php?user=<?php echo $follower['u_id']; ?>">
+                                <span><a href="profileDash.php?user=<?php echo $follower['u_id']; ?>">
                                     <span>@</span><?php echo htmlspecialchars($follower['username'], ENT_QUOTES); ?>
                                 </a></span>
                             </h5>
@@ -168,7 +168,7 @@ $following = $followingQuery->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="follower-name">
                             <h5><?php echo htmlspecialchars($followed['u_name'], ENT_QUOTES); ?> <br>
-                                <span><a href="profile.php?user=<?php echo $followed['u_id']; ?>">
+                                <span><a href="profileDash.php?user=<?php echo $followed['u_id']; ?>">
                                     <span>@</span><?php echo htmlspecialchars($followed['username'], ENT_QUOTES); ?>
                                 </a></span>
                             </h5>

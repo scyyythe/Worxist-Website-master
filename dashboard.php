@@ -864,6 +864,7 @@ if (!empty($allImages)) {
        
         <div class="info-exhibit">
         <div class="nav-icons2">
+            <p class="exhibitstatus" hidden></p>
             <div class="prev-icon2">&#10094;</div>
             <div class="next-icon2">&#10095;</div>
          </div>
@@ -1103,13 +1104,34 @@ if (!empty($allImages)) {
 
                 <div class="form-below">
 
-                <div class="follow">
-                    <p><span >10</span>
-                    <a href="#" id="openFollowers">Followers</a>
+                <?php
+                        $accountManager = new AccountManager($conn); 
+                        $accountInfo = $accountManager->getAccountInfo($u_id);
+                        $profile_id = $accountInfo['u_id'];
+
+                        $followersQuery = $conn->prepare("SELECT COUNT(*) AS followers_count 
+                                                        FROM user_follows 
+                                                        WHERE user_follows.following_id = :profile_id");
+                        $followersQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+                        $followersQuery->execute();
+                        $followersCount = $followersQuery->fetch(PDO::FETCH_ASSOC)['followers_count'];
+
+                        $followingQuery = $conn->prepare("SELECT COUNT(*) AS following_count 
+                                                        FROM user_follows 
+                                                        WHERE user_follows.follower_id = :profile_id");
+                        $followingQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+                        $followingQuery->execute();
+                        $followingCount = $followingQuery->fetch(PDO::FETCH_ASSOC)['following_count'];
+                ?>
+               <div class="follow">
+                    <p>
+                        <span><?php echo $followersCount; ?></span>
+                        <a href="" id="openFollowers">Followers</a>
                     </p>
 
-                    <p><span >1</span>
-                    <a href="#"  id="openFollowing">Following</a>
+                    <p>
+                        <span><?php echo $followingCount; ?></span>
+                        <a href="" id="openFollowing">Following</a>
                     </p>
                 </div>
                 
@@ -1232,79 +1254,94 @@ if (!empty($allImages)) {
 
 </div>
   
-         <!-- Popup Modal -->
-         <div id="followers-modal" class="modal">
-                        <div class="modal-content">
-                            <span class="close-button">&times;</span>
-                            
-                            <div id="followers-content">
-                                <h5>Followers</h5>
-                                <div class="follower-display">
-                                    <div class="profile-pic">
-                                        <img src="gallery/eyes.jpg" alt="">
-                                    </div>
-                                    <div class="follower-name">
-                                        <h5>Angel Canete <br>
-                                            <span><a href="profileDash.php"><span>@</span>scyy</a></span>
-                                        </h5>
-                                    </div>
-                                </div>
-                            
-                                
-                            </div>
+<?php
+$accountManager = new AccountManager($conn); 
+$accountInfo = $accountManager->getAccountInfo($u_id);
+$profile_id = $accountInfo['u_id'];
 
-                            <div id="following-content" style="display: none;">
-                                <h5>Following</h5>
-                                <div class="following-display">
-                                    <div class="profile-pic">
-                                        <img src="gallery/girl.jpg" alt="">
-                                    </div>
-                                    <div class="follower-name">
-                                        <h5>Angel Canete <br>
-                                            <span><a href="profileDash.php"><span>@</span>scyy</a></span>
-                                        </h5>
-                                    </div>
-                                </div>
-                            
-                            </div>
-                        </div>
-                    </div>
+$followersQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
+                                  FROM user_follows 
+                                  JOIN accounts ON user_follows.follower_id = accounts.u_id
+                                  WHERE user_follows.following_id = :profile_id");
+$followersQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followersQuery->execute();
+$followers = $followersQuery->fetchAll(PDO::FETCH_ASSOC);
 
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                
-                <div id="followers-content">
-                    <h5>Followers</h5>
+$followingQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
+                                  FROM user_follows 
+                                  JOIN accounts ON user_follows.following_id = accounts.u_id
+                                  WHERE user_follows.follower_id = :profile_id");
+$followingQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followingQuery->execute();
+$following = $followingQuery->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!-- Popup Modal -->
+<div id="followers-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        
+        <div id="followers-content">
+            <h5>Followers</h5>
+            <?php if (!empty($followers)): ?>
+                <?php foreach ($followers as $follower): ?>
                     <div class="follower-display">
-                        <div class="profile-pic">
-                            <img src="gallery/eyes.jpg" alt="">
-                        </div>
-                        <div class="follower-name">
-                            <h5>Angel Canete <br>
-                                <span><a href=""><span>@</span>scyy</a></span>
-                            </h5>
-                        </div>
-                    </div>
-                
-                    
-                </div>
+                    <div class="profile-pic">
+    <?php
+    $imagePath = '../profile_pics/' . $follower['profile'];
+    if (file_exists($imagePath) && !empty($follower['profile'])) {
+        echo "<img src=\"$imagePath\" alt=\"Profile Image\">";
+    } else {
+        echo "<img src=\"../gallery/head.png\" alt=\"Default Profile Image\">";
+    }
+    ?>
+</div>
 
-                <div id="following-content" style="display: none;">
-                    <h5>Following</h5>
-                    <div class="following-display">
-                        <div class="profile-pic">
-                            <img src="gallery/eyes.jpg" alt="">
-                        </div>
                         <div class="follower-name">
-                            <h5>Angel Canete <br>
-                                <span><a href="profileDash.html"><span>@</span>scyy</a></span>
+                            <h5><?php echo htmlspecialchars($follower['u_name'], ENT_QUOTES); ?> <br>
+                                <span><a href="profileDash.php?user=<?php echo $follower['u_id']; ?>">
+                                    <span>@</span><?php echo htmlspecialchars($follower['username'], ENT_QUOTES); ?>
+                                </a></span>
                             </h5>
                         </div>
                     </div>
-                
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No followers yet.</p>
+            <?php endif; ?>
         </div>
+
+        <div id="following-content" style="display: none;">
+            <h5>Following</h5>
+            <?php if (!empty($following)): ?>
+                <?php foreach ($following as $followed): ?>
+                    <div class="following-display">
+                    <div class="profile-pic">
+    <?php
+    $imagePath = '../profile_pics/' . $follower['profile'];
+    if (file_exists($imagePath) && !empty($follower['profile'])) {
+        echo "<img src=\"$imagePath\" alt=\"Profile Image\">";
+    } else {
+        echo "<img src=\"../gallery/head.png\" alt=\"Default Profile Image\">";
+    }
+    ?>
+</div>
+
+                        <div class="follower-name">
+                            <h5><?php echo htmlspecialchars($followed['u_name'], ENT_QUOTES); ?> <br>
+                                <span><a href="profileDash.php?user=<?php echo $followed['u_id']; ?>">
+                                    <span>@</span><?php echo htmlspecialchars($followed['username'], ENT_QUOTES); ?>
+                                </a></span>
+                            </h5>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Not following anyone yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
 
     <!-- end of settings container -->
 </div>
@@ -1331,6 +1368,7 @@ const collaborators = [
     },
     <?php endforeach; ?>
 ];
+
 
 let currentCollaboratorIndex = 0; 
 let currentArtworkIndex = 0; 
@@ -1411,6 +1449,13 @@ function updateCarousel() {
     centerTitle.textContent = artworks[centerIndex].title;
     centerDesc.textContent = artworks[centerIndex].description;
     rightImg.src = artworks[rightIndex].src;
+
+    const navIcons = document.querySelector('.nav-icons2');
+    const exhibitStatus = navIcons ? navIcons.getAttribute('data-exhibit-status') : '';
+
+    if (exhibitStatus === 'Solo') {
+        navIcons.style.display = 'none';
+    }
 }
 
 // Initialize the display
