@@ -416,8 +416,7 @@ class ExhibitManager {
     
     public function getRequestExhibit() {
         $statement = $this->conn->prepare("SELECT * FROM exhibit_tbl WHERE exbt_status = 'Pending'");
-        $statement->execute();
-        
+        $statement->execute();     
         return $statement->fetchAll(PDO::FETCH_ASSOC); 
     }
 

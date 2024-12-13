@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const dashboardLink = document.querySelector('.dasboardLink');
   const exhibitLink = document.querySelector('.exhibitLink');
   const settingsLink = document.querySelector('.settingLink');
+  
 
   // Section containers
   const dashboardSection = document.getElementById('dashboard');
@@ -10,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const settingsSection = document.getElementById('settings');
   const topSection = document.querySelector('.header-wrapper');
   const acceptAll=document.getElementById('accept-all-btn');
+  const viewDeclined=document.getElementById('view-declined');
+  const panel = document.getElementById("panel"); 
   // Default display settings
   dashboardSection.style.display = 'flex';
   exhibitsSection.style.display = 'none';
@@ -17,35 +20,48 @@ document.addEventListener('DOMContentLoaded', function() {
   if (acceptAll) {
     acceptAll.style.display = 'none';
   }
+  if (viewDeclined) {
+    viewDeclined.style.display = 'none';
+  }
+
   // Dashboard section
   dashboardLink.addEventListener('click', function(e) {
       e.preventDefault();
+      console.log('Dashboard link clicked');
       dashboardSection.style.display = 'flex';
       exhibitsSection.style.display = 'none';
       settingsSection.style.display = 'none';
       topSection.style.display = 'flex';
 
-
   if (acceptAll) {
     acceptAll.style.display = 'none';
+  }
+  if (viewDeclined) {
+    viewDeclined.style.display = 'none';
   }
   });
 
   // Exhibits section
-  exhibitLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      dashboardSection.style.display = 'none';
-      exhibitsSection.style.display = 'flex';
-      settingsSection.style.display = 'none';
-      topSection.style.display = 'flex';
-      if (acceptAll) {
-        acceptAll.style.display = 'block';
-      }
-  });
+exhibitLink.addEventListener('click', function(e) {
+   e.preventDefault();
+   console.log('Exhibit link clicked');
+   dashboardSection.style.display = 'none';
+   exhibitsSection.style.display = 'flex';
+   settingsSection.style.display = 'none';
+   topSection.style.display = 'flex';
+   if (acceptAll) {
+     acceptAll.style.display = 'block';
+   }
+   if (viewDeclined) {
+    viewDeclined.style.display = 'block';
+  }
+});
+
 
   // Settings section
   settingsLink.addEventListener('click', function(e) {
       e.preventDefault();
+      console.log('Settings link clicked');
       dashboardSection.style.display = 'none';
       exhibitsSection.style.display = 'none';
       settingsSection.style.display = 'block';
@@ -54,10 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (acceptAll) {
     acceptAll.style.display = 'none';
   }
+  if (viewDeclined) {
+    viewDeclined.style.display = 'none';
+  }
 
   });
 });
-
 
 // --- Activity Chart ---
 document.addEventListener('DOMContentLoaded', function () {
@@ -191,8 +209,12 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("exhibit-title").innerText = exhibit.exhibit.exbt_title;
 document.getElementById("exhibit-description").innerText = exhibit.exhibit.exbt_descrip;
 const acceptAll = document.getElementById('accept-all-btn');
+const viewDeclined= document.getElementById('view-declined');
   if (acceptAll) {
     acceptAll.style.display = 'none';
+  }
+  if (viewDeclined) {
+    viewDeclined.style.display = 'none';
   }
 // Solo Section
 document.getElementById('artist_name').textContent = exhibit.exhibit.organizer_name || 'Unknown Organizer';
@@ -299,9 +321,9 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
         }
 
         for (let i = 0; i < declineButtons.length; i++) {
-          declineButtons[i].setAttribute("data-exhibit-id", exhibitId); // Attach exhibitId to the decline button
+          declineButtons[i].setAttribute("data-exhibit-id", exhibitId); 
           declineButtons[i].addEventListener("click", function () {
-            const exhibitId = this.getAttribute("data-exhibit-id"); // Retrieve the exhibitId
+            const exhibitId = this.getAttribute("data-exhibit-id"); 
             showPopup(`Are you sure you want to decline this exhibit? ${exhibitId}`, "decline", exhibitId);
           });
         }
@@ -336,17 +358,30 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
-      .then(response => response.json())  
+      .then(response => response.json())
       .then(data => {
         if (data.status === 'error') {
           console.log(data.message); 
           showCustomAlert(data.message);  
         } else {
-         showCustomAlert("Exhibit updated successfully");
+          showCustomAlert("Exhibit updated successfully");
+  
+          // Dynamically remove or update the exhibit from the list
+          let exhibitCard = document.querySelector(`.card[data-exhibit-id="${currentExhibitId}"]`);
+          if (exhibitCard) {
+            exhibitCard.remove(); // Remove the card after approval
+          }
+  
+          // If there are no more pending exhibits, show a message
+          let postsWrapper = document.querySelector('.posts-wrapper');
+          if (!postsWrapper.querySelector('.card')) {
+            postsWrapper.innerHTML = "<p class='no-exhibits-message'>No pending exhibits available.</p>";
+          }
         }
       })
       .catch(error => {
         console.error("Error:", error);
+        showCustomAlert("An error occurred.");
       });
       
     } else if (currentAction === "decline" && currentExhibitId) {
@@ -366,6 +401,18 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
       .then(data => {
         if (data.status === 'success') {
           showCustomAlert('Exhibit declined!');
+          
+          // Dynamically remove or update the exhibit from the list
+          let exhibitCard = document.querySelector(`.card[data-exhibit-id="${currentExhibitId}"]`);
+          if (exhibitCard) {
+            exhibitCard.remove(); // Remove the card after decline
+          }
+  
+          // If there are no more pending exhibits, show a message
+          let postsWrapper = document.querySelector('.posts-wrapper');
+          if (!postsWrapper.querySelector('.card')) {
+            postsWrapper.innerHTML = "<p class='no-exhibits-message'>No pending exhibits available.</p>";
+          }
         } else {
           showCustomAlert('Failed to update exhibit status.');
         }
@@ -375,14 +422,15 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
         showCustomAlert('An error occurred.');
       });
     }
-
+  
     hidePopup(); 
   });
-
- cancelButton.addEventListener("click", function () {
+  
+  cancelButton.addEventListener("click", function () {
     hidePopup(); 
   });
-
+  
+  
   
 
         // get the exhibit type
@@ -429,8 +477,14 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
       if (postsWrapper && headerWrapper) {
         postsWrapper.style.display = "block";
         headerWrapper.style.display = "block";
+        if (acceptAll) {
+          acceptAll.style.display = 'block';
+        }
+        if (viewDeclined) {
+          viewDeclined.style.display = 'block';
+        }
       }
-      window.location.reload();
+   
     });
   }
 });
@@ -487,6 +541,91 @@ document.getElementById('accept-all-btn').addEventListener('click', function() {
       showCustomAlert('An error occurred.');
   });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const viewDeclinedButton = document.getElementById('view-declined');
+  const declinedPopup = document.getElementById('declined-popup');
+  const closePopup = document.getElementById('close-popup-declined');
+  const declinedExhibitsList = document.getElementById('declined-exhibits-list');
+
+  viewDeclinedButton.addEventListener('click', function() {
+    fetchDeclinedExhibits();
+    declinedPopup.style.display = 'flex'; 
+  });
+
+  closePopup.addEventListener('click', function() {
+    declinedPopup.style.display = 'none'; 
+  });
+
+  function processDeclinedExhibits(data) {
+    declinedExhibitsList.innerHTML = ''; 
+    if (data.length > 0) {
+      data.forEach(exhibit => {
+        const exhibitDiv = document.createElement('div');
+        exhibitDiv.classList.add('exhibit-item');
+        const exhibitTitle = document.createElement('h3');
+        exhibitTitle.textContent = exhibit.exbt_title;
+        const restoreButton = document.createElement('button');
+        restoreButton.textContent = 'Restore';
+        restoreButton.addEventListener('click', function() {
+          restoreExhibit(exhibit.exbt_id);
+        });
+        exhibitDiv.appendChild(exhibitTitle);
+        exhibitDiv.appendChild(restoreButton);
+        declinedExhibitsList.appendChild(exhibitDiv);
+      });
+    } else {
+      declinedExhibitsList.innerHTML = '<p>No declined exhibits found.</p>';
+    }
+  }
+
+  function fetchDeclinedExhibits() {
+    fetch('get_declined_exhibit.php') 
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        processDeclinedExhibits(data); 
+      })
+      .catch(error => {
+        console.error('Error fetching declined exhibits:', error);
+        alert('An error occurred while fetching declined exhibits.');
+      });
+  }
+
+  function restoreExhibit(exhibitId) {
+    fetch('restore_exhibit.php', { 
+      method: 'POST',
+      body: new URLSearchParams({ exbt_id: exhibitId }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        alert('Exhibit restored successfully');
+        fetchDeclinedExhibits();
+      } else {
+        alert('Failed to restore exhibit');
+      }
+    })
+    .catch(error => {
+      console.error('Error restoring exhibit:', error);
+    });
+  }
+
+  document.addEventListener('click', function(event) {
+    if (!declinedPopup.contains(event.target) && event.target !== viewDeclinedButton) {
+      declinedPopup.style.display = 'none';
+    }
+  });
+});
+
 
 
 //ADMIN & COLLAB IMG CAROUSEL

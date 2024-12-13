@@ -9,6 +9,7 @@ include '../class/exhbtClass.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+ini_set('display_errors', 1); // Display errors
 
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -198,9 +199,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <section class="content-wrapper3" id="dashboard" style="display: none;">
 
             <div class="overview">
+                    <div class="acc">
+                        <div class="stat-box">
+                            <h3>Accounts <span class="a-badge red">2</span></h3>
+                        </div>
+                        <div class="a_number"></div>
+                    </div>
                     <div class="request">
                         <div class="stat-box">
-                            <h3>Posts Requests<span class="p-badge blue"></span></h3>
+                            <h3>Posts Requests<span class="p-badge blue">2</span></h3>
                         </div>
                         <div class="r_number"></div>
                     </div>
@@ -244,36 +251,50 @@ echo "<script>
 
 
             <div class="exhibit-ni-section">
+
             <div class="actions-wrapper">
         <button id="accept-all-btn" class="btn accept-all">Accept All</button><br><br>
+        <button id="view-declined" class="view-declined">View Declined</button>
     </div>
 
-            <section class="content-wrapper1" id="exhibits" >
+            <section class="content-wrapper1" id="exhibits" style="display: none;">
                 <!-- Custom Alert Box -->
-                
+       
             <div id="customAlert" class="alert-box">
                 <div class="alert-content">
                     <p id="alertMessage"></p><br>
                     <button id="closeAlertBtn" class="close-btn">Close</button>
                 </div>
             </div>
+
+            <!-- Popup container -->
+            <div id="declined-popup" class="declined-popup" style="display: none;">
+  <div class="popup-content">
+    <span id="close-popup-declined" class="close-popup-declined">×</span>
+    <h2>Declined Exhibits</h2>
+    <div id="declined-exhibits-list"></div>
+  </div>
+</div>
+
         
-            <div class="posts-wrapper">
-                <?php if (!empty($request)) : ?>
-                    <?php foreach ($request as $exhibit) : ?>
-                        <div class="card" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">
-                            <img src="pics/banner.png" class="banner-image">
-                            <div class="card-content">
-                                <p class="art-title"><?php echo $exhibit['exbt_title']; ?></p>
-                                <p class="description"><?php echo $exhibit['exbt_descrip']; ?></p>
-                                
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <p>No pending exhibits available.</p>
-                <?php endif; ?>
+<div class="posts-wrapper">
+    <?php if (!empty($request)) : ?>
+        <?php foreach ($request as $exhibit) : ?>
+            <div class="card" data-exhibit-id="<?php echo $exhibit['exbt_id']; ?>">
+                <img src="pics/banner.png" class="banner-image">
+                <div class="card-content">
+                    <p class="art-title"><?php echo $exhibit['exbt_title']; ?></p>
+                    <p class="description"><?php echo $exhibit['exbt_descrip']; ?></p>
+                </div>
             </div>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <p class="no-exhibits-message">No pending exhibits available.</p>
+    <?php endif; ?>
+
+</div>
+
+
                 <!-- PANEL INSIDE THE EXHBIT CARD -->
                 <section id="panel"  class="panel" style="display: none;">
                     <i class='bx bx-chevron-left'></i>
