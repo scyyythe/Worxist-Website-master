@@ -3,77 +3,194 @@ document.addEventListener('DOMContentLoaded', function() {
   const dashboardLink = document.querySelector('.dasboardLink');
   const exhibitLink = document.querySelector('.exhibitLink');
   const settingsLink = document.querySelector('.settingLink');
-  
+  const acceptedLink = document.querySelector('.acceptedLink');
+  const declinedLink = document.querySelector('.declinedLink');
 
   // Section containers
   const dashboardSection = document.getElementById('dashboard');
   const exhibitsSection = document.getElementById('exhibits');
   const settingsSection = document.getElementById('settings');
+  const acceptedSection = document.getElementById('acceptedEx');
+  const declinedSection = document.getElementById('declinedEx');
   const topSection = document.querySelector('.header-wrapper');
-  const acceptAll=document.getElementById('accept-all-btn');
-  const viewDeclined=document.getElementById('view-declined');
-  const panel = document.getElementById("panel"); 
+  const acceptAll = document.getElementById('accept-all-btn');
+  const viewDeclined = document.getElementById('view-declined');
+
   // Default display settings
   dashboardSection.style.display = 'flex';
   exhibitsSection.style.display = 'none';
   settingsSection.style.display = 'none';
-  if (acceptAll) {
-    acceptAll.style.display = 'none';
-  }
-  if (viewDeclined) {
-    viewDeclined.style.display = 'none';
-  }
+  acceptedSection.style.display = 'none';
+  declinedSection.style.display = 'none';
+  if (acceptAll) acceptAll.style.display = 'none';
+  if (viewDeclined) viewDeclined.style.display = 'none';
 
   // Dashboard section
   dashboardLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log('Dashboard link clicked');
-      dashboardSection.style.display = 'flex';
-      exhibitsSection.style.display = 'none';
-      settingsSection.style.display = 'none';
-      topSection.style.display = 'flex';
+    e.preventDefault();
+    console.log('Dashboard link clicked');
+    dashboardSection.style.display = 'flex';
+    exhibitsSection.style.display = 'none';
+    settingsSection.style.display = 'none';
+    acceptedSection.style.display = 'none';
+    declinedSection.style.display = 'none';
+    topSection.style.display = 'flex';
 
-  if (acceptAll) {
-    acceptAll.style.display = 'none';
-  }
-  if (viewDeclined) {
-    viewDeclined.style.display = 'none';
-  }
+    if (acceptAll) acceptAll.style.display = 'none';
+    if (viewDeclined) viewDeclined.style.display = 'none';
   });
 
   // Exhibits section
-exhibitLink.addEventListener('click', function(e) {
-   e.preventDefault();
-   console.log('Exhibit link clicked');
-   dashboardSection.style.display = 'none';
-   exhibitsSection.style.display = 'flex';
-   settingsSection.style.display = 'none';
-   topSection.style.display = 'flex';
-   if (acceptAll) {
-     acceptAll.style.display = 'block';
-   }
-   if (viewDeclined) {
-    viewDeclined.style.display = 'block';
-  }
-});
+  exhibitLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    console.log('Exhibit link clicked');
+    dashboardSection.style.display = 'none';
+    exhibitsSection.style.display = 'flex';
+    settingsSection.style.display = 'none';
+    acceptedSection.style.display = 'none';
+    declinedSection.style.display = 'none';
+    topSection.style.display = 'flex';
 
+    if (acceptAll) acceptAll.style.display = 'block';
+    if (viewDeclined) viewDeclined.style.display = 'block';
+  });
+
+  // Accepted section
+  acceptedLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    console.log('Accepted link clicked');
+    dashboardSection.style.display = 'none';
+    exhibitsSection.style.display = 'none';
+    settingsSection.style.display = 'none';
+    acceptedSection.style.display = 'block';
+    declinedSection.style.display = 'none';
+    topSection.style.display = 'none';
+
+    if (acceptAll) acceptAll.style.display = 'none';
+    if (viewDeclined) viewDeclined.style.display = 'none';
+  });
+
+  // Declined section
+  declinedLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    console.log('Declined link clicked');
+    dashboardSection.style.display = 'none';
+    exhibitsSection.style.display = 'none';
+    settingsSection.style.display = 'none';
+    acceptedSection.style.display = 'none';
+    declinedSection.style.display = 'block';
+    topSection.style.display = 'none';
+
+    if (acceptAll) acceptAll.style.display = 'none';
+    if (viewDeclined) viewDeclined.style.display = 'none';
+  });
 
   // Settings section
   settingsLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log('Settings link clicked');
-      dashboardSection.style.display = 'none';
-      exhibitsSection.style.display = 'none';
-      settingsSection.style.display = 'block';
-      topSection.style.display = 'none';
+    e.preventDefault();
+    console.log('Settings link clicked');
+    dashboardSection.style.display = 'none';
+    exhibitsSection.style.display = 'none';
+    settingsSection.style.display = 'block';
+    acceptedSection.style.display = 'none';
+    declinedSection.style.display = 'none';
+    topSection.style.display = 'none';
 
-      if (acceptAll) {
-    acceptAll.style.display = 'none';
-  }
-  if (viewDeclined) {
-    viewDeclined.style.display = 'none';
-  }
+    if (acceptAll) acceptAll.style.display = 'none';
+    if (viewDeclined) viewDeclined.style.display = 'none';
+  });
+});
 
+document.getElementById("year").addEventListener("change", filterExhibits);
+document.getElementById("month").addEventListener("change", filterExhibits);
+
+function filterExhibits() {
+    var year = document.getElementById("year").value;
+    var month = document.getElementById("month").value;
+    
+    var exhibits = document.querySelectorAll(".ex-card");
+    
+    exhibits.forEach(function(exhibit) {
+        var exhibitYear = exhibit.getAttribute("data-year");
+        var exhibitMonth = exhibit.getAttribute("data-month");
+
+        if ((year === "" || exhibitYear === year) && (month === "" || exhibitMonth === month)) {
+            exhibit.style.display = "block"; 
+        } else {
+            exhibit.style.display = "none"; 
+        }
+    });
+}
+
+
+document.getElementById("year").addEventListener("change", function() {
+    if (this.value !== "") {
+        document.getElementById("month").classList.remove("hidden");
+    } else {
+        document.getElementById("month").classList.add("hidden");
+    }
+});
+
+
+//FILTER IN SORTING USER NAMES
+document.addEventListener('DOMContentLoaded', function () {
+  const filterButton = document.querySelector('.bx-filter');
+  const tableBody = document.querySelector('.user-table tbody');
+
+  filterButton.addEventListener('click', function () {
+      const rows = tableBody.querySelectorAll('tr');
+      
+      // Array to store name and corresponding row
+      const rowsArray = [];
+      for (let i = 0; i < rows.length; i++) {
+
+        const nameCell = rows[i].querySelector('.name');
+        const nameText = nameCell.textContent.trim();
+      
+        // Push the name and the corresponding row to the array
+        rowsArray.push({ name: nameText, row: rows[i] });
+      }
+    
+      // Alphabetical order
+      for (let i = 0; i < rowsArray.length; i++) {
+        for (let j = 0; j < rowsArray.length - 1; j++) {
+          if (rowsArray[j].name > rowsArray[j + 1].name) {
+            // Swap the elements
+            const temp = rowsArray[j];
+            rowsArray[j] = rowsArray[j + 1];
+            rowsArray[j + 1] = temp;
+          }
+        }
+      }
+    
+      tableBody.innerHTML = '';
+    
+      for (let i = 0; i < rowsArray.length; i++) {
+        tableBody.appendChild(rowsArray[i].row);
+      }
+  });
+});
+
+
+//SEARCH BAR FOR USERS
+document.addEventListener('DOMContentLoaded', () => {
+  const searchBar = document.querySelector('.search-bar');
+  const tableRows = document.querySelectorAll('.user-table tbody tr');
+
+  searchBar.addEventListener('input', () => {
+      const query = searchBar.value.toLowerCase();
+      
+      // Loop sa tanan table rows
+      for (let i = 0; i < tableRows.length; i++) {
+          const nameCell = tableRows[i].querySelector('.name');
+          const name = nameCell.textContent.toLowerCase();
+          
+          if (query === '' || name.includes(query)) {
+            tableRows[i].style.display = '';
+          } else {
+            tableRows[i].style.display = 'none';
+          }
+      }
   });
 });
 
@@ -466,7 +583,9 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
     });
 
   }
-
+  const viewDeclined= document.getElementById('view-declined');
+  let postsWrapperContent = postsWrapper.innerHTML;
+let headerWrapperContent = headerWrapper.innerHTML;
   // Back button functionality
   if (backButton) {
     backButton.addEventListener("click", function () {
@@ -477,12 +596,8 @@ artworkFiles.slice(0, 3).forEach((file, index) => {
       if (postsWrapper && headerWrapper) {
         postsWrapper.style.display = "block";
         headerWrapper.style.display = "block";
-        if (acceptAll) {
-          acceptAll.style.display = 'block';
-        }
-        if (viewDeclined) {
-          viewDeclined.style.display = 'block';
-        }
+        acceptAll.style.display='block';
+        viewDeclined.style.display='block';
       }
    
     });
@@ -546,7 +661,6 @@ document.getElementById('accept-all-btn').addEventListener('click', function() {
 document.addEventListener("DOMContentLoaded", function () {
   const viewDeclinedButton = document.getElementById('view-declined');
   const declinedPopup = document.getElementById('declined-popup');
-  const closePopup = document.getElementById('close-popup-declined');
   const declinedExhibitsList = document.getElementById('declined-exhibits-list');
 
   viewDeclinedButton.addEventListener('click', function() {
@@ -554,35 +668,62 @@ document.addEventListener("DOMContentLoaded", function () {
     declinedPopup.style.display = 'flex'; 
   });
 
-  closePopup.addEventListener('click', function() {
-    declinedPopup.style.display = 'none'; 
-  });
+
 
   function processDeclinedExhibits(data) {
+    const declinedExhibitsList = document.getElementById('declined-exhibits-list');
+    const closeBtn = document.getElementById('closeDeclined');
+    
+    // Clear the list before adding new content
     declinedExhibitsList.innerHTML = ''; 
+    
     if (data.length > 0) {
       data.forEach(exhibit => {
         const exhibitDiv = document.createElement('div');
         exhibitDiv.classList.add('exhibit-item');
+    
         const exhibitTitle = document.createElement('h3');
         exhibitTitle.textContent = exhibit.exbt_title;
+    
+        const exhibitOwner = document.createElement('p');
+        exhibitOwner.classList.add('owner-name');
+        exhibitOwner.textContent = `Owner: ${exhibit.owner_name}`;
+    
         const restoreButton = document.createElement('button');
         restoreButton.textContent = 'Restore';
+        restoreButton.classList.add('restore-button');
         restoreButton.addEventListener('click', function() {
           restoreExhibit(exhibit.exbt_id);
         });
+    
         exhibitDiv.appendChild(exhibitTitle);
+        exhibitDiv.appendChild(exhibitOwner);
         exhibitDiv.appendChild(restoreButton);
         declinedExhibitsList.appendChild(exhibitDiv);
       });
+  
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          declinedExhibitsList.style.display = 'none';
+        });
+      }
+  
+      document.addEventListener('click', function(event) {
+        if (!declinedExhibitsList.contains(event.target) && event.target !== closeBtn) {
+          declinedExhibitsList.style.display = 'none'; 
+        }
+      });
+  
     } else {
       declinedExhibitsList.innerHTML = '<p>No declined exhibits found.</p>';
     }
   }
+  
+
 
   function fetchDeclinedExhibits() {
     fetch('get_declined_exhibit.php') 
-      .then(response => {
+      .then(response => { 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -619,11 +760,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  document.addEventListener('click', function(event) {
-    if (!declinedPopup.contains(event.target) && event.target !== viewDeclinedButton) {
-      declinedPopup.style.display = 'none';
-    }
-  });
+
 });
 
 

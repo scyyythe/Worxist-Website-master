@@ -84,3 +84,7 @@ Stack trace:
 #0 D:\xampp\htdocs\Worxist-Website-master\admin\admin.php(234): PDOStatement->execute()
 #1 {main}
   thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 234
+[13-Dec-2024 05:01:19 Europe/Berlin] PHP Fatal error:  Uncaught Error: Class "ExhibitManager" not found in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 35

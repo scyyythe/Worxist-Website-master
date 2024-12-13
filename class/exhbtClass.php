@@ -419,7 +419,37 @@ class ExhibitManager {
         $statement->execute();     
         return $statement->fetchAll(PDO::FETCH_ASSOC); 
     }
-
+    public function getAccept() {
+        $statement = $this->conn->prepare("SELECT * FROM exhibit_tbl WHERE exbt_status = 'Accepted'");
+        $statement->execute();     
+        return $statement->fetchAll(PDO::FETCH_ASSOC); 
+    }
+    public function getExhibitsByStatus($status) {
+        // SQL query to join exhibit_tbl and accounts table
+        $query = "
+            SELECT 
+                exhibit_tbl.*, 
+                accounts.u_id, 
+                accounts.u_name, 
+                accounts.email, 
+                accounts.username, 
+                accounts.profile, 
+                accounts.u_status as account_status
+            FROM exhibit_tbl
+            JOIN accounts ON exhibit_tbl.u_id = accounts.u_id
+            WHERE exhibit_tbl.exbt_status = :status
+        ";
+    
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        // Fetch results
+        $exhibits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $exhibits;
+    }
+    
     //pending exhibits
     public function getPendingExhibits($userId) {
         $statement = $this->conn->prepare("

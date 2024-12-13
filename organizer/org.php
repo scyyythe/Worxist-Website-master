@@ -35,6 +35,10 @@ $user = new AccountManager($conn);
 $infos = $user->getAccountInfo($u_id);
 $users = $user->getUsers();
 
+
+// Create an instance of ExhibitManager
+$exhibitManager = new ExhibitManager($conn);
+$exhibits = $exhibitManager->getExhibitsByStatus('Declined');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -60,7 +64,7 @@ $pending=$exhibit->getPendingExhibits($u_id);
 $request=$exhibit->getRequestExhibit();
 $exhibitId = 1; 
 $collaborator=$exhibit->getCollab($exhibitId);
-
+$acceptedExhibits = $exhibit->getAccept();
 
 if (isset($_GET['id'])) {
     $exhibit= new ExhibitManager($conn);
@@ -109,6 +113,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['restore_exbt_id'])) {
+    $exbt_id = $_POST['restore_exbt_id'];
+
+
+    $query = "UPDATE exhibit_tbl SET exbt_status = 'Pending' WHERE exbt_id = :exbt_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindValue(':exbt_id', $exbt_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    exit();
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -130,12 +149,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <img src="pics/worxist.png" alt="Logo">
             </div>
             <ul class="nav">
-            <li><i class='bx bxs-dashboard'></i><a href="#dashboard" class="dasboardLink">Dashboard</a></li>
-            <li><i class='bx bx-merge'></i><a href="#exhibits" class="exhibitLink">Exhibits</a></li>
-            <li><i class='bx bxs-cog'></i><a href="#settings" class="settingLink">Settings</a></li>
-           
-            </ul>
-            <a href="../logout.php" class="logout logoutButton"><i class='bx bxs-log-out'></i>Logout</a>
+    <li><i class='bx bxs-dashboard'></i><a href="#dashboard" class="dasboardLink">Dashboard</a></li>
+    <li><i class='bx bx-merge'></i><a href="#exhibits" class="exhibitLink">Exhibits</a></li>
+    <li><i class='bx bxs-badge-check'></i></i><a href="#acceptedEx" class="acceptedLink">Accepted</a></li>
+    <li><i class='bx bxs-message-rounded-error'></i></i><a href="#declinedEx" class="declinedLink">Declined</a></li>
+    <li><i class='bx bxs-cog'></i><a href="#settings" class="settingLink">Settings</a></li>
+</ul>
+     <a href="../logout.php" class="logout logoutButton"><i class='bx bxs-log-out'></i>Logout</a>
          
         </aside>
 
@@ -193,8 +213,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </header>
             </section>   
 
-    
-            
             <!-- EXHIBITS REQUESTS -->
             <section class="content-wrapper3" id="dashboard" style="display: none;">
 
@@ -254,10 +272,14 @@ echo "<script>
 
             <div class="actions-wrapper">
         <button id="accept-all-btn" class="btn accept-all">Accept All</button><br><br>
-        <button id="view-declined" class="view-declined">View Declined</button>
+        <!-- <button id="view-declined" class="view-declined">View Declined</button> -->
     </div>
 
-            <section class="content-wrapper1" id="exhibits" style="display: none;">
+
+
+
+
+    <section class="content-wrapper1" id="exhibits" style="display: none;">
                 <!-- Custom Alert Box -->
        
             <div id="customAlert" class="alert-box">
@@ -268,13 +290,13 @@ echo "<script>
             </div>
 
             <!-- Popup container -->
-            <div id="declined-popup" class="declined-popup" style="display: none;">
+            <!-- <div id="declined-popup" class="declined-popup" style="display: none;">
   <div class="popup-content">
-    <span id="close-popup-declined" class="close-popup-declined">×</span>
-    <h2>Declined Exhibits</h2>
+  <button id="closeDeclined" class="close-btn-declined">X</button>
+  <h2>Declined Exhibits</h2>
     <div id="declined-exhibits-list"></div>
   </div>
-</div>
+</div> -->
 
         
 <div class="posts-wrapper">
@@ -388,6 +410,135 @@ echo "<script>
 
             </div>
 
+            <section class="content-wrapper4" id="acceptedEx" style="display: none;">
+    <h1>Accepted Exhibits</h1>
+    <div class="filter-container">
+        <label for="year">Filter by:</label>
+        <select id="year" class="filter-select">
+            <option value="" disabled selected>Select Year</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+        </select>
+        <select id="month" class="filter-select hidden">
+            <option value="" disabled selected>Select Month</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+        </select>
+    </div>
+    <div class="ex-wrapper">
+    <?php if (!empty($acceptedExhibits)) : ?>
+        <?php foreach ($acceptedExhibits as $exhibit) : ?>
+            <div class="ex-card" data-year="<?php echo date('Y', strtotime($exhibit['exbt_date'])); ?>" data-month="<?php echo date('F', strtotime($exhibit['exbt_date'])); ?>">
+                <img src="pics/banner.png" class="banner-image">
+                <div class="ex-card-content">
+                    <p class="ex-art-title"><?php echo htmlspecialchars($exhibit['exbt_title'], ENT_QUOTES); ?></p>
+                    <p class="ex-description"><?php echo htmlspecialchars($exhibit['exbt_descrip'], ENT_QUOTES); ?></p>
+                    
+                    <!-- Hidden elements for year, month, and other data -->
+                    <input type="hidden" class="hidden-date" value="<?php echo htmlspecialchars($exhibit['exbt_date'], ENT_QUOTES); ?>">
+                    <input type="hidden" class="hidden-id" value="<?php echo htmlspecialchars($exhibit['exbt_id'], ENT_QUOTES); ?>">
+                    <input type="hidden" class="hidden-status" value="<?php echo htmlspecialchars($exhibit['exbt_status'], ENT_QUOTES); ?>">
+                </div>
+                <i class='bx bxs-show'><p class="ex-views">1</p></i>
+            </div>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <p>No accepted exhibits found.</p>
+    <?php endif; ?>
+    </div>
+</section>
+
+
+<!-- declined -->
+<section class="content-wrapper5" id="declinedEx" style="display: none;">
+    <h1>Declined Exhibits</h1>
+<div class="header-controls">
+<h2>Total Users <span class="total-users"><?= count($exhibits); ?></span></h2>
+                    <div class="table-controls">
+                      <input type="text" class="search-bar" placeholder="Search">
+                      <i class='bx bx-filter'><p class="filter-btn">Filter</p></i>
+                    </div>
+                </div>
+                <table class="user-table">
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Exhibit Title</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($exhibits)): ?>
+            <?php foreach ($exhibits as $exhibit): ?>
+                <tr data-id="<?= $exhibit['exbt_id']; ?>">
+                    <td>
+                        <?php
+                        // Check if the profile image exists
+                        $imagePath = '../profile_pics/' . $exhibit['profile'];
+                        if (file_exists($imagePath) && !empty($exhibit['profile'])) {
+                            echo "<img src=\"$imagePath\" alt=\"Profile Photo\" class=\"user-photo\">";
+                        } else {
+                            echo "<img src=\"../gallery/head.png\" alt=\"Default Profile Photo\" class=\"user-photo\">";
+                        }
+                        ?>
+                    </td>
+                    <td class="name"><?= $exhibit['u_name']; ?></td>
+                    <td class="exhibit-title"><?= $exhibit['exbt_title']; ?></td>
+                    <td class="exhibit-date"><?= $exhibit['exbt_date']; ?></td>
+                    <td class="exhibit-type"><?= $exhibit['exbt_type']; ?></td>
+                    <td style="color: red;" class="status <?= strtolower($exhibit['exbt_status']); ?>">
+                        <?= $exhibit['exbt_status']; ?>
+                    </td>
+                    <td>
+                  
+                        <?php if ($exhibit['exbt_status'] == 'Declined'): ?>
+                            <form method="POST" action="restore_exhibit.php">
+                                <input type="hidden" name="exbt_id" value="<?= $exhibit['exbt_id']; ?>">  
+                                <input type="hidden" name="status" value="Pending"> 
+                                <button type="submit" class="restoreExhibit">Restore</button>
+                            </form>
+
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="7">No exhibits found</td></tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+
+<!-- Popup for Archive Action -->
+<div class="popup" id="popup" style="display: none;">
+    <div class="popup-content">
+        <i class='bx bxs-archive'></i>
+        <h2>Archive User?</h2>
+        <p>Are you sure you want to archive this user? This action is reversible.</p>
+        <div class="popup-btns">
+            <button class="continue-btn" id="continueBtn">Continue</button>
+            <button class="cancel-btn" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+</section>
+            
             <!-- SETTINGS -->
 <section class="content-wrapper2" id="settings" style="display: none;">
     <div class="settings-container">
