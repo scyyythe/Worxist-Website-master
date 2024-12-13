@@ -15,7 +15,6 @@
 
 .sidebar {
     width: 200px;
-    max-height: 990px;
     background: #a20d0d;
     color: #fff;
     display: flex;
@@ -24,6 +23,7 @@
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
     transition: width 0.3s ease; 
+    height:100vh!important;
 }
 
 /* Sidebar Styles */
@@ -114,6 +114,8 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 40px;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .header h1 {
@@ -130,9 +132,10 @@
 
 .notifications {
     display: flex;
-    align-items: center;
-    margin-left: 93rem;
+    align-items: right;
+    margin-left: 87rem;
     margin-top: -3.5rem;
+    
 }
 
 .bell-icon i {
@@ -164,6 +167,8 @@
 .main-wrapper {
     padding: 40px;
     transition: 0.3s ease;
+    width: 90%;
+
 }
 
 
@@ -1337,8 +1342,8 @@ background: rgba(255, 255, 255, 1);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin: 20px auto;
-  width: 90%;
-  height: 50%;
+  width: 80%;
+  height: 60%;
   text-align: center;
 
 }
@@ -1347,4 +1352,6 @@ canvas {
   margin-inline: auto;
   width: 85% !important;
   height: 90% !important;
+  margin-bottom:1rem ;
+  padding: 20px;
 }

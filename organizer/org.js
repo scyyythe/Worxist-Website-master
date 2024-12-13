@@ -50,6 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
       exhibitsSection.style.display = 'none';
       settingsSection.style.display = 'block';
       topSection.style.display = 'none';
+
+      if (acceptAll) {
+    acceptAll.style.display = 'none';
+  }
+
   });
 });
 
@@ -71,16 +76,16 @@ document.addEventListener('DOMContentLoaded', function () {
       data: {
           labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], 
           datasets: [
+              // {
+              //     label: 'Posts', 
+              //     data: [posts, posts + 1, posts + 2, posts + 3, posts + 4], // Dynamic data for posts
+              //     borderColor: '#a20d0d', 
+              //     backgroundColor: '#a20d0d', 
+              //     fill: false, 
+              //     borderWidth: 2
+              // },
               {
-                  label: 'Posts', 
-                  data: [posts, posts + 1, posts + 2, posts + 3, posts + 4], // Dynamic data for posts
-                  borderColor: '#a20d0d', 
-                  backgroundColor: '#a20d0d', 
-                  fill: false, 
-                  borderWidth: 2
-              },
-              {
-                  label: 'Requests', 
+                  label: 'Exhibit Requests', 
                   data: [requests, requests + 1, requests + 2, requests + 3, requests + 4], // Dynamic data for requests
                   borderColor: '#ff7272', 
                   backgroundColor: '#ff7272', 

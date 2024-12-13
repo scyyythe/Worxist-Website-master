@@ -207,10 +207,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>   
 <?php
 
-$queryPosts = "SELECT COUNT(*) AS total_posts FROM art_info WHERE a_status = 'Approved'";
-$stmt = $conn->prepare($queryPosts);
-$stmt->execute();
-$totalPosts = $stmt->fetch(PDO::FETCH_ASSOC)['total_posts'];
+// $queryPosts = "SELECT COUNT(*) AS total_posts FROM art_info WHERE a_status = 'Approved'";
+// $stmt = $conn->prepare($queryPosts);
+// $stmt->execute();
+// $totalPosts = $stmt->fetch(PDO::FETCH_ASSOC)['total_posts'];
 
 $queryRequests = "SELECT COUNT(*) AS total_requests FROM exhibit_tbl WHERE exbt_status = 'Pending'";
 $stmt = $conn->prepare($queryRequests);
@@ -222,8 +222,9 @@ $stmt = $conn->prepare($queryAcceptedExhibitions);
 $stmt->execute();
 $totalAcceptedExhibitions = $stmt->fetch(PDO::FETCH_ASSOC)['total_accepted_exhibitions'];
 
+  // var posts = {$totalPosts};
 echo "<script>
-    var posts = {$totalPosts};
+  
     var requests = {$totalRequests};
     var acceptedExhibitions = {$totalAcceptedExhibitions};
 </script>";
