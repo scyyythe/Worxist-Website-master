@@ -1403,11 +1403,17 @@ const collaborators = [
         artistImage: "<?php echo 'profile_pics/' . $collaborator['profile_image']; ?>",
         artworks: [
             <?php foreach ($collaborator['artworks'] as $artwork): ?>{
-                src: "<?php echo htmlspecialchars($artwork['artwork_file']); ?>",
-                title: "<?php echo htmlspecialchars($artwork['artwork_title']); ?>",
-                description: "<?php echo htmlspecialchars($artwork['artwork_description']); ?>"
-            },
-            <?php endforeach; ?>
+    src: "<?php echo htmlspecialchars($artwork['artwork_file']); ?>",
+    title: "<?php echo htmlspecialchars($artwork['artwork_title']); ?>",
+    description: "<?php 
+        $description = $artwork['artwork_description']; 
+        $words = explode(' ', $description); 
+        $shortDescription = implode(' ', array_slice($words, 0, 15)); 
+        echo htmlspecialchars($shortDescription); 
+    ?>"
+},
+<?php endforeach; ?>
+
         ]
     },
     <?php endforeach; ?>

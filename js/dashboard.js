@@ -933,8 +933,6 @@ document.querySelectorAll('.display-creations img').forEach((img) => {
 });
 
 
-
-
 document.querySelectorAll('.includeArt-collab img').forEach((img) => {
   console.log('Attaching click event to:', img);
 });
@@ -964,7 +962,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (soloExhibitForm) {
     soloExhibitForm.addEventListener('submit', function (e) {
       console.log('Selected Artworks:', selectedArtworks ? selectedArtworks.value : '');
-
+     
       if (!selectedArtworks || !selectedArtworks.value.trim()) {
           e.preventDefault();
           if (artworkValidationModal) {
@@ -980,8 +978,11 @@ document.addEventListener('DOMContentLoaded', function () {
           window.addEventListener('click', (event) => {
               if (artworkValidationModal && event.target === artworkValidationModal) {
                   artworkValidationModal.style.display = 'none';
+                
               }
           });
+      }else{
+        alert('Exhibit Requested Successfully');
       }
     });
   }
@@ -1012,7 +1013,7 @@ document.getElementById('soloExhibitForm').addEventListener('submit', function(e
       } else {
           messageElement.textContent = '';
           submitButton.disabled = false;
-          alert('Exhibit Requested Successfully')
+         
       }
   })
   .catch(error => {
@@ -1065,6 +1066,8 @@ document.querySelector('form[name="collabExhibit"]').addEventListener('submit', 
       });
       return;
   }
+
+  alert('Exhibit request was successful!');
 });
 
 // Date validation for collaborative exhibit
@@ -1095,7 +1098,7 @@ document.getElementById('collabExhibitForm').addEventListener('submit', function
       } else {
           messageElement.textContent = ''; 
           submitButton.disabled = false; 
-          alert('Exhibit Requested Successfully')
+         
       }
   })
   .catch(error => {
