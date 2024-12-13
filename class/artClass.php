@@ -52,6 +52,24 @@ class artManager
         $statement->execute();
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
+    public function getDeclinedPosts() {
+        $statement = $this->conn->prepare("
+            SELECT 
+                art_info.a_id AS post_id, 
+                art_info.title, 
+                art_info.category, 
+                art_info.file AS image, 
+                art_info.a_status AS status, 
+                accounts.ban_end_date, 
+                accounts.u_name AS artist_name
+            FROM art_info
+            INNER JOIN accounts ON art_info.u_id = accounts.u_id
+            WHERE art_info.a_status = 'Declined'
+        ");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
     public function getUserArtworks() {
         $statement = $this->conn->prepare("
@@ -90,6 +108,7 @@ class artManager
                 art_info.title, 
                 art_info.description,
                 art_info.date, 
+                art_info.category, 
                 art_info.category,
                 COALESCE(COUNT(DISTINCT likes.u_id), 0) AS likes_count,
                 COALESCE(COUNT(DISTINCT saved.u_id), 0) AS saved_count,

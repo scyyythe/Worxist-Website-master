@@ -163,21 +163,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("year").addEventListener("change", filterExhibits);
 document.getElementById("month").addEventListener("change", filterExhibits);
-document.getElementById("type").addEventListener("change", filterExhibits);  // Added listener for type
+document.getElementById("type").addEventListener("change", filterExhibits);  
 
 function filterExhibits() {
     var year = document.getElementById("year").value;
     var month = document.getElementById("month").value;
-    var type = document.getElementById("type").value;  // Get the selected type
+    var type = document.getElementById("type").value;  
 
     var exhibits = document.querySelectorAll(".ex-card");
 
     exhibits.forEach(function(exhibit) {
         var exhibitYear = exhibit.getAttribute("data-year");
         var exhibitMonth = exhibit.getAttribute("data-month");
-        var exhibitType = exhibit.getAttribute("data-type");  // Assume you have a 'data-type' attribute for type
+        var exhibitType = exhibit.getAttribute("data-type"); 
 
-        // Apply filter conditions for year, month, and type
+       
         if ((year === "" || exhibitYear === year) && 
             (month === "" || exhibitMonth === month) && 
             (type === "" || exhibitType === type)) {

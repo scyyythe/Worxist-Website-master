@@ -88,3 +88,155 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 35
+[13-Dec-2024 10:54:48 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 10:54:48 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 10:54:51 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 10:54:51 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:04 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:04 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:06 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:06 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:18 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:18 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:20 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:20 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:23 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:23 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:46 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:46 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:49 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:49 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:54 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:54 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:56 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:56 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:58 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:07:58 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:23 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:23 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:29 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:29 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:43 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:43 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:44 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:44 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:44 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:10:44 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:11:39 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:11:39 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:11:39 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:11:39 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:11:48 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:11:48 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:13 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:13 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:23 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:23 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:31 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:31 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:39 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:39 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:50 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:50 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:58 Europe/Berlin] PHP Warning:  Undefined variable $exhibits in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:12:58 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php:457
+Stack trace:
+#0 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 457
+[13-Dec-2024 11:38:06 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'art_info.reason' in 'field list' in D:\xampp\htdocs\Worxist-Website-master\class\artClass.php:70
+Stack trace:
+#0 D:\xampp\htdocs\Worxist-Website-master\class\artClass.php(70): PDOStatement->execute()
+#1 D:\xampp\htdocs\Worxist-Website-master\admin\admin.php(36): artManager->getDeclinedPosts()
+#2 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\class\artClass.php on line 70
+[13-Dec-2024 11:39:21 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'art_info.banned_end_date' in 'field list' in D:\xampp\htdocs\Worxist-Website-master\class\artClass.php:69
+Stack trace:
+#0 D:\xampp\htdocs\Worxist-Website-master\class\artClass.php(69): PDOStatement->execute()
+#1 D:\xampp\htdocs\Worxist-Website-master\admin\admin.php(36): artManager->getDeclinedPosts()
+#2 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\class\artClass.php on line 69
+[13-Dec-2024 11:39:31 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accounts.banned_end_date' in 'field list' in D:\xampp\htdocs\Worxist-Website-master\class\artClass.php:69
+Stack trace:
+#0 D:\xampp\htdocs\Worxist-Website-master\class\artClass.php(69): PDOStatement->execute()
+#1 D:\xampp\htdocs\Worxist-Website-master\admin\admin.php(36): artManager->getDeclinedPosts()
+#2 {main}
+  thrown in D:\xampp\htdocs\Worxist-Website-master\class\artClass.php on line 69
+[13-Dec-2024 11:39:46 Europe/Berlin] PHP Warning:  Undefined array key "reason" in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 533
+[13-Dec-2024 11:39:46 Europe/Berlin] PHP Warning:  Undefined array key "reason" in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 533
+[13-Dec-2024 11:40:01 Europe/Berlin] PHP Warning:  Undefined array key "reason" in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 533
+[13-Dec-2024 11:40:01 Europe/Berlin] PHP Warning:  Undefined array key "reason" in D:\xampp\htdocs\Worxist-Website-master\admin\admin.php on line 533

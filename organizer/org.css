@@ -946,7 +946,7 @@ background: rgba(255, 255, 255, 1);
   cursor: pointer;
 }
 #exhibits,
-#settings {
+#settings,#declined {
   display: none; /* Initially hide both sections */
 }
 .content-of-exhibit{

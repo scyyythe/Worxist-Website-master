@@ -5,14 +5,17 @@ document.addEventListener('DOMContentLoaded', function() {
   const usersLink = document.querySelector('a[href="users"]');
   const postsLink = document.querySelector('a[href="posts"]');
   const settingsLink = document.querySelector('a[href="settings"]');
+  const declineLink = document.querySelector('a[href="decline"]');
 
   // Section containers
   const dashboardSection = document.querySelector('.content-wrapper1');
   const userSection = document.querySelector('.content-wrapper2');
-  const postsSection = document.querySelector('.content-wrapper3');
+  const postsSection = document.querySelector('.post-section');
   const settingsSection = document.querySelector('.content-wrapper4');
+  const declineSection = document.querySelector('.decline-section');
   const topSection = document.querySelector('.header-wrapper');
-
+  const acceptAll = document.querySelector('.accept-all');
+  const postWrap = document.querySelector('.post-wrapper');
   // Header title
   const headerTitle = document.querySelector('.header-title');
 
@@ -20,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
   userSection.style.display = 'none';
   postsSection.style.display = 'none';
   settingsSection.style.display = 'none';
+  declineSection.style.display = 'none';
+
   topSection.style.display = 'flex';
 
   // Function to update the header title based on the section
@@ -45,6 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="date" id="current-date"></span>
       `;
       document.getElementById("current-date").innerText = formatDate();
+    }else if (section === declineSection) {
+      headerTitle.innerHTML = `
+        <h1> Declined Posts</h1>
+        <span class="date" id="current-date"></span>
+      `;
+      document.getElementById("current-date").innerText = formatDate();
     }
   }
 
@@ -56,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     postsSection.style.display = 'none';
     settingsSection.style.display = 'none';
     topSection.style.display = 'flex';
+    declineSection.style.display = 'none';
     updateHeaderTitle(dashboardSection);
   });
 
@@ -67,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     postsSection.style.display = 'none';
     settingsSection.style.display = 'none';
     topSection.style.display = 'flex';
+    declineSection.style.display = 'none';
     updateHeaderTitle(userSection);
   });
 
@@ -78,7 +91,21 @@ document.addEventListener('DOMContentLoaded', function() {
     postsSection.style.display = 'block';
     settingsSection.style.display = 'none';
     topSection.style.display = 'flex';
+    declineSection.style.display = 'none';
     updateHeaderTitle(postsSection);
+  });
+
+  declineLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    dashboardSection.style.display = 'none';
+    userSection.style.display = 'none';
+    postsSection.style.display = 'block';
+    settingsSection.style.display = 'none';
+    topSection.style.display = 'block';
+    declineSection.style.display = 'flex';
+    acceptAll.style.display = 'none';
+
+    updateHeaderTitle(declineSection);
   });
 
   // Settings section
@@ -89,7 +116,72 @@ document.addEventListener('DOMContentLoaded', function() {
     postsSection.style.display = 'none';
     settingsSection.style.display = 'block';
     topSection.style.display = 'flex';
+    declineSection.style.display = 'none';
     updateHeaderTitle(settingsSection);
+  });
+});
+
+  // Get modal
+    var modal = document.getElementById("imageModal");
+    var modalImg = document.getElementById("modalImage");
+    var captionText = document.getElementById("caption");
+
+    // Get all image links
+    var imageLinks = document.querySelectorAll(".image-link");
+
+    imageLinks.forEach(function(link) {
+        link.addEventListener("click", function(e) {
+            e.preventDefault();
+            var imageSrc = link.getAttribute("data-image");
+            modal.style.display = "block";
+            modalImg.src = imageSrc;
+            captionText.innerHTML = link.querySelector("img").alt;
+        });
+    });
+
+    // Close modal when clicking on the close button
+    var closeModal = document.getElementsByClassName("close")[0];
+    closeModal.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Open the popup when the "Restore" button is clicked
+function openRestorePopup(postId) {
+  const popup = document.getElementById('restorePopup');
+  popup.style.display = 'block';
+  
+  document.getElementById('restoreContinueBtn').setAttribute('data-post-id', postId);
+}
+
+document.getElementById('restoreCancelBtn').addEventListener('click', function() {
+  const popup = document.getElementById('restorePopup');
+  popup.style.display = 'none';
+});
+
+
+document.getElementById('restoreContinueBtn').addEventListener('click', function(event) {
+  event.preventDefault();  
+
+  const postId = this.getAttribute('data-post-id');
+  const form = document.getElementById('restoreForm_' + postId);
+  
+  const formData = new FormData(form);
+
+  fetch('', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+
+    showCustomAlert(data.message);
+  
+    const popup = document.getElementById('restorePopup');
+    popup.style.display = 'none';
+  })
+  .catch(error => {
+
+    showCustomAlert('An error occurred while restoring the post.');
   });
 });
 
