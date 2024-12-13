@@ -348,7 +348,7 @@ textarea{
 .follower-name{
     margin-left: 5%;
 }
-.profile-pic{
+.profile-pic {
     overflow: hidden;
     width: 30px;
     height: 30px;
@@ -358,8 +358,14 @@ textarea{
     justify-content: center;
     align-items: center;
     text-align: center;
-    border-radius: 20px;
+    border-radius: 50%;
     font-size: 20px;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
 }
 
 /*tab folder */

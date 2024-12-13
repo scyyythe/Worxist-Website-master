@@ -651,7 +651,28 @@ if (!empty($allImages)) {
     } else {
        
     }
-    ?>
+$collaboratorQuery = "SELECT * FROM collab_exhibit WHERE u_id = :u_id";
+$collabStatement = $conn->prepare($collaboratorQuery);
+$collabStatement->bindParam(':u_id', $u_id, PDO::PARAM_INT);
+$collabStatement->execute();
+
+if ($collabStatement->rowCount() > 0) {
+
+    while ($collab = $collabStatement->fetch(PDO::FETCH_ASSOC)) {
+
+        $exbtQuery = "SELECT * FROM exhibit_tbl WHERE exbt_id = :exbt_id";
+        $exbtStatement = $conn->prepare($exbtQuery);
+        $exbtStatement->bindParam(':exbt_id', $collab['exbt_id'], PDO::PARAM_INT);
+        $exbtStatement->execute();
+        $exhibit = $exbtStatement->fetch(PDO::FETCH_ASSOC);
+
+        if ($exhibit) {
+
+            echo "<a  class='collabUploadArt' href='uploadCollab.php?exbt_id=" . $exhibit['exbt_id'] . "'>You are a collaborator!<span style='color:#9f1414; font-weight:bold;'>&nbsp;Click here</span> </a><br>";
+        }
+    }
+}
+?>
 
                 </div>
             
@@ -1264,6 +1285,7 @@ if (!empty($allImages)) {
 </div>
   
 <?php
+// Assuming $accountManager and $accountInfo are already defined
 $accountManager = new AccountManager($conn); 
 $accountInfo = $accountManager->getAccountInfo($u_id);
 $profile_id = $accountInfo['u_id'];
@@ -1283,8 +1305,21 @@ $followingQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, account
 $followingQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
 $followingQuery->execute();
 $following = $followingQuery->fetchAll(PDO::FETCH_ASSOC);
-?>
 
+$followersCountQuery = $conn->prepare("SELECT COUNT(*) AS followers_count 
+                                       FROM user_follows 
+                                       WHERE following_id = :profile_id");
+$followersCountQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followersCountQuery->execute();
+$followersCount = $followersCountQuery->fetch(PDO::FETCH_ASSOC)['followers_count'];
+
+$followingCountQuery = $conn->prepare("SELECT COUNT(*) AS following_count 
+                                       FROM user_follows 
+                                       WHERE follower_id = :profile_id");
+$followingCountQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+$followingCountQuery->execute();
+$followingCount = $followingCountQuery->fetch(PDO::FETCH_ASSOC)['following_count'];
+?>
 <!-- Popup Modal -->
 <div id="followers-modal" class="modal">
     <div class="modal-content">

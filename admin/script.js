@@ -620,30 +620,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
 var modal = document.getElementById("imageModal");
 
-// Get all image links and insert them inside the modal
+
 var images = document.querySelectorAll('.image-link');
 var modalImg = document.getElementById("modalImage");
 var captionText = document.getElementById("caption");
 
-// Loop through each image link and attach click event
 images.forEach(image => {
     image.onclick = function(event) {
-        event.preventDefault(); // Prevent the default action (navigation)
+        event.preventDefault();
 
-        // Get the image URL from the data attribute
         var imageUrl = this.getAttribute('data-image');
-        modal.style.display = "block"; // Show the modal
-        modalImg.src = imageUrl; // Set the image source to the clicked image's URL
-        captionText.innerHTML = this.querySelector('img').alt; // Set the caption text
+        modal.style.display = "block";
+        modalImg.src = imageUrl; 
+        captionText.innerHTML = this.querySelector('img').alt; 
     };
 });
 
-// Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on <span> (x), close the modal
 span.onclick = function() {
-    modal.style.display = "none"; // Hide the modal
+    modal.style.display = "none"; 
 }
 //CARD MODAL
 document.addEventListener("DOMContentLoaded", function () {

@@ -47,6 +47,7 @@ $artwork=$exhibitManager->visitArtworks($u_id);
             <h5><?php echo ($accountInfo['u_name']); ?></h5>
             <p><span>@</span><?php echo ($accountInfo['username']); ?></p>
             <?php
+            
 $profile_id = $accountInfo['u_id'];
 
 $followersQuery = $conn->prepare("SELECT COUNT(*) AS followers_count 
@@ -77,7 +78,6 @@ $followingCount = $followingQuery->fetch(PDO::FETCH_ASSOC)['following_count'];
 
                 <button class="follow-btn" data-followed-id="<?php echo $accountInfo['u_id']; ?>">
     <?php
-    
     $follower_id = $_SESSION['u_id']; 
     $followed_id = $accountInfo['u_id']; 
 
@@ -88,15 +88,36 @@ $followingCount = $followingQuery->fetch(PDO::FETCH_ASSOC)['following_count'];
     ]);
 
     $isFollowing = $statement->fetchColumn();
+
     echo ($isFollowing > 0) ? "Unfollow" : "Follow";
     ?>
 </button>
 
 
+
             </div>
         </div>
         <?php
-$profile_id = $accountInfo['u_id'];
+            $accountManager = new AccountManager($conn); 
+            $accountInfo = $accountManager->getAccountInfo($u_id);
+            $profile_id = $accountInfo['u_id'];
+            
+            $followersQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
+                                              FROM user_follows 
+                                              JOIN accounts ON user_follows.follower_id = accounts.u_id
+                                              WHERE user_follows.following_id = :profile_id");
+            $followersQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+            $followersQuery->execute();
+            $followers = $followersQuery->fetchAll(PDO::FETCH_ASSOC);
+            
+            $followingQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
+                                              FROM user_follows 
+                                              JOIN accounts ON user_follows.following_id = accounts.u_id
+                                              WHERE user_follows.follower_id = :profile_id");
+            $followingQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
+            $followingQuery->execute();
+            $following = $followingQuery->fetchAll(PDO::FETCH_ASSOC);
+
 
 $followersQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
                                   FROM user_follows 
@@ -105,6 +126,7 @@ $followersQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, account
 $followersQuery->bindValue(':profile_id', $profile_id, PDO::PARAM_INT);
 $followersQuery->execute();
 $followers = $followersQuery->fetchAll(PDO::FETCH_ASSOC);
+
 
 $followingQuery = $conn->prepare("SELECT accounts.u_id, accounts.u_name, accounts.username, accounts.profile 
                                   FROM user_follows 

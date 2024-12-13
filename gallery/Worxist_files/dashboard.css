@@ -419,6 +419,7 @@ body {
     overflow-y: scroll;
     height: 33%;
     border-style: solid !important;
+    position: fixed;
 }
 .user-image{
     display: flex;

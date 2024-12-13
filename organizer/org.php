@@ -446,15 +446,22 @@ $weeks = array_map(function($item) { return 'Week ' . $item['week']; }, $request
                 <img src="pics/banner.png" class="banner-image">
                 <div class="card-content">
                     <p class="art-title"><?php echo $exhibit['exbt_title']; ?></p>
-                    <p class="description"><?php echo $exhibit['exbt_descrip']; ?></p>
+                    <p class="description">
+                        <?php 
+                            $description = $exhibit['exbt_descrip'];
+                            $words = explode(' ', $description); 
+                            $limited_description = implode(' ', array_slice($words, 0, 10)); 
+                            echo $limited_description . (count($words) > 10 ? '...' : ''); 
+                        ?>
+                    </p>
                 </div>
             </div>
         <?php endforeach; ?>
     <?php else : ?>
         <p class="no-exhibits-message">No pending exhibits available.</p>
     <?php endif; ?>
-
 </div>
+
 
 
                 <!-- PANEL INSIDE THE EXHBIT CARD -->
@@ -594,7 +601,14 @@ $weeks = array_map(function($item) { return 'Week ' . $item['week']; }, $request
                 <img src="pics/banner.png" class="banner-image">
                 <div class="ex-card-content">
                     <p class="ex-art-title"><?php echo htmlspecialchars($exhibit['exbt_title'], ENT_QUOTES); ?></p>
-                    <p class="ex-description"><?php echo htmlspecialchars($exhibit['exbt_descrip'], ENT_QUOTES); ?></p>
+                    <p class="ex-description">
+                        <?php 
+                            $description = htmlspecialchars($exhibit['exbt_descrip'], ENT_QUOTES); 
+                            $words = explode(' ', $description); 
+                            echo implode(' ', array_slice($words, 0, 10)) . (count($words) > 10 ? '...' : ''); 
+                        ?>
+                    </p>
+
                     
                   
                     <input type="hidden" class="hidden-date" value="<?php echo htmlspecialchars($exhibit['exbt_date'], ENT_QUOTES); ?>">

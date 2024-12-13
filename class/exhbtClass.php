@@ -477,7 +477,7 @@ class ExhibitManager {
             LEFT JOIN collab_exhibit ON exhibit_tbl.exbt_id = collab_exhibit.exbt_id  
             LEFT JOIN accounts AS collaborators ON collab_exhibit.u_id = collaborators.u_id  
             WHERE exhibit_tbl.exbt_status = 'Pending'
-            AND (exhibit_tbl.u_id = :userId OR collab_exhibit.u_id = :userId)
+            AND (exhibit_tbl.u_id = :userId )
         ");
         
         $statement->bindParam(':userId', $userId, PDO::PARAM_INT);

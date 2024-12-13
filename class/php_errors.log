@@ -29,3 +29,5 @@
 [12-Dec-2024 13:56:01 Europe/Berlin] PHP Warning:  Undefined array key "profile" in D:\xampp\htdocs\Worxist-Website-master\class\submitComment.php on line 32
 [12-Dec-2024 14:40:14 Europe/Berlin] SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`gallery_db`.`user_follows`, CONSTRAINT `user_follows_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `accounts` (`u_id`) ON DELETE CASCADE)
 [12-Dec-2024 14:40:26 Europe/Berlin] SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`gallery_db`.`user_follows`, CONSTRAINT `user_follows_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `accounts` (`u_id`) ON DELETE CASCADE)
+[13-Dec-2024 15:22:59 Europe/Berlin] PHP Warning:  Undefined array key "profile" in D:\xampp\htdocs\Worxist-Website-master\class\submitComment.php on line 32
+[13-Dec-2024 15:23:14 Europe/Berlin] PHP Warning:  Undefined array key "profile" in D:\xampp\htdocs\Worxist-Website-master\class\submitComment.php on line 32
