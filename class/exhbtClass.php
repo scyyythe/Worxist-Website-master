@@ -424,6 +424,11 @@ class ExhibitManager {
         $statement->execute();     
         return $statement->fetchAll(PDO::FETCH_ASSOC); 
     }
+    public function getCompleted() {
+        $statement = $this->conn->prepare("SELECT * FROM exhibit_tbl WHERE exbt_status = 'Completed'");
+        $statement->execute();     
+        return $statement->fetchAll(PDO::FETCH_ASSOC); 
+    }
     public function getExhibitsByStatus($status) {
         // SQL query to join exhibit_tbl and accounts table
         $query = "

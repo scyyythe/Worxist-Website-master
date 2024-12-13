@@ -101,27 +101,92 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+//NAVIGATION OF PAST & UPCOMING CONTAINERS
+document.addEventListener("DOMContentLoaded", () => {
+  const options = document.querySelectorAll(".a-option");
+  const upcomingWrapper = document.getElementById("upcoming-wrapper");
+  const pastWrapper = document.getElementById("past-wrapper");
+
+  options.forEach((option, index) => {
+    option.addEventListener("click", () => {
+      options.forEach((opt) => opt.classList.remove("active"));
+      option.classList.add("active");
+
+      if (index === 0) { 
+        upcomingWrapper.style.display = "block";
+        pastWrapper.style.display = "none";
+      } else if (index === 1) { 
+        pastWrapper.style.display = "block";
+        upcomingWrapper.style.display = "none";
+      }
+    });
+  });
+
+  options[0].classList.add("active");
+  upcomingWrapper.style.display = "block";
+  pastWrapper.style.display = "none";
+});
+
+
+//ACTIVE TAB
+document.addEventListener("DOMContentLoaded", () => {
+  const options = document.querySelectorAll(".a-option");
+  const upcomingWrapper = document.getElementById("upcoming-wrapper");
+  const pastWrapper = document.getElementById("past-wrapper");
+
+  options.forEach(option => {
+      option.addEventListener("click", () => {
+          options.forEach(opt => {
+              opt.style.color = "";
+              opt.style.borderBottom = "";
+          });
+
+          option.style.color = "#a20d0d";
+          option.style.borderBottom = "2px solid #a20d0d";
+
+          if (option.textContent === "Upcoming Exhibits") {
+              upcomingWrapper.style.display = "grid";
+              pastWrapper.style.display = "none";
+          } else if (option.textContent === "Past Exhibits") {
+              pastWrapper.style.display = "grid";
+              upcomingWrapper.style.display = "none";
+          }
+      });
+  });
+
+  options[0].style.color = "#a20d0d";
+  options[0].style.borderBottom = "2px solid #a20d0d";
+  upcomingWrapper.style.display = "grid";
+  pastWrapper.style.display = "none";
+});
+
+
 document.getElementById("year").addEventListener("change", filterExhibits);
 document.getElementById("month").addEventListener("change", filterExhibits);
+document.getElementById("type").addEventListener("change", filterExhibits);  // Added listener for type
 
 function filterExhibits() {
     var year = document.getElementById("year").value;
     var month = document.getElementById("month").value;
-    
+    var type = document.getElementById("type").value;  // Get the selected type
+
     var exhibits = document.querySelectorAll(".ex-card");
-    
+
     exhibits.forEach(function(exhibit) {
         var exhibitYear = exhibit.getAttribute("data-year");
         var exhibitMonth = exhibit.getAttribute("data-month");
+        var exhibitType = exhibit.getAttribute("data-type");  // Assume you have a 'data-type' attribute for type
 
-        if ((year === "" || exhibitYear === year) && (month === "" || exhibitMonth === month)) {
-            exhibit.style.display = "block"; 
+        // Apply filter conditions for year, month, and type
+        if ((year === "" || exhibitYear === year) && 
+            (month === "" || exhibitMonth === month) && 
+            (type === "" || exhibitType === type)) {
+            exhibit.style.display = "block";
         } else {
-            exhibit.style.display = "none"; 
+            exhibit.style.display = "none";
         }
     });
 }
-
 
 document.getElementById("year").addEventListener("change", function() {
     if (this.value !== "") {
@@ -130,6 +195,7 @@ document.getElementById("year").addEventListener("change", function() {
         document.getElementById("month").classList.add("hidden");
     }
 });
+
 
 
 //FILTER IN SORTING USER NAMES
@@ -193,8 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 });
-
-// --- Activity Chart ---
 document.addEventListener('DOMContentLoaded', function () {
   // Get the canvas for the Activity Chart
   let activityCanvas = document.getElementById('activityChart').getContext('2d');
@@ -205,31 +269,23 @@ document.addEventListener('DOMContentLoaded', function () {
   activityCanvas.canvas.height = activityCanvas.canvas.clientHeight * dpr;
   activityCanvas.scale(dpr, dpr);
 
-  // Line chart with dynamic data for all users
+  // Line chart with dynamic data for exhibit requests and accepted exhibitions
   let activityChart = new Chart(activityCanvas, {
       type: 'line', // Chart type
       data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], 
+          labels: weeks, // Dynamic week labels from PHP data
           datasets: [
-              // {
-              //     label: 'Posts', 
-              //     data: [posts, posts + 1, posts + 2, posts + 3, posts + 4], // Dynamic data for posts
-              //     borderColor: '#a20d0d', 
-              //     backgroundColor: '#a20d0d', 
-              //     fill: false, 
-              //     borderWidth: 2
-              // },
               {
                   label: 'Exhibit Requests', 
-                  data: [requests, requests + 1, requests + 2, requests + 3, requests + 4], // Dynamic data for requests
-                  borderColor: '#ff7272', 
-                  backgroundColor: '#ff7272', 
+                  data: requestsData, 
+                  borderColor: '#a20d0d', 
+                  backgroundColor: '#a20d0d', 
                   fill: false, 
                   borderWidth: 2
               },
               {
                   label: 'Accepted Exhibitions', 
-                  data: [acceptedExhibitions, acceptedExhibitions + 1, acceptedExhibitions + 2, acceptedExhibitions + 3, acceptedExhibitions + 4], // Dynamic data for accepted exhibitions
+                  data: acceptedData, 
                   borderColor: '#ed1c24', 
                   backgroundColor: '#ed1c24', 
                   fill: false, 
@@ -273,6 +329,19 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const dateElement = document.querySelector(".ex-date");
+  const today = new Date();
+  const month = today.getMonth() + 1; // Month is zero-indexed
+  const day = today.getDate();
+  const year = today.getFullYear();
+  const shortYear = year.toString().slice(-2); // Last two digits of the year
+  const formattedDate = `${month}/${day}/${shortYear}`;
+  dateElement.textContent = formattedDate;
+});
+
+
 
 
 // Function to format and display the current date in dashboard

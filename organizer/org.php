@@ -64,7 +64,8 @@ $pending=$exhibit->getPendingExhibits($u_id);
 $request=$exhibit->getRequestExhibit();
 $exhibitId = 1; 
 $collaborator=$exhibit->getCollab($exhibitId);
-$acceptedExhibits = $exhibit->getAccept();
+$upcomingExhibits = $exhibit->getAccept();
+$pastExhibits = $exhibit->getCompleted();
 
 if (isset($_GET['id'])) {
     $exhibit= new ExhibitManager($conn);
@@ -150,8 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['restore_exbt_id'])) {
             </div>
             <ul class="nav">
     <li><i class='bx bxs-dashboard'></i><a href="#dashboard" class="dasboardLink">Dashboard</a></li>
-    <li><i class='bx bx-merge'></i><a href="#exhibits" class="exhibitLink">Exhibits</a></li>
-    <li><i class='bx bxs-badge-check'></i></i><a href="#acceptedEx" class="acceptedLink">Accepted</a></li>
+    <li><i class='bx bx-merge'></i><a href="#exhibits" class="exhibitLink">Reviews</a></li>
+    <li><i class='bx bxs-badge-check'></i></i><a href="#acceptedEx" class="acceptedLink">Exhibits</a></li>
     <li><i class='bx bxs-message-rounded-error'></i></i><a href="#declinedEx" class="declinedLink">Declined</a></li>
     <li><i class='bx bxs-cog'></i><a href="#settings" class="settingLink">Settings</a></li>
 </ul>
@@ -214,60 +215,199 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['restore_exbt_id'])) {
             </section>   
 
             <!-- EXHIBITS REQUESTS -->
-            <section class="content-wrapper3" id="dashboard" style="display: none;">
+            <div class="main-wrap-dash">
+        <section class="content-wrapper3" id="dashboard" style="display: none;">
 
-            <div class="overview">
-                    <div class="acc">
-                        <div class="stat-box">
-                            <h3>Accounts <span class="a-badge red">2</span></h3>
+        <?php
+       
+    $sql_pending = "SELECT COUNT(*) FROM exhibit_tbl WHERE exbt_status = :pending_status";
+    $stmt_pending = $conn->prepare($sql_pending);
+    $stmt_pending->bindValue(':pending_status', 'Pending', PDO::PARAM_STR); 
+    $stmt_pending->execute();
+    $pending_count = $stmt_pending->fetchColumn(); 
+
+    $sql_approved = "SELECT COUNT(*) FROM exhibit_tbl WHERE exbt_status = :approved_status";
+    $stmt_approved = $conn->prepare($sql_approved);
+    $stmt_approved->bindValue(':approved_status', 'Accepted', PDO::PARAM_STR); 
+    $stmt_approved->execute();
+    $approved_count = $stmt_approved->fetchColumn(); 
+        ?>
+           <div class="overview">
+    <div class="acc">
+        <div class="stat-box">
+            <h3>Pending <span class="a-badge red"><?php echo $pending_count; ?></span></h3>
+        </div>
+        <div class="a_number"><?php echo $pending_count; ?></div>
+    </div>
+    <div class="request">
+        <div class="stat-box">
+            <h3>Approved<span class="p-badge blue"><?php echo $approved_count; ?></span></h3>
+        </div>
+        <div class="r_number"><?php echo $approved_count; ?></div>
+    </div>
+</div>
+
+
+            <div class="main-content-exhibit">
+                <div class="best-posts">
+                    <h3>Best Performing Exhibits</h3>
+                    <div class="post">
+                        <img src="pics/banner.png"><p class="ex-title">Classical Sculptures</p>
+                        <div class="post-info">
+                            <div class="views">
+                                <i class='bx bxs-show' ></i>
+                                <span class="count">7.2k</span>
+                            </div>
                         </div>
-                        <div class="a_number"></div>
                     </div>
-                    <div class="request">
-                        <div class="stat-box">
-                            <h3>Posts Requests<span class="p-badge blue">2</span></h3>
+                    <div class="post">
+                        <img src="pics/banner.png"><p class="ex-title">Classical Sculptures</p>
+                        <div class="post-info">
+                            <div class="views">
+                                <i class='bx bxs-show' ></i>
+                                <span class="count">6.4k</span>
+                            </div>
                         </div>
-                        <div class="r_number"></div>
                     </div>
-                </div>   
-<?php
+                    <div class="post">
+                        <img src="pics/banner.png"><p class="ex-title">Classical Sculptures</p>
+                        <div class="post-info">
+                            <div class="views">
+                                <i class='bx bxs-show' ></i>
+                                <span class="count">3.5k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-// $queryPosts = "SELECT COUNT(*) AS total_posts FROM art_info WHERE a_status = 'Approved'";
-// $stmt = $conn->prepare($queryPosts);
-// $stmt->execute();
-// $totalPosts = $stmt->fetch(PDO::FETCH_ASSOC)['total_posts'];
+                <?php
+try {
+    // Fetch Exhibit Requests data grouped by week
+    $sql_requests = "SELECT WEEK(exbt_date) AS week, COUNT(*) AS count FROM exhibit_tbl WHERE exbt_status = 'Pending' GROUP BY WEEK(exbt_date)";
+    $stmt_requests = $conn->prepare($sql_requests);
+    $stmt_requests->execute();
+    $requests_data = $stmt_requests->fetchAll(PDO::FETCH_ASSOC);
 
-$queryRequests = "SELECT COUNT(*) AS total_requests FROM exhibit_tbl WHERE exbt_status = 'Pending'";
-$stmt = $conn->prepare($queryRequests);
-$stmt->execute();
-$totalRequests = $stmt->fetch(PDO::FETCH_ASSOC)['total_requests'];
+    // Fetch Accepted Exhibits data grouped by week
+    $sql_accepted = "SELECT WEEK(exbt_date) AS week, COUNT(*) AS count FROM exhibit_tbl WHERE exbt_status = 'Accepted' GROUP BY WEEK(exbt_date)";
+    $stmt_accepted = $conn->prepare($sql_accepted);
+    $stmt_accepted->execute();
+    $accepted_data = $stmt_accepted->fetchAll(PDO::FETCH_ASSOC);
 
-$queryAcceptedExhibitions = "SELECT COUNT(*) AS total_accepted_exhibitions FROM exhibit_tbl WHERE accepted_at IS NOT NULL";
-$stmt = $conn->prepare($queryAcceptedExhibitions);
-$stmt->execute();
-$totalAcceptedExhibitions = $stmt->fetch(PDO::FETCH_ASSOC)['total_accepted_exhibitions'];
+} catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
 
-  // var posts = {$totalPosts};
-echo "<script>
-  
-    var requests = {$totalRequests};
-    var acceptedExhibitions = {$totalAcceptedExhibitions};
-</script>";
+// Prepare the data for JavaScript
+$requests_counts = array_column($requests_data, 'count');
+$accepted_counts = array_column($accepted_data, 'count');
+$weeks = array_map(function($item) { return 'Week ' . $item['week']; }, $requests_data);
 ?>
+
 
                 <div class="activity">
                     <h3>Activity</h3>
-                    <select name="filterChart" id="" style="border-radius: 20px; padding:3px; border:none;">Filter
-                        <option value="Weekly">Weekly</option>
-                        <option value="Monthly">Monthly</option>
-                        <option value="Yearly">Yearly</option>
-                    </select>
                     <canvas id="activityChart"></canvas>
                 </div>
+            </div>
 
-</section>
+            <div class="display-of-exhibit">
+                      <div class="on-header-dash">
+                <p class="exhibit-text">Ongoing Exhibit</p>
+                <p class="ex-date">12/12/24</p>
+                </div>
+
+                <div class="exhibit-display">
+
+                        <!-- Top gallery section with title -->
+    <div class="gallery-container">
+        <div class="top-gallery">
+        <h3>
+    <?php 
+        if (!empty($collaborators) && isset($collaborators[0]['exhibit']['title'])) {
+          
+            echo htmlspecialchars($collaborators[0]['exhibit']['title'] ?? 'Exhibit Title', ENT_QUOTES);
+        } else {
+            echo 'Exhibit Title';
+        }
+    ?>
+</h3>
+
+        </div>
+        <div class="descriptionExhibit">
+    <p class="viewDescription">View Description</p>
+</div>
+
+<!-- Popup modal for description -->
+<div class="exhibition-description-popup">
+    <div class="exhibition-description-popup-content">
+        <span class="exhibition-close-popup" hidden>&times;</span>
+        <p>
+    <?php 
+        if (!empty($collaborators) && isset($collaborators[0]['exhibit']['description'])) {
+          
+            echo htmlspecialchars($collaborators[0]['exhibit']['description'] ?? 'No description available.', ENT_QUOTES);
+        } else {
+            echo 'No description available.';
+        }
+    ?>
+</p>
+    </div>
+</div>
 
 
+        <!-- Carousel navigation icons -->
+        <!-- <div class="nav-icons">
+            <div class="prev-icon">&#10094;</div>
+            <div class="next-icon">&#10095;</div>
+        </div> -->
+
+    
+        <div class="carousel">
+            <div class="carousel-img left-img">
+                <img src="../gallery/ai.jpg" alt="Left Image" class="side-image">
+            </div>
+
+            <div class="carousel-img center-img">
+                <div class="center-container">
+                    <img src="../gallery/cat.jpg" alt="Center Image" class="center-image">
+                    <div class="center-description">
+                        <h3>Artwork Title</h3>
+                        <p>Description</p>      
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-img right-img">
+                <img src="../gallery/guitar.jpg" alt="Right Image" class="side-image">
+            </div>
+        </div>
+
+       
+        <!-- <div class="info-exhibit">
+        <div class="nav-icons2">
+            <p class="exhibitstatus" hidden></p>
+            <div class="prev-icon2">&#10094;</div>
+            <div class="next-icon2">&#10095;</div>
+         </div>
+         <div class="artist-info">
+    <img src="../gallery/eyes.jpg" alt="Artist Profile Image" class="artist-img">
+    <p>
+        <span></span><br>Cebu, Philippines
+    </p>
+</div>
+
+        </div> -->
+
+        
+    </div>
+                </div>
+            </div>
+      
+        </section>
+    </div>
+
+    
             <div class="exhibit-ni-section">
 
             <div class="actions-wrapper">
@@ -318,7 +458,7 @@ echo "<script>
 
 
                 <!-- PANEL INSIDE THE EXHBIT CARD -->
-                <section id="panel"  class="panel" style="display: none;">
+                <div id="panel"  class="panel" style="display: none;">
                     <i class='bx bx-chevron-left'></i>
                     <!-- Header -->
                     <div class="e-header">
@@ -404,64 +544,100 @@ echo "<script>
                           </div>
                         </div>
                     </div>
-                </section>
+                </d>
             </section>
 
 
             </div>
 
             <section class="content-wrapper4" id="acceptedEx" style="display: none;">
-    <h1>Accepted Exhibits</h1>
-    <div class="filter-container">
-        <label for="year">Filter by:</label>
-        <select id="year" class="filter-select">
-            <option value="" disabled selected>Select Year</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-        </select>
-        <select id="month" class="filter-select hidden">
-            <option value="" disabled selected>Select Month</option>
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
-        </select>
-    </div>
-    <div class="ex-wrapper">
-    <?php if (!empty($acceptedExhibits)) : ?>
-        <?php foreach ($acceptedExhibits as $exhibit) : ?>
-            <div class="ex-card" data-year="<?php echo date('Y', strtotime($exhibit['exbt_date'])); ?>" data-month="<?php echo date('F', strtotime($exhibit['exbt_date'])); ?>">
+            <div class="a-options">
+            <p class="a-option">Upcoming Exhibits</p>
+            <p class="a-option">Past Exhibits</p>
+        </div>
+
+        <div class="filter-container">
+            <label for="year" class="filt">Filter by </label> 
+            <select id="year" class="filter-select">
+              <option value="" disabled selected>Select Year</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+            <select id="month" class="filter-select hidden">
+              <option value="" disabled selected>Select Month</option>
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+            <select id="type" class="filter-select">
+                <option value="" disabled selected>Select Type</option>
+                <option value="Solo">Solo</option>
+                <option value="Collaboration">Collaboration</option>
+              </select>
+        </div>
+        
+<!-- Upcoming Exhibits Section -->
+<div id="upcoming-wrapper" class="ex-wrapper">
+    <?php if (!empty($upcomingExhibits)) : ?>
+        <?php foreach ($upcomingExhibits as $exhibit) : ?>
+            <div class="ex-card" data-year="<?php echo date('Y', strtotime($exhibit['exbt_date'])); ?>" data-month="<?php echo date('F', strtotime($exhibit['exbt_date'])); ?>" data-type="<?php echo htmlspecialchars($exhibit['exbt_type'], ENT_QUOTES); ?>">
                 <img src="pics/banner.png" class="banner-image">
                 <div class="ex-card-content">
                     <p class="ex-art-title"><?php echo htmlspecialchars($exhibit['exbt_title'], ENT_QUOTES); ?></p>
                     <p class="ex-description"><?php echo htmlspecialchars($exhibit['exbt_descrip'], ENT_QUOTES); ?></p>
                     
-                    <!-- Hidden elements for year, month, and other data -->
+                  
                     <input type="hidden" class="hidden-date" value="<?php echo htmlspecialchars($exhibit['exbt_date'], ENT_QUOTES); ?>">
                     <input type="hidden" class="hidden-id" value="<?php echo htmlspecialchars($exhibit['exbt_id'], ENT_QUOTES); ?>">
                     <input type="hidden" class="hidden-status" value="<?php echo htmlspecialchars($exhibit['exbt_status'], ENT_QUOTES); ?>">
                 </div>
-                <i class='bx bxs-show'><p class="ex-views">1</p></i>
+                <i class='bx bxs-show'><p class="ex-views">245</p></i>
             </div>
         <?php endforeach; ?>
     <?php else : ?>
-        <p>No accepted exhibits found.</p>
+        <p>No upcoming exhibits found.</p>
     <?php endif; ?>
-    </div>
+</div>
+
+<!-- Past Exhibits Section -->
+<div id="past-wrapper" class="ex-wrapper">
+    <?php if (!empty($pastExhibits)) : ?>
+        <?php foreach ($pastExhibits as $exhibit) : ?>
+            <div class="ex-card" data-year="<?php echo date('Y', strtotime($exhibit['exbt_date'])); ?>" data-month="<?php echo date('F', strtotime($exhibit['exbt_date'])); ?>" data-type="<?php echo htmlspecialchars($exhibit['exbt_type'], ENT_QUOTES); ?>">
+                <img src="pics/banner.png" class="banner-image">
+                <div class="ex-card-content">
+                    <p class="ex-art-title"><?php echo htmlspecialchars($exhibit['exbt_title'], ENT_QUOTES); ?></p>
+                    <p class="ex-description"><?php echo htmlspecialchars($exhibit['exbt_descrip'], ENT_QUOTES); ?></p>
+                    
+                 
+                    <input type="hidden" class="hidden-date" value="<?php echo htmlspecialchars($exhibit['exbt_date'], ENT_QUOTES); ?>">
+                    <input type="hidden" class="hidden-id" value="<?php echo htmlspecialchars($exhibit['exbt_id'], ENT_QUOTES); ?>">
+                    <input type="hidden" class="hidden-status" value="<?php echo htmlspecialchars($exhibit['exbt_status'], ENT_QUOTES); ?>">
+                </div>
+                <i class='bx bxs-show'><p class="ex-views">150</p></i>
+            </div>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <p>No past exhibits found.</p>
+    <?php endif; ?>
+</div>
+
 </section>
 
 
 <!-- declined -->
 <section class="content-wrapper5" id="declinedEx" style="display: none;">
+    
     <h1>Declined Exhibits</h1>
 <div class="header-controls">
 <h2>Total Users <span class="total-users"><?= count($exhibits); ?></span></h2>
@@ -687,6 +863,9 @@ echo "<script>
     <script src="org.js"></script>
     <script>
          const exhibitType = "<?php echo $exhibit['exbt_type']; ?>";
+         const requestsData = <?php echo json_encode($requests_counts); ?>;
+    const acceptedData = <?php echo json_encode($accepted_counts); ?>;
+    const weeks = <?php echo json_encode($weeks); ?>;
     </script>
 </body>
 </html>
