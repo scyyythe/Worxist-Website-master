@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
     userSection.style.display = 'none';
     postsSection.style.display = 'block';
     settingsSection.style.display = 'none';
-    topSection.style.display = 'block';
+    topSection.style.display = 'bloc';
     declineSection.style.display = 'flex';
     acceptAll.style.display = 'none';
 
@@ -121,63 +121,103 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-  // Get modal
-    var modal = document.getElementById("imageModal");
-    var modalImg = document.getElementById("modalImage");
-    var captionText = document.getElementById("caption");
+  // // Get modal
+  //   var modal = document.getElementById("imageModal");
+  //   var modalImg = document.getElementById("modalImage");
+  //   var captionText = document.getElementById("caption");
 
-    // Get all image links
-    var imageLinks = document.querySelectorAll(".image-link");
+  //   // Get all image links
+  //   var imageLinks = document.querySelectorAll(".image-link");
 
-    imageLinks.forEach(function(link) {
-        link.addEventListener("click", function(e) {
-            e.preventDefault();
-            var imageSrc = link.getAttribute("data-image");
-            modal.style.display = "block";
-            modalImg.src = imageSrc;
-            captionText.innerHTML = link.querySelector("img").alt;
+  //   imageLinks.forEach(function(link) {
+  //       link.addEventListener("click", function(e) {
+  //           e.preventDefault();
+  //           var imageSrc = link.getAttribute("data-image");
+  //           modal.style.display = "block";
+  //           modalImg.src = imageSrc;
+  //           captionText.innerHTML = link.querySelector("img").alt;
+  //       });
+  //   });
+
+  //   // Close modal when clicking on the close button
+  //   var closeModal = document.getElementsByClassName("close")[0];
+  //   closeModal.onclick = function() {
+  //       modal.style.display = "none";
+  //   }
+    // Search bar functionality
+    const searchBar = document.getElementById('searchBar');
+    searchBar.addEventListener('input', function() {
+        const query = searchBar.value.toLowerCase();
+        const rows = document.querySelectorAll('.post-row');
+
+        rows.forEach(row => {
+            const artist = row.querySelector('.artist').textContent.toLowerCase();
+            const title = row.querySelector('.title').textContent.toLowerCase();
+            const category = row.querySelector('.reason').textContent.toLowerCase();
+
+            if (artist.includes(query) || title.includes(query) || category.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
         });
     });
 
-    // Close modal when clicking on the close button
-    var closeModal = document.getElementsByClassName("close")[0];
-    closeModal.onclick = function() {
-        modal.style.display = "none";
-    }
+    // Filter button functionality (example: filter by category)
+    const filterBtn = document.getElementById('filterBtn');
+    filterBtn.addEventListener('click', function() {
+        // You can add custom filter logic here
+        const rows = document.querySelectorAll('.post-row');
 
-    // Open the popup when the "Restore" button is clicked
+        // Example: Toggle visibility of posts by category
+        rows.forEach(row => {
+            const category = row.getAttribute('data-category');
+            if (category === 'SomeCategory') {  // Replace with actual filter condition
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Open the restore popup when the "Restore" button is clicked
 function openRestorePopup(postId) {
+  // Show the restore popup
   const popup = document.getElementById('restorePopup');
   popup.style.display = 'block';
   
+  // Store the post ID in the popup for later use
   document.getElementById('restoreContinueBtn').setAttribute('data-post-id', postId);
 }
 
+// Close the restore popup when the "Cancel" button is clicked
 document.getElementById('restoreCancelBtn').addEventListener('click', function() {
   const popup = document.getElementById('restorePopup');
   popup.style.display = 'none';
 });
 
-
+// Continue button to submit the form for restoring the post
 document.getElementById('restoreContinueBtn').addEventListener('click', function(event) {
-  event.preventDefault();  
+  event.preventDefault();  // Prevent form from resubmitting
 
   const postId = this.getAttribute('data-post-id');
   const form = document.getElementById('restoreForm_' + postId);
   
+  // Create a new FormData object and submit it via AJAX
   const formData = new FormData(form);
 
+  // Perform the AJAX request
   fetch('', {
     method: 'POST',
     body: formData
   })
   .then(response => response.json())
   .then(data => {
-
     showCustomAlert(data.message);
-  
+    
     const popup = document.getElementById('restorePopup');
     popup.style.display = 'none';
+    
   })
   .catch(error => {
 
@@ -578,7 +618,33 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
+var modal = document.getElementById("imageModal");
 
+// Get all image links and insert them inside the modal
+var images = document.querySelectorAll('.image-link');
+var modalImg = document.getElementById("modalImage");
+var captionText = document.getElementById("caption");
+
+// Loop through each image link and attach click event
+images.forEach(image => {
+    image.onclick = function(event) {
+        event.preventDefault(); // Prevent the default action (navigation)
+
+        // Get the image URL from the data attribute
+        var imageUrl = this.getAttribute('data-image');
+        modal.style.display = "block"; // Show the modal
+        modalImg.src = imageUrl; // Set the image source to the clicked image's URL
+        captionText.innerHTML = this.querySelector('img').alt; // Set the caption text
+    };
+});
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none"; // Hide the modal
+}
 //CARD MODAL
 document.addEventListener("DOMContentLoaded", function () {
     const bannerImages = document.querySelectorAll(".banner-image");

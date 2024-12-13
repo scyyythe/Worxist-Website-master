@@ -470,97 +470,96 @@ echo "<script>
 
 
 </section>
-
 <section class="decline-section" id="declined">
 
     <div class="below-declined">
-    <div class="declined-controls">
-    <?php
-$query = "SELECT COUNT(*) AS total_declined FROM art_info WHERE a_status = 'Declined'";
-$result = $conn->query($query);
-$row = $result->fetch(PDO::FETCH_ASSOC);
-$totalDeclined = $row['total_declined'];
-?>
+        <div class="declined-controls">
+            <?php
+            $query = "SELECT COUNT(*) AS total_declined FROM art_info WHERE a_status = 'Declined'";
+            $result = $conn->query($query);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $totalDeclined = $row['total_declined'];
+            ?>
 
-<h3>Total Declined Posts <span class="total-declined"><?= $totalDeclined ?></span></h3>
+            <h3>Total Declined Posts <span class="total-declined"><?= $totalDeclined ?></span></h3>
 
-        <div class="table-controls">
-            <input type="text" class="search-bar" placeholder="Search">
-            <i class='bx bx-filter'><p class="filter-btn">Filter</p></i>
+            <div class="table-controls">
+                <input type="text" class="search-bar" id="searchBar" placeholder="Search">
+                <i class='bx bx-filter'><p class="filter-btn" id="filterBtn">Filter</p></i>
+            </div>
         </div>
-    </div>
-    <div id="imageModal" class="modal">
+
+        <!-- Table -->
+        <table class="declined-table">
+            <thead>
+                <tr>
+                    <th>Artist</th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Ban End Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="declinedTableBody">
+                <?php if (!empty($declinedPosts)): ?>
+                    <?php foreach ($declinedPosts as $post): ?>
+                        <tr class="post-row" data-id="<?= $post['post_id']; ?>" data-category="<?= $post['category']; ?>">
+                            <td class="artist"><?= $post['artist_name']; ?></td>
+                            <td>
+                                <?php
+                                $imagePath = '../' . $post['image'];  
+                                if (file_exists($imagePath) && !empty($post['image'])) {
+                                    echo "<a href=\"#\" class=\"image-link\" data-image=\"$imagePath\"><img src=\"$imagePath\" alt=\"Post Image\" class=\"post-image\"></a>";
+                                } else {
+                                    echo "<a href=\"#\" class=\"image-link\" data-image=\"../gallery/default.png\"><img src=\"../gallery/default.png\" alt=\"Default Image\" class=\"post-image\"></a>";
+                                }
+                                ?>
+                            </td>
+                            <td class="title"><?= $post['title']; ?></td>
+                            <td class="reason"><?= $post['category']; ?></td>
+                            <td class="ban-end-date">
+                                <?= (new DateTime($post['ban_end_date']))->format('Y-m-d'); ?>
+                            </td>
+
+                            <td>
+                                <!-- Restore-->
+                                <form action="" method="POST" class="restore-form" id="restoreForm_<?= $post['post_id']; ?>">
+                                    <input type="hidden" name="restore_post_id" value="<?= $post['post_id']; ?>">
+                                    <button type="button" class="restore-btn" onclick="openRestorePopup(<?= $post['post_id']; ?>)">
+                                        <i class='bx bx-refresh restore-icon'></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="6">No declined posts found</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <!-- Popup for Restore Action -->
+        <div class="popup" id="restorePopup" style="display: none;">
+            <div class="popup-content restorePop">
+                <i class='bx bxs-refresh'></i>
+                <h2>Restore Post?</h2>
+                <p>Are you sure you want to restore this post? This action is reversible.</p>
+                <div class="popup-btns">
+                    <button class="continue-btn" id="restoreContinueBtn">Continue</button>
+                    <button class="cancel-btn" id="restoreCancelBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+<div id="imageModal" class="modal">
     <span class="close">&times;</span>
     <img class="modal-content" id="modalImage">
     <div id="caption"></div>
 </div>
-    <!-- Table -->
-    <table class="declined-table">
-        <thead>
-            <tr>
-            <th>Artist</th>
-                <th>Image</th>  
-                <th>Title</th>
-                <th>Category</th>
-                <th>Ban End Date</th>
-               
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (!empty($declinedPosts)): ?>
-                <?php foreach ($declinedPosts as $post): ?>
-                    <tr data-id="<?= $post['post_id']; ?>">
-                    <td class="artist"><?= $post['artist_name']; ?></td>
-                        <td>
-                        <?php
-                        $imagePath = '../' . $post['image'];  
-                        if (file_exists($imagePath) && !empty($post['image'])) {
-                            echo "<a href=\"#\" class=\"image-link\" data-image=\"$imagePath\"><img src=\"$imagePath\" alt=\"Post Image\" class=\"post-image\"></a>";
-                        } else {
-                            echo "<a href=\"#\" class=\"image-link\" data-image=\"../gallery/default.png\"><img src=\"../gallery/default.png\" alt=\"Default Image\" class=\"post-image\"></a>";
-                        }
-                        ?>
 
-                        </td>
-                        <td class="title"><?= $post['title']; ?></td>
-                        <td class="reason"><?= $post['category']; ?></td>
-                        <td class="ban-end-date">
-                            <?= (new DateTime($post['ban_end_date']))->format('Y-m-d'); ?>
-                        </td>
-
-                        <td>
-                            <!-- Restore-->
-                            <form action="" method="POST" class="restore-form" id="restoreForm_<?= $post['post_id']; ?>">
-                                <input type="hidden" name="restore_post_id" value="<?= $post['post_id']; ?>">
-                                <button type="button" class="restore-btn" onclick="openRestorePopup(<?= $post['post_id']; ?>)">
-                                    <i class='bx bx-refresh restore-icon'></i>
-                                </button>
-                            </form>
-
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr><td colspan="6">No declined posts found</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-
-    <!-- Popup for Restore Action -->
-    <div class="popup" id="restorePopup" style="display: none;">
-        <div class="popup-content restorePop">
-            <i class='bx bxs-refresh'></i>
-            <h2>Restore Post?</h2>
-            <p>Are you sure you want to restore this post? This action is reversible.</p>
-            <div class="popup-btns">
-                <button class="continue-btn" id="restoreContinueBtn">Continue</button>
-                <button class="cancel-btn" id="restoreCancelBtn">Cancel</button>
-            </div>
-        </div>
     </div>
-    </div>
-  
 </section>
 
             <!-- SETTINGS -->
