@@ -207,6 +207,7 @@
 /* Scrollbar Styling */
 .content-wrapper1::-webkit-scrollbar {
     width: 8px; 
+    
 }
 
 .content-wrapper1::-webkit-scrollbar-thumb {
@@ -942,7 +943,10 @@ background: rgba(255, 255, 255, 1);
 #settings {
   display: none; /* Initially hide both sections */
 }
-
+.content-of-exhibit{
+  display: flex;
+  flex-direction: column;
+}
 #exhibits {
   display: flex; /* Show exhibits section by default */
 }
@@ -1296,4 +1300,51 @@ background: rgba(255, 255, 255, 1);
 
 .logoutButton .text {
   font-weight: bold;
+}
+
+
+/* dashboard */
+.content-wrapper3{
+  height: 80vh;
+  width: 90%;
+
+}
+.overview {
+  display: flex;
+  gap: 100px;
+  width: 700px;
+  justify-content: center;
+}
+
+.request {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.r_number {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #000;
+  margin-top: 20px;
+  position: relative;
+}
+
+/* BOXES */
+.activity {
+  background-color: #eeeeee;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin: 20px auto;
+  width: 90%;
+  height: 50%;
+  text-align: center;
+
+}
+
+canvas {
+  margin-inline: auto;
+  width: 85% !important;
+  height: 90% !important;
 }

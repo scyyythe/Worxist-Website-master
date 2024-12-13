@@ -452,7 +452,45 @@ class ExhibitManager {
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
     
-
+    public function approveAllRequestsExhibit() {
+        try {
+            // Fetch all pending exhibit IDs
+            $fetchQuery = "SELECT exbt_id FROM exhibit_tbl WHERE exbt_status = 'Pending'";
+            $fetchStatement = $this->conn->prepare($fetchQuery);
+            $fetchStatement->execute();
+            $pendingExhibits = $fetchStatement->fetchAll(PDO::FETCH_COLUMN);
+    
+            if (empty($pendingExhibits)) {
+                echo json_encode(["status" => "error", "message" => "No pending requests to approve"]);
+                exit;
+            }
+    
+           
+            $updateQuery = "UPDATE exhibit_tbl SET exbt_status = 'Accepted', accepted_at = ? WHERE exbt_status = 'Pending'";
+            $updateStatement = $this->conn->prepare($updateQuery);
+            $acceptedAt = date("Y-m-d H:i:s");
+            $updateStatement->bindValue(1, $acceptedAt, PDO::PARAM_STR);
+    
+            if ($updateStatement->execute()) {
+      
+                foreach ($pendingExhibits as $exbt_id) {
+                    $message = "Your exhibit request with ID $exbt_id has been approved.";
+                    $this->createNotification($exbt_id, $message);
+                }
+    
+                echo json_encode(["status" => "success", "message" => "All pending requests have been approved and notifications sent"]);
+            } else {
+                $errorInfo = $updateStatement->errorInfo();
+                error_log("Failed to approve all requests: " . $errorInfo[2]);
+                echo json_encode(["status" => "error", "message" => "Failed to approve requests. Error: " . $errorInfo[2]]);
+            }
+        } catch (Exception $e) {
+            error_log("Exception in approveAllRequestsExhibit: " . $e->getMessage());
+            echo json_encode(["status" => "error", "message" => "Exception caught: " . $e->getMessage()]);
+        }
+        exit;
+    }
+    
     public function acceptedExhibits() {
         $statement = $this->conn->prepare("
             SELECT 

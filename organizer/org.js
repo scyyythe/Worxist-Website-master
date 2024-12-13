@@ -1,31 +1,136 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Sidebar links
+  const dashboardLink = document.querySelector('.dasboardLink');
   const exhibitLink = document.querySelector('.exhibitLink');
   const settingsLink = document.querySelector('.settingLink');
 
   // Section containers
+  const dashboardSection = document.getElementById('dashboard');
   const exhibitsSection = document.getElementById('exhibits');
   const settingsSection = document.getElementById('settings');
   const topSection = document.querySelector('.header-wrapper');
-
-
+  const acceptAll=document.getElementById('accept-all-btn');
+  // Default display settings
+  dashboardSection.style.display = 'flex';
+  exhibitsSection.style.display = 'none';
   settingsSection.style.display = 'none';
-  exhibitsSection.style.display = 'flex';
+  if (acceptAll) {
+    acceptAll.style.display = 'none';
+  }
+  // Dashboard section
+  dashboardLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      dashboardSection.style.display = 'flex';
+      exhibitsSection.style.display = 'none';
+      settingsSection.style.display = 'none';
+      topSection.style.display = 'flex';
+
+
+  if (acceptAll) {
+    acceptAll.style.display = 'none';
+  }
+  });
 
   // Exhibits section
   exhibitLink.addEventListener('click', function(e) {
       e.preventDefault();
-      exhibitsSection.style.display = 'block';
+      dashboardSection.style.display = 'none';
+      exhibitsSection.style.display = 'flex';
       settingsSection.style.display = 'none';
       topSection.style.display = 'flex';
+      if (acceptAll) {
+        acceptAll.style.display = 'block';
+      }
   });
 
   // Settings section
   settingsLink.addEventListener('click', function(e) {
       e.preventDefault();
+      dashboardSection.style.display = 'none';
       exhibitsSection.style.display = 'none';
       settingsSection.style.display = 'block';
       topSection.style.display = 'none';
+  });
+});
+
+
+// --- Activity Chart ---
+document.addEventListener('DOMContentLoaded', function () {
+  // Get the canvas for the Activity Chart
+  let activityCanvas = document.getElementById('activityChart').getContext('2d');
+
+  // Adjust canvas resolution for high-DPI displays
+  let dpr = window.devicePixelRatio || 1; // Device Pixel Ratio
+  activityCanvas.canvas.width = activityCanvas.canvas.clientWidth * dpr;
+  activityCanvas.canvas.height = activityCanvas.canvas.clientHeight * dpr;
+  activityCanvas.scale(dpr, dpr);
+
+  // Line chart with dynamic data for all users
+  let activityChart = new Chart(activityCanvas, {
+      type: 'line', // Chart type
+      data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], 
+          datasets: [
+              {
+                  label: 'Posts', 
+                  data: [posts, posts + 1, posts + 2, posts + 3, posts + 4], // Dynamic data for posts
+                  borderColor: '#a20d0d', 
+                  backgroundColor: '#a20d0d', 
+                  fill: false, 
+                  borderWidth: 2
+              },
+              {
+                  label: 'Requests', 
+                  data: [requests, requests + 1, requests + 2, requests + 3, requests + 4], // Dynamic data for requests
+                  borderColor: '#ff7272', 
+                  backgroundColor: '#ff7272', 
+                  fill: false, 
+                  borderWidth: 2
+              },
+              {
+                  label: 'Accepted Exhibitions', 
+                  data: [acceptedExhibitions, acceptedExhibitions + 1, acceptedExhibitions + 2, acceptedExhibitions + 3, acceptedExhibitions + 4], // Dynamic data for accepted exhibitions
+                  borderColor: '#ed1c24', 
+                  backgroundColor: '#ed1c24', 
+                  fill: false, 
+                  borderWidth: 2
+              }
+          ]
+      },
+      options: {
+          responsive: true, 
+          maintainAspectRatio: false, 
+          scales: {
+              y: {
+                  beginAtZero: true, 
+                  ticks: {
+                      font: {
+                          size: 14, 
+                          family: 'Poppins', 
+                          weight: 'bold'
+                      }
+                  }
+              },
+              x: {
+                  ticks: {
+                      font: {
+                          size: 14, 
+                          family: 'Poppins', 
+                      }
+                  }
+              }
+          },
+          plugins: {
+              legend: {
+                  labels: {
+                      font: {
+                          size: 14, 
+                          family: 'Poppins', 
+                      }
+                  }
+              }
+          }
+      }
   });
 });
 
@@ -57,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const postsWrapper = document.querySelector(".posts-wrapper"); 
   const headerWrapper = document.querySelector(".header-wrapper");
   const backButton = document.querySelector(".bx-chevron-left");
-
+  const acceptAll=document.getElementById('accept-all-btn');
   // Solo and Collaborator Sections
   const soloRequest = document.getElementById("soloRequest");
   const collabRequest = document.getElementById("collabRequest");
@@ -80,7 +185,10 @@ document.addEventListener("DOMContentLoaded", function () {
  document.getElementById("exhibit-date").innerText = "Exhibit Date: " + exhibit.exhibit.exbt_date;
 document.getElementById("exhibit-title").innerText = exhibit.exhibit.exbt_title;
 document.getElementById("exhibit-description").innerText = exhibit.exhibit.exbt_descrip;
-
+const acceptAll = document.getElementById('accept-all-btn');
+  if (acceptAll) {
+    acceptAll.style.display = 'none';
+  }
 // Solo Section
 document.getElementById('artist_name').textContent = exhibit.exhibit.organizer_name || 'Unknown Organizer';
 const artworkFiles = exhibit.artwork_files;
@@ -356,6 +464,24 @@ function showCustomAlert(message) {
       window.location.reload();
   });
 }
+
+// approve all the request exhibit
+document.getElementById('accept-all-btn').addEventListener('click', function() {
+  fetch('org.php', {
+      method: 'POST',
+      body: new URLSearchParams({
+          action: 'approve_all' 
+      })
+  })
+  .then(response => response.text())
+  .then(message => {
+      showCustomAlert(message);
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      showCustomAlert('An error occurred.');
+  });
+});
 
 
 //ADMIN & COLLAB IMG CAROUSEL

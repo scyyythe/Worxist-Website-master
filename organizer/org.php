@@ -77,12 +77,20 @@ if (isset($_GET['id'])) {
 }
 // approved or declined exhibits
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle 'approve_all' action
+    if (isset($_POST['action']) && $_POST['action'] === 'approve_all') {
+        $response = $exhibit->approveAllRequestsExhibit();
+        header('Content-Type: text/plain');
+        echo $response['message'];
+        exit();
+    }
+
+ 
     if (isset($_POST['exbt_id']) && !empty($_POST['exbt_id']) && isset($_POST['status']) && !empty($_POST['status'])) {
         $exbt_id = $_POST['exbt_id']; 
         $status = $_POST['status'];   
 
         if ($status === 'Accepted' || $status === 'Declined') {
-          
             $exhibit = new ExhibitManager($conn);
             $update = $exhibit->updateExhibitStatus($exbt_id, $status); 
             
@@ -100,8 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -110,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer</title>
     <link rel="shortcut icon" href="/gallery/image/vags-logo.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="org.css">
 </head>
@@ -121,8 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <img src="pics/worxist.png" alt="Logo">
             </div>
             <ul class="nav">
+            <li><i class='bx bxs-dashboard'></i><a href="#dashboard" class="dasboardLink">Dashboard</a></li>
             <li><i class='bx bx-merge'></i><a href="#exhibits" class="exhibitLink">Exhibits</a></li>
             <li><i class='bx bxs-cog'></i><a href="#settings" class="settingLink">Settings</a></li>
+           
             </ul>
             <a href="../logout.php" class="logout logoutButton"><i class='bx bxs-log-out'></i>Logout</a>
          
@@ -145,6 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <header class="header">
                     <div class="header-title">
                         <h1>Review an exhibit today!</h1>
+
+                        
                         <span class="date" id="current-date"></span>
                     </div>
                     <div class="notifications">
@@ -183,16 +195,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             
             <!-- EXHIBITS REQUESTS -->
+            <section class="content-wrapper3" id="dashboard" style="display: none;">
+
+            <div class="overview">
+                    <div class="request">
+                        <div class="stat-box">
+                            <h3>Posts Requests<span class="p-badge blue"></span></h3>
+                        </div>
+                        <div class="r_number"></div>
+                    </div>
+                </div>   
+<?php
+
+$queryPosts = "SELECT COUNT(*) AS total_posts FROM art_info WHERE a_status = 'Approved'";
+$stmt = $conn->prepare($queryPosts);
+$stmt->execute();
+$totalPosts = $stmt->fetch(PDO::FETCH_ASSOC)['total_posts'];
+
+$queryRequests = "SELECT COUNT(*) AS total_requests FROM exhibit_tbl WHERE exbt_status = 'Pending'";
+$stmt = $conn->prepare($queryRequests);
+$stmt->execute();
+$totalRequests = $stmt->fetch(PDO::FETCH_ASSOC)['total_requests'];
+
+$queryAcceptedExhibitions = "SELECT COUNT(*) AS total_accepted_exhibitions FROM exhibit_tbl WHERE accepted_at IS NOT NULL";
+$stmt = $conn->prepare($queryAcceptedExhibitions);
+$stmt->execute();
+$totalAcceptedExhibitions = $stmt->fetch(PDO::FETCH_ASSOC)['total_accepted_exhibitions'];
+
+echo "<script>
+    var posts = {$totalPosts};
+    var requests = {$totalRequests};
+    var acceptedExhibitions = {$totalAcceptedExhibitions};
+</script>";
+?>
+
+                <div class="activity">
+                    <h3>Activity</h3>
+                    <select name="filterChart" id="" style="border-radius: 20px; padding:3px; border:none;">Filter
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Yearly">Yearly</option>
+                    </select>
+                    <canvas id="activityChart"></canvas>
+                </div>
+
+</section>
+
+
+            <div class="exhibit-ni-section">
+            <div class="actions-wrapper">
+        <button id="accept-all-btn" class="btn accept-all">Accept All</button><br><br>
+    </div>
+
             <section class="content-wrapper1" id="exhibits" >
                 <!-- Custom Alert Box -->
+                
             <div id="customAlert" class="alert-box">
                 <div class="alert-content">
                     <p id="alertMessage"></p><br>
                     <button id="closeAlertBtn" class="close-btn">Close</button>
                 </div>
             </div>
-
-
+        
             <div class="posts-wrapper">
                 <?php if (!empty($request)) : ?>
                     <?php foreach ($request as $exhibit) : ?>
@@ -298,6 +362,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </section>
             </section>
+
+
+            </div>
 
             <!-- SETTINGS -->
 <section class="content-wrapper2" id="settings" style="display: none;">
