@@ -279,7 +279,7 @@ header{
     transform: scale(1.07);
 }
 .card img{
-  
+    height: 450px;
     width: 300px;
     border-radius: 20px;
 }

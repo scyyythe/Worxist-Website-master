@@ -101,7 +101,7 @@ $includedArtworks = $exhibitManager->getCollabArtworks($exbt_id);
             </div>
         </div>
 
-        <?php if (isset($status) && $status == 'Accepted'||'Ongoing'): ?>
+        <?php if (isset($status) && $status == 'Accepted'): ?>
             <p class="displayAlertCollab">You already have an upcoming/ongoing exhibit.</p><br>
 
             <div class="selectart-collab">
